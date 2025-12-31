@@ -1,61 +1,50 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { redis } from '@/lib/redis'
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
+import { db, alerts } from '@/lib/db';
+import { eq, desc } from 'drizzle-orm';
 
-interface Alert {
-  type: 'downtime' | 'recovery' | 'ssl_warning'
-  timestamp: number
-  error?: string
-  daysUntilExpiry?: number
-  emailSent?: string
+export async function GET() {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const userAlerts = await db
+      .select()
+      .from(alerts)
+      .where(eq(alerts.userId, session.user.id))
+      .orderBy(desc(alerts.createdAt))
+      .limit(50);
+
+    return NextResponse.json({ alerts: userAlerts });
+  } catch (error) {
+    console.error('Error fetching alerts:', error);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  }
 }
 
-// GET /api/alerts - Get all alerts for user's sites
-export async function GET(request: NextRequest) {
+export async function PATCH(request: NextRequest) {
   try {
-    const session = await auth()
-    
+    const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
-    // Get user's sites
-    const userSiteIds = await redis.smembers(`user:${session.user.id}:sites`)
-    
-    if (!userSiteIds.length) {
-      return NextResponse.json({ alerts: [] })
+
+    const { alertId, isRead } = await request.json();
+
+    if (!alertId) {
+      return NextResponse.json({ error: 'Alert ID is verplicht' }, { status: 400 });
     }
-    
-    // Get alerts for each site
-    const allAlerts: (Alert & { siteId: string; siteName: string; siteUrl: string })[] = []
-    
-    for (const siteId of userSiteIds) {
-      const site = await redis.hgetall(`site:${siteId}`)
-      if (!site) continue
-      
-      const alerts = await redis.lrange(`alerts:${siteId}`, 0, 49)
-      
-      for (const alertStr of alerts) {
-        try {
-          const alert = typeof alertStr === 'string' ? JSON.parse(alertStr) : alertStr
-          allAlerts.push({
-            ...alert,
-            siteId,
-            siteName: site.name as string,
-            siteUrl: site.url as string,
-          })
-        } catch (e) {
-          // Skip invalid alerts
-        }
-      }
-    }
-    
-    // Sort by timestamp descending
-    allAlerts.sort((a, b) => b.timestamp - a.timestamp)
-    
-    return NextResponse.json({ alerts: allAlerts.slice(0, 100) })
+
+    await db
+      .update(alerts)
+      .set({ isRead: isRead ?? true })
+      .where(eq(alerts.id, alertId));
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Failed to get alerts:', error)
-    return NextResponse.json({ error: 'Failed to get alerts' }, { status: 500 })
+    console.error('Error updating alert:', error);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

@@ -1,0 +1,102 @@
+.card {
+  background: linear-gradient(180deg, rgba(20, 25, 24, 0.8) 0%, rgba(15, 20, 18, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.iconWrapper {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.green .iconWrapper {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.green .icon {
+  color: #10b981;
+}
+
+.blue .iconWrapper {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.blue .icon {
+  color: #3b82f6;
+}
+
+.yellow .iconWrapper {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.yellow .icon {
+  color: #f59e0b;
+}
+
+.red .iconWrapper {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.red .icon {
+  color: #ef4444;
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0 0 0.25rem 0;
+}
+
+.valueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: white;
+}
+
+.trend {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+}
+
+.positive {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.negative {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0.25rem 0 0 0;
+}

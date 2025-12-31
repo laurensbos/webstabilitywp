@@ -1,139 +1,133 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { redis } from '@/lib/redis'
-import crypto from 'crypto'
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
+import { db, sites } from '@/lib/db';
+import { eq, and } from 'drizzle-orm';
+import { getPlan, canAddSite, getCheckInterval } from '@/lib/plans';
 
-interface Site {
-  id: string
-  url: string
-  name: string
-  userId: string
-  createdAt: number
-  lastCheck?: number
-  status?: 'up' | 'down' | 'unknown'
-  responseTime?: number
-}
-
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const session = await auth()
-    
+    const session = await auth();
     if (!session?.user?.id) {
-      // For demo/unauthenticated access, return all sites
-      const allSiteIds = await redis.smembers('sites')
-      if (!allSiteIds.length) return NextResponse.json({ sites: [] })
-      
-      const sites = await Promise.all(
-        allSiteIds.map(async (id) => {
-          const site = await redis.hgetall(`site:${id}`)
-          if (!site) return null
-          return {
-            id: site.id as string,
-            url: site.url as string,
-            name: site.name as string,
-            createdAt: site.createdAt as number,
-            lastCheck: site.lastCheck as number | undefined,
-            status: site.status as string | undefined,
-            responseTime: site.responseTime as number | undefined,
-          }
-        })
-      )
-      return NextResponse.json({ sites: sites.filter(Boolean) })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get user's sites
-    const userSiteIds = await redis.smembers(`user:${session.user.id}:sites`)
-    if (!userSiteIds.length) return NextResponse.json({ sites: [] })
+    const userSites = await db
+      .select()
+      .from(sites)
+      .where(eq(sites.userId, session.user.id))
+      .orderBy(sites.createdAt);
 
-    const sites = await Promise.all(
-      userSiteIds.map(async (id) => {
-        const site = await redis.hgetall(`site:${id}`)
-        if (!site) return null
-        return {
-          id: site.id as string,
-          url: site.url as string,
-          name: site.name as string,
-          createdAt: site.createdAt as number,
-          lastCheck: site.lastCheck as number | undefined,
-          status: site.status as string | undefined,
-          responseTime: site.responseTime as number | undefined,
-        }
-      })
-    )
-
-    return NextResponse.json({ sites: sites.filter(Boolean) })
+    return NextResponse.json({ sites: userSites });
   } catch (error) {
-    console.error('Failed to get sites:', error)
-    return NextResponse.json({ error: 'Failed to get sites' }, { status: 500 })
+    console.error('Error fetching sites:', error);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth()
-    const { url, name } = await request.json()
-
-    if (!url) {
-      return NextResponse.json({ error: 'URL is required' }, { status: 400 })
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const id = crypto.randomUUID()
-    const site: Record<string, string | number> = {
-      id,
-      url: url.startsWith('http') ? url : `https://${url}`,
-      name: name || url,
-      userId: session?.user?.id || 'anonymous',
-      createdAt: Date.now(),
-      status: 'unknown',
+    const { url, name } = await request.json();
+
+    if (!url || !name) {
+      return NextResponse.json(
+        { error: 'URL en naam zijn verplicht' },
+        { status: 400 }
+      );
     }
 
-    await redis.hset(`site:${id}`, site)
-    await redis.sadd('sites', id)
-    
-    if (session?.user?.id) {
-      await redis.sadd(`user:${session.user.id}:sites`, id)
+    // Validate URL
+    let validUrl: string;
+    try {
+      const parsed = new URL(url.startsWith('http') ? url : `https://${url}`);
+      validUrl = parsed.href;
+    } catch {
+      return NextResponse.json(
+        { error: 'Ongeldige URL' },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ site })
+    // Check site limit
+    const currentSites = await db
+      .select()
+      .from(sites)
+      .where(eq(sites.userId, session.user.id));
+
+    const plan = (session.user as { plan?: string }).plan;
+    if (!canAddSite(currentSites.length, plan)) {
+      const userPlan = getPlan(plan);
+      return NextResponse.json(
+        { error: `Je hebt het maximum aantal sites (${userPlan.sites}) bereikt. Upgrade je plan voor meer sites.` },
+        { status: 403 }
+      );
+    }
+
+    // Check if URL already exists for this user
+    const existingSite = await db
+      .select()
+      .from(sites)
+      .where(and(eq(sites.userId, session.user.id), eq(sites.url, validUrl)));
+
+    if (existingSite.length > 0) {
+      return NextResponse.json(
+        { error: 'Deze site monitor je al' },
+        { status: 400 }
+      );
+    }
+
+    // Create site
+    const checkInterval = getCheckInterval(plan);
+    const [site] = await db
+      .insert(sites)
+      .values({
+        userId: session.user.id,
+        url: validUrl,
+        name,
+        checkInterval,
+      })
+      .returning();
+
+    return NextResponse.json({ site });
   } catch (error) {
-    console.error('Failed to create site:', error)
-    return NextResponse.json({ error: 'Failed to create site' }, { status: 500 })
+    console.error('Error creating site:', error);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await auth()
-    const { searchParams } = new URL(request.url)
-    const id = searchParams.get('id')
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    if (!id) {
-      return NextResponse.json({ error: 'Site ID is required' }, { status: 400 })
+    const { searchParams } = new URL(request.url);
+    const siteId = searchParams.get('id');
+
+    if (!siteId) {
+      return NextResponse.json({ error: 'Site ID is verplicht' }, { status: 400 });
     }
 
     // Check ownership
-    const site = await redis.hgetall(`site:${id}`)
+    const [site] = await db
+      .select()
+      .from(sites)
+      .where(and(eq(sites.id, siteId), eq(sites.userId, session.user.id)));
+
     if (!site) {
-      return NextResponse.json({ error: 'Site not found' }, { status: 404 })
+      return NextResponse.json({ error: 'Site niet gevonden' }, { status: 404 });
     }
 
-    // Allow deletion if anonymous site or user owns it
-    if (site.userId !== 'anonymous' && session?.user?.id && site.userId !== session.user.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
-    }
+    await db.delete(sites).where(eq(sites.id, siteId));
 
-    await redis.del(`site:${id}`)
-    await redis.srem('sites', id)
-    
-    if (session?.user?.id) {
-      await redis.srem(`user:${session.user.id}:sites`, id)
-    }
-    
-    await redis.del(`checks:${id}`)
-
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Failed to delete site:', error)
-    return NextResponse.json({ error: 'Failed to delete site' }, { status: 500 })
+    console.error('Error deleting site:', error);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

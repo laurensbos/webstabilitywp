@@ -1,0 +1,32 @@
+.card {
+  background: linear-gradient(180deg, rgba(20, 25, 24, 0.8) 0%, rgba(15, 20, 18, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.none { padding: 0; }
+.sm { padding: 1rem; }
+.md { padding: 1.5rem; }
+.lg { padding: 2rem; }
+
+.header {
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0.25rem 0 0 0;
+}
+
+.content {
+  color: #e2e8f0;
+}
