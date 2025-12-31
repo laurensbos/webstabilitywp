@@ -51,13 +51,13 @@
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 24px;
-  padding: 3rem;
+  padding: 2.5rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 .header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
 }
 
 .logo {
@@ -66,18 +66,18 @@
   color: #00e599;
   text-decoration: none;
   display: inline-block;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .title {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #fff;
   margin: 0 0 0.5rem 0;
 }
 
 .subtitle {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.5);
   margin: 0;
 }
@@ -85,19 +85,19 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .error {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.875rem 1rem;
+  padding: 0.75rem 1rem;
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
   border-radius: 12px;
   color: #f87171;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
 }
 
 .inputGroup {
@@ -107,26 +107,9 @@
 }
 
 .inputGroup label {
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.7);
-}
-
-.labelRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.forgotLink {
-  font-size: 0.8rem;
-  color: #00e599;
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-
-.forgotLink:hover {
-  opacity: 0.8;
 }
 
 .inputWrapper {
@@ -144,12 +127,12 @@
 
 .inputWrapper input {
   width: 100%;
-  padding: 0.875rem 1rem 0.875rem 2.75rem;
+  padding: 0.8rem 1rem 0.8rem 2.75rem;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   color: #fff;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   transition: all 0.2s;
 }
 
@@ -172,13 +155,31 @@
   cursor: pointer;
   padding: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
   transition: color 0.2s;
 }
 
 .eyeButton:hover {
   color: rgba(255, 255, 255, 0.6);
+}
+
+.passwordStrength {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+.strengthItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.2s;
+}
+
+.strengthItem.valid {
+  color: #00e599;
 }
 
 .submitBtn {
@@ -187,10 +188,10 @@
   justify-content: center;
   gap: 0.5rem;
   width: 100%;
-  padding: 0.875rem 1.5rem;
+  padding: 0.8rem 1.5rem;
   background: #00e599;
   color: #000;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   border: none;
   border-radius: 12px;
@@ -218,11 +219,27 @@
   to { transform: rotate(360deg); }
 }
 
+.terms {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  margin: 0;
+}
+
+.terms a {
+  color: #00e599;
+  text-decoration: none;
+}
+
+.terms a:hover {
+  text-decoration: underline;
+}
+
 .footer {
   text-align: center;
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
   color: rgba(255, 255, 255, 0.5);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .footer a {
@@ -243,55 +260,40 @@
   gap: 2rem;
 }
 
-.testimonial {
+.benefits {
   background: rgba(15, 20, 18, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 2rem;
 }
 
-.stars {
-  display: flex;
-  gap: 0.25rem;
-  margin-bottom: 1rem;
-}
-
-.testimonial blockquote {
+.benefits h3 {
   font-size: 1.1rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0 0 1.5rem 0;
-  font-style: italic;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 1.25rem 0;
 }
 
-.author {
+.benefits ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.benefits li {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-}
-
-.avatar {
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, #00e599, #00cc88);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  color: #000;
-  font-size: 0.9rem;
-}
-
-.authorName {
-  font-weight: 600;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 0.95rem;
 }
 
-.authorTitle {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
+.checkIcon {
+  color: #00e599;
+  flex-shrink: 0;
 }
 
 .trustpilot {
@@ -336,6 +338,6 @@
   }
   
   .formWrapper {
-    padding: 2rem;
+    padding: 1.75rem;
   }
 }

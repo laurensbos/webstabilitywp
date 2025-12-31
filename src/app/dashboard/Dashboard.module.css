@@ -712,3 +712,73 @@
     height: 20px;
   }
 }
+
+/* Improved Empty State */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: rgba(0, 229, 153, 0.02);
+  border: 2px dashed rgba(0, 229, 153, 0.2);
+  border-radius: 20px;
+  margin-top: 1rem;
+}
+
+.emptyIcon {
+  width: 80px;
+  height: 80px;
+  background: rgba(0, 229, 153, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  color: #00e599;
+}
+
+.emptyState h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.5rem 0;
+}
+
+.emptyState p {
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 2rem 0;
+  max-width: 400px;
+}
+
+.emptySteps {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.emptyStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stepNumber {
+  width: 32px;
+  height: 32px;
+  background: rgba(0, 229, 153, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #00e599;
+}
+
+.stepText {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}

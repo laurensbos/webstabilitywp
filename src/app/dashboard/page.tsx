@@ -235,7 +235,7 @@ export default function Dashboard() {
             </button>
             <button onClick={() => setShowAddForm(true)} className={styles.addButton}>
               <Plus size={16} />
-              Add Monitor
+              Monitor toevoegen
             </button>
           </div>
         </header>
@@ -299,7 +299,7 @@ export default function Dashboard() {
             <Search size={16} />
             <input
               type="text"
-              placeholder="Search monitors..."
+              placeholder="Zoeken..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -326,11 +326,11 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* Add Monitor Modal */}
+        {/* Monitor toevoegen Modal */}
         {showAddForm && (
           <div className={styles.modal} onClick={() => setShowAddForm(false)}>
             <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
-              <h2>Add New Monitor</h2>
+              <h2>Nieuwe monitor toevoegen</h2>
               <form onSubmit={addSite} className={styles.addForm}>
                 <div className={styles.formGroup}>
                   <label>Website URL</label>
@@ -343,20 +343,20 @@ export default function Dashboard() {
                   />
                 </div>
                 <div className={styles.formGroup}>
-                  <label>Display Name (optional)</label>
+                  <label>Naam (optioneel)</label>
                   <input
                     type="text"
-                    placeholder="My WordPress Site"
+                    placeholder="Mijn WordPress Site"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                   />
                 </div>
                 <div className={styles.formActions}>
                   <button type="button" onClick={() => setShowAddForm(false)} className={styles.cancelBtn}>
-                    Cancel
+                    Annuleren
                   </button>
                   <button type="submit" className={styles.submitBtn}>
-                    Add Monitor
+                    Monitor toevoegen
                   </button>
                 </div>
               </form>
@@ -369,16 +369,16 @@ export default function Dashboard() {
           {loading ? (
             <div className={styles.loading}>
               <RefreshCw className={styles.spinner} size={24} />
-              <p>Loading monitors...</p>
+              <p>Monitors laden...</p>
             </div>
           ) : filteredSites.length === 0 ? (
             <div className={styles.empty}>
               <Globe size={48} />
-              <h3>No monitors yet</h3>
-              <p>Add your first WordPress site to start monitoring</p>
+              <h3>Nog geen monitors</h3>
+              <p>Voeg je eerste WordPress site toe om te beginnen met monitoren</p>
               <button onClick={() => setShowAddForm(true)} className={styles.addButton}>
                 <Plus size={16} />
-                Add Your First Monitor
+                Eerste site toevoegen
               </button>
             </div>
           ) : (

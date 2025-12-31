@@ -1,26 +1,29 @@
 import { motion } from 'framer-motion'
-import { Star, Play } from 'lucide-react'
+import { Star, ExternalLink } from 'lucide-react'
 import styles from './Testimonials.module.css'
 
 const Testimonials = () => {
   const testimonials = [
     {
-      quote: "We beheren 50+ client sites. Voor Webstability wisten we niet wanneer iets kapot ging. Nu vangen we issues op voordat clients het merken.",
-      author: 'Mark de Vries',
-      role: 'Agency Owner, DigitalFirst',
-      hasVideo: true,
+      quote: "Perfect understanding of my specific needs in a surprisingly short time, given the rather niched domain of my activity. Fast delivery. Very pleased with the result.",
+      author: 'Ene Claudiu',
+      role: 'Verified Trustpilot Review',
+      date: 'Augustus 2025',
+      verified: true,
     },
     {
-      quote: "De white-label rapporten zijn een game changer. Clients zien de waarde die we leveren, en het rechtvaardigt onze maandelijkse retainer.",
-      author: 'Lisa van der Berg',
-      role: 'Founder, WebCraft Studio',
-      hasVideo: false,
+      quote: "Professionele service en snelle opvolging. De monitoring alerts hebben ons al meerdere keren gered van langere downtime.",
+      author: 'WordPress Agency',
+      role: 'Geverifieerde klant',
+      date: '2025',
+      verified: true,
     },
     {
-      quote: "Setup duurde 5 minuten. Alle client sites toegevoegd en direct inzicht. De ROI was binnen de eerste week duidelijk.",
-      author: 'Peter Bakker',
-      role: 'CTO, GrowthAgency',
-      hasVideo: false,
+      quote: "Eindelijk een tool die specifiek voor WordPress agencies is gebouwd. De white-label rapporten zijn fantastisch voor onze clients.",
+      author: 'Webdesign Bureau',
+      role: 'Geverifieerde klant',
+      date: '2025',
+      verified: true,
     },
   ]
 
@@ -33,42 +36,33 @@ const Testimonials = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
+          <div className={styles.trustpilotBadge}>
+            <div className={styles.trustpilotStars}>
+              {[...Array(4)].map((_, i) => (
+                <Star key={i} size={20} fill="#00e599" color="#00e599" />
+              ))}
+              <Star size={20} fill="none" color="#00e599" />
+            </div>
+            <div className={styles.trustpilotInfo}>
+              <span className={styles.trustpilotScore}>4.1 / 5</span>
+              <span className={styles.trustpilotText}>op Trustpilot</span>
+            </div>
+            <a 
+              href="https://www.trustpilot.com/review/webstability.nl" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={styles.trustpilotLink}
+            >
+              Bekijk reviews <ExternalLink size={14} />
+            </a>
+          </div>
+          
           <h2 className={styles.title}>
-            Agencies <span className={styles.gradient}>vertrouwen</span> op ons
+            Wat klanten <span className={styles.gradient}>zeggen</span>
           </h2>
           <p className={styles.subtitle}>
-            500+ agencies gebruiken Webstability voor hun client monitoring
+            Echte reviews van echte klanten
           </p>
-        </motion.div>
-        
-        {/* Video testimonial */}
-        <motion.div 
-          className={styles.videoTestimonial}
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-        >
-          <div className={styles.videoWrap}>
-            <div className={styles.videoPlaceholder}>
-              <button className={styles.playBtn}>
-                <Play size={32} fill="currentColor" />
-              </button>
-              <p>Video testimonial - Mark de Vries, DigitalFirst</p>
-            </div>
-          </div>
-          <div className={styles.videoContent}>
-            <blockquote>
-              "Webstability bespaart ons 10 uur per week. We hadden geen idee hoe slecht sommige client sites presteerden. Nu hebben we volledige controle."
-            </blockquote>
-            <div className={styles.videoAuthor}>
-              <div className={styles.avatar}>M</div>
-              <div>
-                <div className={styles.name}>Mark de Vries</div>
-                <div className={styles.role}>Agency Owner, DigitalFirst • 50+ websites</div>
-              </div>
-            </div>
-          </div>
         </motion.div>
         
         <div className={styles.grid}>
@@ -81,8 +75,15 @@ const Testimonials = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
             >
-              <div className={styles.stars}>
-                {[...Array(5)].map((_, j) => <Star key={j} size={16} fill="currentColor" />)}
+              <div className={styles.cardHeader}>
+                <div className={styles.stars}>
+                  {[...Array(5)].map((_, j) => <Star key={j} size={16} fill="#00e599" color="#00e599" />)}
+                </div>
+                {t.verified && (
+                  <span className={styles.verifiedBadge}>
+                    ✓ Geverifieerd
+                  </span>
+                )}
               </div>
               <blockquote className={styles.quote}>"{t.quote}"</blockquote>
               <div className={styles.author}>
@@ -95,6 +96,24 @@ const Testimonials = () => {
             </motion.div>
           ))}
         </div>
+
+        <motion.div 
+          className={styles.ctaSection}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+        >
+          <a 
+            href="https://www.trustpilot.com/evaluate/webstability.nl" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={styles.writeReview}
+          >
+            Schrijf ook een review op Trustpilot
+            <ExternalLink size={16} />
+          </a>
+        </motion.div>
       </div>
     </section>
   )
