@@ -24,7 +24,7 @@ const Footer = () => {
           
           <div className={styles.links}>
             <h4>Product</h4>
-            <a href="#features">Features</a>
+            <a href="#features">Functies</a>
             <a href="#pricing">Prijzen</a>
             <a href="#faq">FAQ</a>
           </div>

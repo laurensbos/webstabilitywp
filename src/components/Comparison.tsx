@@ -1,12 +1,13 @@
-import { Check, X } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Check, X, Clock, Zap } from 'lucide-react'
 import styles from './Comparison.module.css'
 
 const comparisons = [
-  { feature: 'Automatische monitoring', manual: false, webstability: true },
-  { feature: 'Realtime alerts', manual: false, webstability: true },
-  { feature: 'Performance tracking', manual: false, webstability: true },
-  { feature: 'SEO monitoring', manual: false, webstability: true },
-  { feature: 'White-label rapporten', manual: false, webstability: true },
+  { feature: 'Uptime monitoring 24/7', manual: false, webstability: true },
+  { feature: 'Directe alerts bij downtime', manual: false, webstability: true },
+  { feature: 'Performance & laadtijd tracking', manual: false, webstability: true },
+  { feature: 'SSL certificaat checks', manual: false, webstability: true },
+  { feature: 'Overzichtelijk dashboard', manual: false, webstability: true },
   { feature: 'Schaalbaar naar 100+ sites', manual: false, webstability: true },
   { feature: 'Tijdsinvestering per week', manual: '10+ uur', webstability: '< 30 min' },
 ]
@@ -15,22 +16,48 @@ export default function Comparison() {
   return (
     <section className={styles.comparison}>
       <div className={styles.container}>
-        <div className={styles.header}>
+        <motion.div 
+          className={styles.header}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
           <h2 className={styles.title}>
-            Handmatig vs <span className={styles.gradient}>Webstability</span>
+            Van <span className={styles.gradient}>10 uur</span> naar 30 minuten per week
           </h2>
-          <p className={styles.subtitle}>Bespaar uren per week met geautomatiseerde monitoring</p>
-        </div>
+          <p className={styles.subtitle}>
+            Stop met handmatig checken. Laat Webstability het zware werk doen.
+          </p>
+        </motion.div>
 
-        <div className={styles.table}>
+        <motion.div 
+          className={styles.table}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+        >
           <div className={styles.tableHeader}>
-            <div className={styles.featureCol}>Feature</div>
-            <div className={styles.manualCol}>Handmatig</div>
-            <div className={styles.wsCol}>Webstability</div>
+            <div className={styles.featureCol}>Functie</div>
+            <div className={styles.manualCol}>
+              <Clock size={16} />
+              Handmatig
+            </div>
+            <div className={styles.wsCol}>
+              <Zap size={16} />
+              Webstability
+            </div>
           </div>
 
           {comparisons.map((row, index) => (
-            <div key={index} className={styles.tableRow}>
+            <motion.div 
+              key={index} 
+              className={styles.tableRow}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 * index }}
+            >
               <div className={styles.featureCol}>{row.feature}</div>
               <div className={styles.manualCol}>
                 {typeof row.manual === 'boolean' ? (
@@ -46,9 +73,9 @@ export default function Comparison() {
                   <span className={styles.wsText}>{row.webstability}</span>
                 )}
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

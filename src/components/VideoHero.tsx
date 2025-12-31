@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Play, Star, Zap, Shield, Clock, TrendingUp } from 'lucide-react';
+import { ArrowRight, Play, Star, Zap, Shield, Clock, TrendingUp, Bell, Mail, MessageSquare } from 'lucide-react';
 import styles from './VideoHero.module.css';
 
 export default function VideoHero() {
@@ -51,7 +51,7 @@ export default function VideoHero() {
           Gebouwd voor WordPress agencies
         </motion.div>
 
-        {/* Main Headline - Large gradient text like Upstash */}
+        {/* Main Headline - Nederlandse tekst */}
         <motion.div
           className={styles.headlineWrapper}
           initial={{ opacity: 0, y: 30 }}
@@ -59,29 +59,29 @@ export default function VideoHero() {
           transition={{ duration: 0.6, delay: 0.1 }}
         >
           <h1 className={styles.headline}>
-            <span className={styles.headlineWhite}>Monitor</span>
+            <span className={styles.headlineWhite}>Nooit meer</span>
             <br />
-            <span className={styles.headlineGradient}>Everywhere</span>
+            <span className={styles.headlineGradient}>handmatig checken</span>
           </h1>
           
-          {/* Background text effect like Upstash "Fast Anywhere" */}
+          {/* Background text effect */}
           <div className={styles.backgroundText}>
-            <span>UPTIME</span>
+            <span>MONITORING</span>
           </div>
         </motion.div>
 
-        {/* Subtitle */}
+        {/* Subtitle - Korter en krachtiger */}
         <motion.p
           className={styles.subtitle}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          Real-time uptime monitoring, performance tracking en SSL checks voor al je 
-          WordPress sites. Eén dashboard, onbeperkt sites.
+          Eén dashboard voor al je WordPress sites. 
+          Weet direct als er iets misgaat.
         </motion.p>
 
-        {/* Stats bar like Upstash */}
+        {/* Stats bar - Nederlandse labels */}
         <motion.div
           className={styles.statsBar}
           initial={{ opacity: 0, y: 20 }}
@@ -89,8 +89,8 @@ export default function VideoHero() {
           transition={{ duration: 0.6, delay: 0.3 }}
         >
           <div className={styles.stat}>
-            <span className={styles.statValue}>5min</span>
-            <span className={styles.statLabel}>Check Interval</span>
+            <span className={styles.statValue}>5 min</span>
+            <span className={styles.statLabel}>Check interval</span>
           </div>
           <div className={styles.statDivider}></div>
           <div className={styles.stat}>
@@ -100,12 +100,12 @@ export default function VideoHero() {
           <div className={styles.statDivider}></div>
           <div className={styles.stat}>
             <span className={styles.statValue}>&lt;1s</span>
-            <span className={styles.statLabel}>Alert Delay</span>
+            <span className={styles.statLabel}>Alert snelheid</span>
           </div>
           <div className={styles.statDivider}></div>
           <div className={styles.stat}>
-            <span className={styles.statValueGreen}>{'>'}99.9%</span>
-            <span className={styles.statLabel}>Uptime</span>
+            <span className={styles.statValueGreen}>99.9%</span>
+            <span className={styles.statLabel}>Uptime garantie</span>
           </div>
         </motion.div>
 
@@ -152,13 +152,13 @@ export default function VideoHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.6 }}
         >
-          {/* Card 1 - Large */}
+          {/* Card 1 - Large Dashboard */}
           <div className={`${styles.card} ${styles.cardLarge}`}>
             <div className={styles.cardHeader}>
               <h3>Real-time Dashboard</h3>
               <span className={styles.cardArrow}>↗</span>
             </div>
-            <p>Monitor al je WordPress sites in één overzichtelijk dashboard. Instant notificaties bij downtime.</p>
+            <p>Alle WordPress sites van je klanten in één overzicht. Direct zien wat aandacht nodig heeft.</p>
             
             {/* Mini dashboard preview */}
             <div className={styles.miniDashboard}>
@@ -212,15 +212,14 @@ export default function VideoHero() {
             </div>
           </div>
 
-          {/* Card 2 */}
+          {/* Card 2 - Instant Alerts */}
           <div className={styles.card}>
             <div className={styles.cardIcon}>
               <Zap size={24} />
             </div>
-            <h3>Instant Alerts</h3>
-            <p>Krijg direct een email als een site down gaat. Gemiddelde alert tijd onder 1 seconde.</p>
+            <h3>Directe Alerts</h3>
+            <p>Weet binnen seconden als een site down gaat. Via email, Slack of SMS.</p>
             
-            {/* Alert animation */}
             <div className={styles.alertDemo}>
               <motion.div
                 className={styles.alertPulse}
@@ -228,20 +227,19 @@ export default function VideoHero() {
                 transition={{ duration: 2, repeat: Infinity }}
               />
               <div className={styles.alertBadge}>
-                <span>🔴</span> Site down gedetecteerd
+                <span>🔴</span> Site offline gedetecteerd
               </div>
             </div>
           </div>
 
-          {/* Card 3 */}
+          {/* Card 3 - SSL */}
           <div className={styles.card}>
             <div className={styles.cardIcon}>
               <Shield size={24} />
             </div>
             <h3>SSL Monitoring</h3>
-            <p>Automatische waarschuwingen voordat je SSL certificaat verloopt. Nooit meer onverwachte problemen.</p>
+            <p>Nooit meer een verlopen certificaat. Waarschuwing 30, 14 en 7 dagen vooraf.</p>
             
-            {/* SSL indicator */}
             <div className={styles.sslDemo}>
               <div className={styles.sslLock}>🔒</div>
               <div className={styles.sslInfo}>
@@ -251,15 +249,14 @@ export default function VideoHero() {
             </div>
           </div>
 
-          {/* Card 4 */}
+          {/* Card 4 - Performance */}
           <div className={styles.card}>
             <div className={styles.cardIcon}>
               <TrendingUp size={24} />
             </div>
-            <h3>Performance Tracking</h3>
-            <p>Houd laadtijden en Core Web Vitals bij. Zie trends en optimaliseer proactief.</p>
+            <h3>Performance Trends</h3>
+            <p>Zie laadtijden over tijd. Spot problemen voordat klanten klagen.</p>
             
-            {/* Mini chart */}
             <div className={styles.chartDemo}>
               <svg viewBox="0 0 200 60" className={styles.miniChart}>
                 <defs>
@@ -281,20 +278,19 @@ export default function VideoHero() {
               </svg>
               <div className={styles.chartLabel}>
                 <span className={styles.chartValue}>847ms</span>
-                <span className={styles.chartTrend}>↓ 12%</span>
+                <span className={styles.chartTrend}>↓ 12% sneller</span>
               </div>
             </div>
           </div>
 
-          {/* Card 5 */}
+          {/* Card 5 - Uptime History */}
           <div className={styles.card}>
             <div className={styles.cardIcon}>
               <Clock size={24} />
             </div>
-            <h3>Uptime History</h3>
-            <p>Volledige historie van alle checks. Bewijs je betrouwbaarheid aan klanten met uptime rapporten.</p>
+            <h3>Uptime Rapporten</h3>
+            <p>Bewijs je betrouwbaarheid. Deel rapporten met klanten.</p>
             
-            {/* Uptime bars */}
             <div className={styles.uptimeBars}>
               {[...Array(30)].map((_, i) => (
                 <div

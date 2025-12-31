@@ -8,28 +8,28 @@ const FAQ = () => {
   
   const faqs = [
     {
-      q: 'Werkt dit alleen met WordPress?',
-      a: 'Nee! webstability werkt met elke website. Maar we zijn geoptimaliseerd voor WordPress agencies die veel sites beheren.',
+      q: 'Werkt dit alleen met WordPress sites?',
+      a: 'Webstability werkt met elke website. Je voert simpelweg de URL in en wij beginnen met monitoren. Geen plugins of code nodig.',
     },
     {
-      q: 'Moet ik een plugin installeren?',
-      a: 'Nee. We monitoren extern via URL. Geen plugins, geen code, geen toegang tot je sites nodig.',
+      q: 'Hoe vaak worden mijn sites gecheckt?',
+      a: 'Elke 5 minuten controleren we de uptime van al je sites. Bij downtime krijg je direct een e-mail alert.',
     },
     {
-      q: 'Wat is het verschil met ManageWP?',
-      a: 'ManageWP rekent per site (€2/site). Wij rekenen een flat fee voor onbeperkt sites. Bij 25+ sites ben je goedkoper uit.',
+      q: 'Wat gebeurt er als mijn site offline gaat?',
+      a: 'Je ontvangt binnen enkele minuten een e-mail met alle details: welke site, wanneer het begon, en de foutmelding. Zodra de site weer online is, krijg je ook daarvan bericht.',
     },
     {
-      q: 'Hoe snel krijg ik alerts?',
-      a: 'Uptime checks draaien elke 5 minuten. Bij downtime krijg je binnen 1 minuut een alert via email of Slack.',
+      q: 'Krijg ik ook SSL certificaat waarschuwingen?',
+      a: 'Ja! We controleren dagelijks alle SSL certificaten. Je krijgt waarschuwingen op 30, 14, 7, 3 en 1 dag voor expiratie.',
     },
     {
-      q: 'Kan ik rapporten naar clients sturen?',
-      a: 'Ja! Genereer white-label PDF rapporten met jouw logo. Perfect voor maandelijkse client updates.',
+      q: 'Kan ik alerts uitzetten voor bepaalde sites?',
+      a: 'Ja, in je dashboard kun je per site of globaal instellen welke alerts je wilt ontvangen.',
     },
     {
-      q: 'Is er een free trial?',
-      a: 'Beter: een gratis plan. Monitor 3 sites gratis, voor altijd. Upgrade wanneer je wilt.',
+      q: 'Is er een gratis versie?',
+      a: 'Je kunt Webstability gratis uitproberen. Maak een account aan en start direct met monitoren.',
     },
   ]
 
@@ -43,7 +43,7 @@ const FAQ = () => {
           viewport={{ once: true }}
         >
           <h2 className={styles.title}>
-            <span className={styles.gradient}>Vragen?</span> Wij hebben antwoorden
+            Veelgestelde <span className={styles.gradient}>vragen</span>
           </h2>
         </motion.div>
         
