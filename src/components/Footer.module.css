@@ -69,3 +69,25 @@
     gap: var(--space-8);
   }
 }
+
+/* Trustpilot link in footer */
+.trustpilot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 229, 153, 0.1);
+  border: 1px solid rgba(0, 229, 153, 0.2);
+  border-radius: 100px;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.trustpilot:hover {
+  background: rgba(0, 229, 153, 0.2);
+  transform: translateY(-2px);
+}

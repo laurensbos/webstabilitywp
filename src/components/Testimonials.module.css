@@ -84,6 +84,14 @@
 
 .grid {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+/* Override if exists */
+.gridOverride {
+  display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
@@ -182,6 +190,14 @@
 
 @media (max-width: 900px) {
   .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+/* Override if exists */
+.gridOverride {
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }

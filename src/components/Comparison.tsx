@@ -19,7 +19,7 @@ export default function Comparison() {
           <h2 className={styles.title}>
             Handmatig vs <span className={styles.gradient}>Webstability</span>
           </h2>
-          <p className={styles.subtitle}>Zie waarom 500+ agencies zijn overgestapt</p>
+          <p className={styles.subtitle}>Bespaar uren per week met geautomatiseerde monitoring</p>
         </div>
 
         <div className={styles.table}>

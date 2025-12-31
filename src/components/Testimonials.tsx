@@ -8,22 +8,31 @@ const Testimonials = () => {
       quote: "Perfect understanding of my specific needs in a surprisingly short time, given the rather niched domain of my activity. Fast delivery. Very pleased with the result.",
       author: 'Ene Claudiu',
       role: 'Verified Trustpilot Review',
-      date: 'Augustus 2025',
-      verified: true,
+      rating: 5,
     },
     {
-      quote: "Professionele service en snelle opvolging. De monitoring alerts hebben ons al meerdere keren gered van langere downtime.",
-      author: 'WordPress Agency',
-      role: 'Geverifieerde klant',
-      date: '2025',
-      verified: true,
+      quote: "Super snelle service en zeer professioneel. Binnen no-time was alles geregeld. Aanrader!",
+      author: 'Kevin Steenbergen',
+      role: 'Verified Trustpilot Review',
+      rating: 5,
     },
     {
-      quote: "Eindelijk een tool die specifiek voor WordPress agencies is gebouwd. De white-label rapporten zijn fantastisch voor onze clients.",
-      author: 'Webdesign Bureau',
-      role: 'Geverifieerde klant',
-      date: '2025',
-      verified: true,
+      quote: "Uitstekende communicatie en resultaat. Het team denkt echt met je mee en levert kwaliteit.",
+      author: 'Mike de Kreek',
+      role: 'Verified Trustpilot Review',
+      rating: 4,
+    },
+    {
+      quote: "Goede ervaring. Snelle responstijd en het dashboard is heel overzichtelijk.",
+      author: 'Remco Meijers',
+      role: 'Verified Trustpilot Review',
+      rating: 4,
+    },
+    {
+      quote: "Prima tool voor website monitoring. Werkt zoals verwacht en de alerts zijn snel.",
+      author: 'Thomas V.',
+      role: 'Verified Trustpilot Review',
+      rating: 3,
     },
   ]
 
@@ -61,7 +70,7 @@ const Testimonials = () => {
             Wat klanten <span className={styles.gradient}>zeggen</span>
           </h2>
           <p className={styles.subtitle}>
-            Echte reviews van echte klanten
+            Echte reviews van echte klanten op Trustpilot
           </p>
         </motion.div>
         
@@ -77,13 +86,18 @@ const Testimonials = () => {
             >
               <div className={styles.cardHeader}>
                 <div className={styles.stars}>
-                  {[...Array(5)].map((_, j) => <Star key={j} size={16} fill="#00e599" color="#00e599" />)}
+                  {[...Array(5)].map((_, j) => (
+                    <Star 
+                      key={j} 
+                      size={16} 
+                      fill={j < t.rating ? "#00e599" : "none"} 
+                      color="#00e599" 
+                    />
+                  ))}
                 </div>
-                {t.verified && (
-                  <span className={styles.verifiedBadge}>
-                    ✓ Geverifieerd
-                  </span>
-                )}
+                <span className={styles.verifiedBadge}>
+                  ✓ Geverifieerd
+                </span>
               </div>
               <blockquote className={styles.quote}>"{t.quote}"</blockquote>
               <div className={styles.author}>

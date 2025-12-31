@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowRight, Play } from 'lucide-react'
+import { ArrowRight, Play, Star, ExternalLink } from 'lucide-react'
 import { useState } from 'react'
 import styles from './VideoHero.module.css'
 import DashboardPreview from './DashboardPreview'
@@ -56,26 +56,29 @@ const VideoHero = () => {
           </button>
         </motion.div>
 
+        {/* Trustpilot Badge */}
         <motion.div 
-          className={styles.stats}
+          className={styles.trustpilot}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <div className={styles.stat}>
-            <span className={styles.statValue}>500+</span>
-            <span className={styles.statLabel}>Agencies</span>
-          </div>
-          <div className={styles.statDivider} />
-          <div className={styles.stat}>
-            <span className={styles.statValue}>50k+</span>
-            <span className={styles.statLabel}>Websites gemonitord</span>
-          </div>
-          <div className={styles.statDivider} />
-          <div className={styles.stat}>
-            <span className={styles.statValue}>99.9%</span>
-            <span className={styles.statLabel}>Uptime</span>
-          </div>
+          <a 
+            href="https://www.trustpilot.com/review/webstability.nl" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={styles.trustpilotLink}
+          >
+            <div className={styles.trustpilotStars}>
+              <Star size={18} fill="#00e599" color="#00e599" />
+              <Star size={18} fill="#00e599" color="#00e599" />
+              <Star size={18} fill="#00e599" color="#00e599" />
+              <Star size={18} fill="#00e599" color="#00e599" />
+              <Star size={18} fill="none" color="#00e599" strokeWidth={1.5} />
+            </div>
+            <span className={styles.trustpilotScore}>4.1/5 op Trustpilot</span>
+            <ExternalLink size={14} />
+          </a>
         </motion.div>
 
         {/* Dashboard Preview */}

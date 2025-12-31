@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion'
-import { Shield, Lock, Server, Award } from 'lucide-react'
+import { Shield, Lock, Server, Zap } from 'lucide-react'
 import styles from './TrustBadges.module.css'
 
 const TrustBadges = () => {
   const badges = [
     { icon: Shield, label: 'GDPR Compliant' },
     { icon: Lock, label: 'SSL Encrypted' },
-    { icon: Server, label: '99.9% Uptime SLA' },
-    { icon: Award, label: 'SOC 2 Type II' },
+    { icon: Server, label: 'EU Data Centers' },
+    { icon: Zap, label: '< 1 min Alert Time' },
   ]
 
   return (
