@@ -75,6 +75,25 @@
   background: #00cc88;
 }
 
+.dashboardBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  background: rgba(0, 229, 153, 0.1);
+  border: 1px solid #00e599;
+  color: #00e599;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.dashboardBtn:hover {
+  background: #00e599;
+  color: #000;
+}
+
 .mobileToggle {
   display: none;
   background: none;

@@ -1,8 +1,13 @@
+'use client'
+
 import { useState, useEffect } from 'react'
-import { Menu, X } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+import { Menu, X, LayoutDashboard } from 'lucide-react'
 import styles from './Header.module.css'
 
 const Header = () => {
+  const { data: session } = useSession()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -15,7 +20,7 @@ const Header = () => {
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
-        <a href="#" className={styles.logo}>webstability</a>
+        <Link href="/" className={styles.logo}>webstability</Link>
 
         <nav className={styles.nav}>
           <a href="#features">Features</a>
@@ -24,8 +29,17 @@ const Header = () => {
         </nav>
 
         <div className={styles.actions}>
-          <a href="#" className={styles.login}>Log in</a>
-          <a href="#pricing" className={styles.cta}>Start Free</a>
+          {session ? (
+            <Link href="/dashboard" className={styles.dashboardBtn}>
+              <LayoutDashboard size={18} />
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className={styles.login}>Inloggen</Link>
+              <Link href="/register" className={styles.cta}>Gratis starten</Link>
+            </>
+          )}
         </div>
 
         <button 
@@ -41,7 +55,18 @@ const Header = () => {
           <a href="#features" onClick={() => setMobileOpen(false)}>Features</a>
           <a href="#pricing" onClick={() => setMobileOpen(false)}>Pricing</a>
           <a href="#faq" onClick={() => setMobileOpen(false)}>FAQ</a>
-          <a href="#pricing" className={styles.cta} onClick={() => setMobileOpen(false)}>Start Free</a>
+          {session ? (
+            <Link href="/dashboard" className={styles.cta} onClick={() => setMobileOpen(false)}>
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" onClick={() => setMobileOpen(false)}>Inloggen</Link>
+              <Link href="/register" className={styles.cta} onClick={() => setMobileOpen(false)}>
+                Gratis starten
+              </Link>
+            </>
+          )}
         </div>
       )}
     </header>
