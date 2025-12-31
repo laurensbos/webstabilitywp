@@ -34,6 +34,31 @@
   background-size: 60px 60px;
 }
 
+/* Floating orbs for dynamic feel */
+.floatingOrb1 {
+  position: absolute;
+  top: 20%;
+  right: 15%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(0, 229, 153, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.floatingOrb2 {
+  position: absolute;
+  bottom: 20%;
+  left: 10%;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(0, 229, 153, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(50px);
+  pointer-events: none;
+}
+
 .content {
   display: flex;
   gap: 4rem;
@@ -67,6 +92,12 @@
   text-decoration: none;
   display: inline-block;
   margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.logo:hover {
+  color: #00e599;
+  transform: scale(1.05);
 }
 
 .title {
@@ -98,6 +129,7 @@
   border-radius: 12px;
   color: #f87171;
   font-size: 0.875rem;
+  overflow: hidden;
 }
 
 .inputGroup {
@@ -120,13 +152,14 @@
 
 .forgotLink {
   font-size: 0.8rem;
-  color: #fff;
+  color: #00e599;
   text-decoration: none;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
 }
 
 .forgotLink:hover {
-  opacity: 0.8;
+  color: #fff;
+  text-decoration: underline;
 }
 
 .inputWrapper {
@@ -140,6 +173,11 @@
   left: 1rem;
   color: rgba(255, 255, 255, 0.3);
   pointer-events: none;
+  transition: color 0.2s;
+}
+
+.inputWrapper:focus-within .inputIcon {
+  color: #00e599;
 }
 
 .inputWrapper input {
@@ -150,13 +188,14 @@
   border-radius: 12px;
   color: #fff;
   font-size: 0.95rem;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
 }
 
 .inputWrapper input:focus {
   outline: none;
-  border-color: #fff;
+  border-color: #00e599;
   background: rgba(0, 229, 153, 0.05);
+  box-shadow: 0 0 0 4px rgba(0, 229, 153, 0.1);
 }
 
 .inputWrapper input::placeholder {
@@ -174,11 +213,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s;
+  transition: all 0.2s;
 }
 
 .eyeButton:hover {
-  color: rgba(255, 255, 255, 0.6);
+  color: #00e599;
+  transform: scale(1.1);
 }
 
 .submitBtn {
@@ -188,20 +228,20 @@
   gap: 0.5rem;
   width: 100%;
   padding: 0.875rem 1.5rem;
-  background: #00e599;
+  background: linear-gradient(135deg, #00e599 0%, #00cc88 100%);
   color: #000;
   font-size: 0.95rem;
   font-weight: 600;
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
   margin-top: 0.5rem;
+  box-shadow: 0 4px 15px rgba(0, 229, 153, 0.3);
 }
 
 .submitBtn:hover:not(:disabled) {
-  background: #00cc88;
-  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 229, 153, 0.4);
 }
 
 .submitBtn:disabled {
@@ -226,12 +266,14 @@
 }
 
 .footer a {
-  color: #fff;
+  color: #00e599;
   text-decoration: none;
   font-weight: 500;
+  transition: all 0.2s;
 }
 
 .footer a:hover {
+  color: #fff;
   text-decoration: underline;
 }
 
@@ -240,14 +282,22 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
+  max-width: 380px;
 }
 
-.testimonial {
+.testimonialWrapper {
   background: rgba(15, 20, 18, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 2rem;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonial {
+  flex: 1;
 }
 
 .stars {
@@ -257,8 +307,8 @@
 }
 
 .testimonial blockquote {
-  font-size: 1.1rem;
-  line-height: 1.6;
+  font-size: 1.05rem;
+  line-height: 1.7;
   color: rgba(255, 255, 255, 0.9);
   margin: 0 0 1.5rem 0;
   font-style: italic;
@@ -294,6 +344,35 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
+/* Dots indicator */
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.dot:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.activeDot {
+  background: #00e599;
+  width: 24px;
+  border-radius: 4px;
+}
+
 .trustpilot {
   display: flex;
   align-items: center;
@@ -302,6 +381,13 @@
   background: rgba(15, 20, 18, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.trustpilot:hover {
+  border-color: rgba(0, 229, 153, 0.3);
+  background: rgba(0, 229, 153, 0.05);
 }
 
 .trustpilotScore {
@@ -324,6 +410,11 @@
 .trustpilotText {
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.6);
+  flex: 1;
+}
+
+.externalIcon {
+  color: rgba(255, 255, 255, 0.4);
 }
 
 @media (max-width: 768px) {
@@ -337,5 +428,11 @@
   
   .formWrapper {
     padding: 2rem;
+    max-width: 100%;
+  }
+  
+  .floatingOrb1,
+  .floatingOrb2 {
+    opacity: 0.5;
   }
 }

@@ -1,28 +1,85 @@
 .hero {
+  position: relative;
   min-height: 100vh;
-  padding: 140px 0 80px;
-  background: #0a0f0d;
+  display: flex;
+  align-items: center;
+  padding: 8rem 0 4rem;
   overflow: hidden;
+  background: linear-gradient(180deg, #0a0f0d 0%, #0d1210 100%);
+}
+
+/* Animated background effects */
+.backgroundEffects {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.glowOrb1 {
+  position: absolute;
+  top: 10%;
+  left: 20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0, 229, 153, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(80px);
+}
+
+.glowOrb2 {
+  position: absolute;
+  bottom: 20%;
+  right: 10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(0, 229, 153, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+.floatingShape1 {
+  position: absolute;
+  top: 25%;
+  right: 15%;
+  width: 100px;
+  height: 100px;
+  border: 1px solid rgba(0, 229, 153, 0.2);
+  border-radius: 20px;
+  transform: rotate(45deg);
+}
+
+.floatingShape2 {
+  position: absolute;
+  bottom: 30%;
+  left: 10%;
+  width: 60px;
+  height: 60px;
+  border: 1px solid rgba(0, 229, 153, 0.15);
+  border-radius: 50%;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: 0 1.5rem;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
   background: rgba(0, 229, 153, 0.1);
-  border: 1px solid rgba(0, 229, 153, 0.3);
-  border-radius: var(--radius-full);
-  font-size: var(--text-sm);
+  border: 1px solid rgba(0, 229, 153, 0.2);
+  border-radius: 100px;
+  font-size: 0.875rem;
   color: #00e599;
-  margin-bottom: var(--space-8);
+  margin-bottom: 1.5rem;
+  cursor: default;
 }
 
 .badgeDot {
@@ -30,20 +87,15 @@
   height: 8px;
   background: #00e599;
   border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  box-shadow: 0 0 10px #00e599;
 }
 
 .title {
-  font-size: clamp(3.5rem, 10vw, 7rem);
-  font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  margin-bottom: var(--space-6);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.02em;
 }
 
 .line1 {
@@ -53,228 +105,101 @@
 
 .line2 {
   display: block;
-  background: linear-gradient(90deg, #00e599 0%, #36d399 25%, #a3e635 60%, #fbbf24 100%);
+  background: linear-gradient(135deg, #00e599, #00cc88);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradientShift 8s ease infinite;
-  background-size: 200% 100%;
-}
-
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
 }
 
 .subtitle {
-  font-size: var(--text-xl);
+  font-size: 1.2rem;
   color: rgba(255, 255, 255, 0.6);
   max-width: 600px;
-  margin: 0 auto var(--space-8);
+  margin: 0 auto 2rem;
   line-height: 1.6;
 }
 
 .actions {
   display: flex;
+  gap: 1rem;
   justify-content: center;
-  gap: var(--space-4);
-  margin-bottom: var(--space-12);
+  flex-wrap: wrap;
 }
 
 .cta {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-4) var(--space-8);
-  background: #00e599;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #00e599 0%, #00cc88 100%);
   color: #000;
-  font-size: var(--text-base);
+  font-size: 1rem;
   font-weight: 600;
-  border-radius: var(--radius-lg);
-  transition: all 0.2s ease;
+  border-radius: 12px;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0, 229, 153, 0.4);
+  transition: box-shadow 0.3s ease;
 }
 
 .cta:hover {
-  background: #00cc88;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 40px rgba(0, 229, 153, 0.3);
+  box-shadow: 0 6px 30px rgba(0, 229, 153, 0.5);
 }
 
 .videoBtn {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-4) var(--space-6);
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  font-size: var(--text-base);
-  font-weight: 500;
-  border-radius: var(--radius-lg);
-  transition: all 0.2s ease;
-}
-
-.videoBtn:hover {
-  border-color: rgba(255, 255, 255, 0.4);
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
   background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.stats {
+.playIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Trustpilot */
+.trustpilot {
+  margin-top: 2.5rem;
   display: flex;
   justify-content: center;
+}
+
+.trustpilotLink {
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-8);
-  margin-bottom: var(--space-16);
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(0, 229, 153, 0.08);
+  border: 1px solid rgba(0, 229, 153, 0.15);
+  border-radius: 100px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
-.stat {
-  text-align: center;
+.trustpilotLink:hover {
+  background: rgba(0, 229, 153, 0.12);
+  border-color: rgba(0, 229, 153, 0.3);
 }
 
-.statValue {
-  display: block;
-  font-size: var(--text-3xl);
-  font-weight: 700;
+.trustpilotStars {
+  display: flex;
+  gap: 2px;
+}
+
+.trustpilotScore {
+  font-weight: 500;
   color: #fff;
-}
-
-.statLabel {
-  font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.statDivider {
-  width: 1px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.preview {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.browser {
-  background: #111;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.5);
-}
-
-.browserHeader {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-3) var(--space-4);
-  background: #1a1a1a;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.dots {
-  display: flex;
-  gap: 6px;
-}
-
-.dots span {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #333;
-}
-
-.dots span:nth-child(1) { background: #ff5f57; }
-.dots span:nth-child(2) { background: #febc2e; }
-.dots span:nth-child(3) { background: #28c840; }
-
-.url {
-  flex: 1;
-  padding: var(--space-2) var(--space-4);
-  background: #0a0a0a;
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.5);
-  text-align: center;
-}
-
-.browserContent {
-  padding: var(--space-6);
-}
-
-.dashboardMock {
-  display: flex;
-  gap: var(--space-4);
-  min-height: 300px;
-}
-
-.sidebar {
-  width: 60px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.sidebarItem {
-  height: 40px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-md);
-}
-
-.main {
-  flex: 1;
-}
-
-.statsRow {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-4);
-  margin-bottom: var(--space-6);
-}
-
-.statCard {
-  padding: var(--space-4);
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-lg);
-  text-align: center;
-}
-
-.statCardValue {
-  font-size: var(--text-2xl);
-  font-weight: 700;
-  color: #00e599;
-}
-
-.statCardLabel {
-  font-size: var(--text-xs);
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.chart {
-  height: 120px;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
-  position: relative;
-  overflow: hidden;
-}
-
-.chartLine {
-  position: absolute;
-  bottom: 20%;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #00e599, #00e599);
-  animation: chartDraw 2s ease-out forwards;
-}
-
-@keyframes chartDraw {
-  from { 
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
 }
 
 /* Modal */
@@ -286,7 +211,7 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: var(--space-6);
+  padding: 2rem;
 }
 
 .modalContent {
@@ -295,101 +220,70 @@
   max-width: 900px;
   aspect-ratio: 16/9;
   background: #111;
-  border-radius: var(--radius-xl);
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 .modalClose {
   position: absolute;
-  top: -40px;
-  right: 0;
-  background: none;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
   border: none;
+  border-radius: 50%;
   color: #fff;
-  font-size: 32px;
+  font-size: 1.5rem;
   cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+}
+
+.modalClose:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .videoPlaceholder {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-4);
+  height: 100%;
   color: rgba(255, 255, 255, 0.5);
+}
+
+.videoPlaceholder svg {
+  opacity: 0.5;
+  margin-bottom: 1rem;
 }
 
 @media (max-width: 768px) {
   .hero {
-    padding: 120px 0 60px;
+    padding: 6rem 0 3rem;
+    min-height: auto;
   }
   
   .title {
-    font-size: clamp(2.5rem, 12vw, 4rem);
+    font-size: 2.25rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+    padding: 0 1rem;
   }
   
   .actions {
     flex-direction: column;
-    align-items: center;
+    padding: 0 1rem;
   }
   
-  .stats {
-    flex-direction: column;
-    gap: var(--space-4);
+  .cta, .videoBtn {
+    width: 100%;
+    justify-content: center;
   }
   
-  .statDivider {
+  .floatingShape1, .floatingShape2 {
     display: none;
   }
-  
-  .dashboardMock {
-    flex-direction: column;
-  }
-  
-  .sidebar {
-    flex-direction: row;
-    width: 100%;
-  }
-  
-  .statsRow {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Trustpilot Badge */
-.trustpilot {
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
-}
-
-.trustpilotLink {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1.25rem;
-  background: rgba(0, 229, 153, 0.1);
-  border: 1px solid rgba(0, 229, 153, 0.2);
-  border-radius: 100px;
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.trustpilotLink:hover {
-  background: rgba(0, 229, 153, 0.15);
-  border-color: rgba(0, 229, 153, 0.4);
-  transform: translateY(-2px);
-}
-
-.trustpilotStars {
-  display: flex;
-  gap: 2px;
-}
-
-.trustpilotScore {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--text-primary);
 }
