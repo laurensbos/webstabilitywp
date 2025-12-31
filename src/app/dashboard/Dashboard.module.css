@@ -1,0 +1,223 @@
+.container {
+  min-height: 100vh;
+  background: #0a0f0d;
+  color: #fff;
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo {
+  color: #00e599;
+}
+
+.backLink {
+  color: #888;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #00e599;
+}
+
+.addSection {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.addSection h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #00e599;
+}
+
+.form {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.input {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.875rem;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #00e599;
+}
+
+.input::placeholder {
+  color: #666;
+}
+
+.addButton {
+  padding: 0.75rem 1.5rem;
+  background: #00e599;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.addButton:hover {
+  background: #00cc88;
+  transform: translateY(-1px);
+}
+
+.sitesSection h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.loading,
+.empty {
+  text-align: center;
+  color: #666;
+  padding: 3rem;
+}
+
+.sitesList {
+  display: grid;
+  gap: 1rem;
+}
+
+.siteCard {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 1.5rem;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  transition: border-color 0.2s;
+}
+
+.siteCard:hover {
+  border-color: rgba(0, 229, 153, 0.3);
+}
+
+.siteName {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.siteUrl {
+  font-size: 0.8rem;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.siteUrl:hover {
+  color: #00e599;
+}
+
+.siteStatus {
+  min-width: 120px;
+}
+
+.status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+.status.up {
+  background: rgba(0, 229, 153, 0.15);
+  color: #00e599;
+}
+
+.status.down {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.siteActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.checkButton {
+  padding: 0.5rem 1rem;
+  background: rgba(0, 229, 153, 0.1);
+  color: #00e599;
+  border: 1px solid rgba(0, 229, 153, 0.3);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.checkButton:hover:not(:disabled) {
+  background: rgba(0, 229, 153, 0.2);
+}
+
+.checkButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.deleteButton {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: #888;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.deleteButton:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+@media (max-width: 768px) {
+  .siteCard {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .form {
+    flex-direction: column;
+  }
+
+  .siteActions {
+    justify-content: flex-start;
+  }
+}
