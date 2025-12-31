@@ -247,8 +247,8 @@ export default function Dashboard() {
   const navItems = [
     { href: '/dashboard', icon: BarChart3, label: 'Dashboard', active: true },
     { href: '/dashboard', icon: Globe, label: 'Monitors', active: false },
-    { href: '/dashboard', icon: Bell, label: 'Alerts', active: false, badge: stats.down > 0 ? stats.down : undefined },
-    { href: '/dashboard', icon: Settings, label: 'Instellingen', active: false },
+    { href: '/dashboard/alerts', icon: Bell, label: 'Alerts', active: false, badge: stats.down > 0 ? stats.down : undefined },
+    { href: '/dashboard/settings', icon: Settings, label: 'Instellingen', active: false },
   ];
 
   // Show loading state while checking session

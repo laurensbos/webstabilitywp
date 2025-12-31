@@ -9,6 +9,7 @@ export interface Site {
   id: string
   url: string
   name: string
+  userId?: string
   createdAt: number
   lastCheck?: number
   status?: 'up' | 'down' | 'unknown'
@@ -16,6 +17,7 @@ export interface Site {
   responseTime?: number
   performanceScore?: number
   sslExpiry?: string
+  sslValid?: string
 }
 
 export interface CheckResult {
@@ -40,6 +42,7 @@ export async function getSites(): Promise<Site[]> {
     id: site.id as string,
     url: site.url as string,
     name: site.name as string,
+    userId: site.userId as string | undefined,
     createdAt: site.createdAt as number,
     lastCheck: site.lastCheck as number | undefined,
     status: site.status as 'up' | 'down' | 'unknown' | undefined,
@@ -47,6 +50,7 @@ export async function getSites(): Promise<Site[]> {
     responseTime: site.responseTime as number | undefined,
     performanceScore: site.performanceScore as number | undefined,
     sslExpiry: site.sslExpiry as string | undefined,
+    sslValid: site.sslValid as string | undefined,
   }))
 }
 
@@ -57,6 +61,7 @@ export async function getSite(id: string): Promise<Site | null> {
     id: site.id as string,
     url: site.url as string,
     name: site.name as string,
+    userId: site.userId as string | undefined,
     createdAt: site.createdAt as number,
     lastCheck: site.lastCheck as number | undefined,
     status: site.status as 'up' | 'down' | 'unknown' | undefined,
@@ -64,15 +69,17 @@ export async function getSite(id: string): Promise<Site | null> {
     responseTime: site.responseTime as number | undefined,
     performanceScore: site.performanceScore as number | undefined,
     sslExpiry: site.sslExpiry as string | undefined,
+    sslValid: site.sslValid as string | undefined,
   }
 }
 
-export async function createSite(url: string, name: string): Promise<Site> {
+export async function createSite(url: string, name: string, userId?: string): Promise<Site> {
   const id = crypto.randomUUID()
   const site: Site = {
     id,
     url: url.startsWith('http') ? url : `https://${url}`,
     name,
+    userId,
     createdAt: Date.now(),
     status: 'unknown',
   }
@@ -84,6 +91,7 @@ export async function createSite(url: string, name: string): Promise<Site> {
     createdAt: site.createdAt,
     status: site.status || 'unknown',
   }
+  if (userId) siteData.userId = userId
   
   await redis.hset(`site:${id}`, siteData)
   await redis.sadd('sites', id)
@@ -95,6 +103,7 @@ export async function deleteSite(id: string): Promise<void> {
   await redis.del(`site:${id}`)
   await redis.srem('sites', id)
   await redis.del(`checks:${id}`)
+  await redis.del(`alerts:${id}`)
 }
 
 export async function updateSite(id: string, data: Partial<Site>): Promise<void> {
@@ -129,7 +138,7 @@ export async function getChecks(siteId: string, limit = 20): Promise<CheckResult
 // Calculate uptime percentage from last N checks
 export async function calculateUptime(siteId: string): Promise<number> {
   const checks = await getChecks(siteId, 100)
-  if (!checks.length) return 0
+  if (!checks.length) return 100
   
   const upCount = checks.filter(c => c.status === 'up').length
   return Math.round((upCount / checks.length) * 1000) / 10
