@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server'
-import { getSites, saveCheck, updateSite, calculateUptime, CheckResult } from '@/lib/redis'
+import { NextRequest, NextResponse } from 'next/server'
+import { getSites, saveCheck, updateSite, calculateUptime, CheckResult, getSite } from '@/lib/redis'
 
 // Check a single site
 async function checkSite(url: string): Promise<{ status: 'up' | 'down'; responseTime: number; statusCode?: number; error?: string }> {
@@ -31,6 +31,47 @@ async function checkSite(url: string): Promise<{ status: 'up' | 'down'; response
       responseTime: Date.now() - start,
       error: error instanceof Error ? error.message : 'Unknown error',
     }
+  }
+}
+
+// POST /api/check - Check a single site manually
+export async function POST(request: NextRequest) {
+  try {
+    const { siteId, url } = await request.json()
+    
+    if (!url) {
+      return NextResponse.json({ error: 'URL is required' }, { status: 400 })
+    }
+    
+    const result = await checkSite(url)
+    
+    const checkResult: CheckResult = {
+      siteId: siteId || 'manual',
+      timestamp: Date.now(),
+      status: result.status,
+      responseTime: result.responseTime,
+      statusCode: result.statusCode,
+      error: result.error,
+    }
+    
+    // If we have a siteId, save the check result
+    if (siteId) {
+      await saveCheck(checkResult)
+      
+      // Update uptime percentage
+      const uptime = await calculateUptime(siteId)
+      await updateSite(siteId, { uptime })
+    }
+    
+    return NextResponse.json({
+      status: result.status,
+      responseTime: result.responseTime,
+      statusCode: result.statusCode,
+      error: result.error,
+    })
+  } catch (error) {
+    console.error('Check failed:', error)
+    return NextResponse.json({ error: 'Check failed' }, { status: 500 })
   }
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -24,7 +24,9 @@ import {
   LogOut,
   User,
   ChevronDown,
-  Zap
+  Zap,
+  Shield,
+  Activity
 } from 'lucide-react';
 import styles from './Dashboard.module.css';
 
@@ -46,12 +48,15 @@ interface CheckResult {
   statusCode?: number;
 }
 
-const generateMockHistory = () => {
-  return Array.from({ length: 30 }, () => Math.random() > 0.05 ? 'up' : 'down');
-};
+interface HistoryCheck {
+  siteId: string;
+  timestamp: number;
+  status: 'up' | 'down';
+  responseTime: number;
+}
 
 export default function Dashboard() {
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const [sites, setSites] = useState<Site[]>([]);
   const [loading, setLoading] = useState(true);
   const [newUrl, setNewUrl] = useState('');
@@ -61,16 +66,13 @@ export default function Dashboard() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'up' | 'down'>('all');
-  const [uptimeHistory] = useState<Record<string, string[]>>({});
+  const [uptimeHistory, setUptimeHistory] = useState<Record<string, HistoryCheck[]>>({});
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [addError, setAddError] = useState('');
 
-  useEffect(() => {
-    fetchSites();
-  }, []);
-
-  const fetchSites = async () => {
+  const fetchSites = useCallback(async () => {
     try {
       const res = await fetch('/api/sites');
       const data = await res.json();
@@ -80,11 +82,38 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  const fetchHistory = useCallback(async (siteId: string) => {
+    try {
+      const res = await fetch(`/api/checks?siteId=${siteId}&limit=30`);
+      const data = await res.json();
+      setUptimeHistory(prev => ({
+        ...prev,
+        [siteId]: data.checks || []
+      }));
+    } catch (error) {
+      console.error('Failed to fetch history:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchSites();
+  }, [fetchSites]);
+
+  // Fetch history for all sites when sites change
+  useEffect(() => {
+    sites.forEach(site => {
+      if (!uptimeHistory[site.id]) {
+        fetchHistory(site.id);
+      }
+    });
+  }, [sites, uptimeHistory, fetchHistory]);
 
   const addSite = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newUrl) return;
+    setAddError('');
 
     try {
       const res = await fetch('/api/sites', {
@@ -94,13 +123,22 @@ export default function Dashboard() {
       });
       
       if (res.ok) {
+        const data = await res.json();
         setNewUrl('');
         setNewName('');
         setShowAddForm(false);
         fetchSites();
+        // Immediately check the new site
+        if (data.site?.id) {
+          setTimeout(() => checkSite(data.site), 500);
+        }
+      } else {
+        const error = await res.json();
+        setAddError(error.message || 'Kon site niet toevoegen');
       }
     } catch (error) {
       console.error('Failed to add site:', error);
+      setAddError('Netwerkfout bij toevoegen');
     }
   };
 
@@ -110,7 +148,12 @@ export default function Dashboard() {
     try {
       const res = await fetch(`/api/sites?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
-        fetchSites();
+        setSites(prev => prev.filter(s => s.id !== id));
+        setUptimeHistory(prev => {
+          const newHistory = { ...prev };
+          delete newHistory[id];
+          return newHistory;
+        });
       }
     } catch (error) {
       console.error('Failed to delete site:', error);
@@ -135,7 +178,9 @@ export default function Dashboard() {
           statusCode: data.statusCode,
         },
       }));
+      // Refresh site data and history
       fetchSites();
+      fetchHistory(site.id);
     } catch (error) {
       console.error('Check failed:', error);
     } finally {
@@ -166,7 +211,18 @@ export default function Dashboard() {
   };
 
   const getUptime = (site: Site) => {
-    return site.uptime || 99.9 + Math.random() * 0.1;
+    // Use real uptime from database, default to 100 if no data yet
+    return site.uptime ?? 100;
+  };
+
+  const getHistoryData = (siteId: string): ('up' | 'down')[] => {
+    const history = uptimeHistory[siteId] || [];
+    if (history.length === 0) {
+      // No history yet - show placeholder
+      return [];
+    }
+    // Return last 30 status values
+    return history.slice(0, 30).map(h => h.status);
   };
 
   const filteredSites = sites.filter(site => {
@@ -182,18 +238,35 @@ export default function Dashboard() {
     down: sites.filter(s => getStatus(s) === 'down').length,
     avgUptime: sites.length > 0 
       ? (sites.reduce((acc, s) => acc + getUptime(s), 0) / sites.length).toFixed(2)
-      : '0',
+      : '100.00',
     avgResponseTime: sites.length > 0
-      ? Math.round(sites.reduce((acc, s) => acc + (getResponseTime(s) || 0), 0) / sites.length)
+      ? Math.round(sites.filter(s => getResponseTime(s)).reduce((acc, s) => acc + (getResponseTime(s) || 0), 0) / (sites.filter(s => getResponseTime(s)).length || 1))
       : 0,
   };
 
   const navItems = [
     { href: '/dashboard', icon: BarChart3, label: 'Dashboard', active: true },
     { href: '/dashboard', icon: Globe, label: 'Monitors', active: false },
-    { href: '/dashboard', icon: Bell, label: 'Alerts', active: false },
+    { href: '/dashboard', icon: Bell, label: 'Alerts', active: false, badge: stats.down > 0 ? stats.down : undefined },
     { href: '/dashboard', icon: Settings, label: 'Instellingen', active: false },
   ];
+
+  // Show loading state while checking session
+  if (sessionStatus === 'loading') {
+    return (
+      <div className={styles.dashboard}>
+        <div className={styles.loadingScreen}>
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          >
+            <RefreshCw size={40} className={styles.loadingIcon} />
+          </motion.div>
+          <p>Laden...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.dashboard}>
@@ -248,6 +321,9 @@ export default function Dashboard() {
                   >
                     <item.icon size={16} />
                     {item.label}
+                    {item.badge && (
+                      <span className={styles.badge}>{item.badge}</span>
+                    )}
                   </Link>
                 </motion.div>
               ))}
@@ -272,7 +348,7 @@ export default function Dashboard() {
                 whileHover={{ scale: 1.02 }}
               >
                 <div className={styles.userAvatar}>
-                  {session?.user?.name?.charAt(0) || 'U'}
+                  {session?.user?.name?.charAt(0) || session?.user?.email?.charAt(0) || 'U'}
                 </div>
                 <motion.div
                   animate={{ rotate: userMenuOpen ? 180 : 0 }}
@@ -349,6 +425,9 @@ export default function Dashboard() {
                   >
                     <item.icon size={18} />
                     {item.label}
+                    {item.badge && (
+                      <span className={styles.badge}>{item.badge}</span>
+                    )}
                   </Link>
                 </motion.div>
               ))}
@@ -380,17 +459,19 @@ export default function Dashboard() {
           >
             <div>
               <h1 className={styles.pageTitle}>Dashboard</h1>
-              <p className={styles.pageSubtitle}>Monitor je WordPress sites in realtime</p>
+              <p className={styles.pageSubtitle}>
+                {session?.user?.name ? `Welkom terug, ${session.user.name.split(' ')[0]}` : 'Monitor je WordPress sites in realtime'}
+              </p>
             </div>
             <motion.button 
               onClick={checkAllSites} 
               className={styles.refreshButton}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              disabled={isRefreshing}
+              disabled={isRefreshing || sites.length === 0}
             >
               <RefreshCw size={16} className={isRefreshing ? styles.spinner : ''} />
-              {isRefreshing ? 'Verversen...' : 'Alles verversen'}
+              {isRefreshing ? 'Verversen...' : 'Alles checken'}
             </motion.button>
           </motion.div>
 
@@ -402,11 +483,11 @@ export default function Dashboard() {
             transition={{ delay: 0.2 }}
           >
             {[
-              { icon: Globe, value: stats.total, label: 'Totaal monitors', type: '' },
-              { icon: CheckCircle2, value: stats.up, label: 'Online', type: 'up' },
-              { icon: XCircle, value: stats.down, label: 'Offline', type: 'down' },
-              { icon: TrendingUp, value: `${stats.avgUptime}%`, label: 'Gem. uptime', type: '' },
-              { icon: Zap, value: `${stats.avgResponseTime}ms`, label: 'Gem. responstijd', type: '' },
+              { icon: Globe, value: stats.total, label: 'Totaal monitors', type: '', color: '' },
+              { icon: CheckCircle2, value: stats.up, label: 'Online', type: 'up', color: 'green' },
+              { icon: XCircle, value: stats.down, label: 'Offline', type: 'down', color: 'red' },
+              { icon: TrendingUp, value: `${stats.avgUptime}%`, label: 'Gem. uptime', type: '', color: '' },
+              { icon: Zap, value: stats.avgResponseTime > 0 ? `${stats.avgResponseTime}ms` : '—', label: 'Gem. responstijd', type: '', color: '' },
             ].map((stat, i) => (
               <motion.div 
                 key={stat.label}
@@ -416,7 +497,7 @@ export default function Dashboard() {
                 transition={{ delay: 0.2 + i * 0.05 }}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
               >
-                <div className={styles.statIconWrapper}>
+                <div className={`${styles.statIconWrapper} ${stat.color ? styles[stat.color] : ''}`}>
                   <stat.icon size={20} />
                 </div>
                 <div className={styles.statContent}>
@@ -462,19 +543,30 @@ export default function Dashboard() {
           {/* Sites List */}
           <section className={styles.sitesSection}>
             {loading ? (
-              <motion.div 
-                className={styles.loading}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                >
-                  <RefreshCw size={32} />
-                </motion.div>
-                <p>Monitors laden...</p>
-              </motion.div>
+              <div className={styles.skeletonList}>
+                {[1, 2, 3].map((i) => (
+                  <motion.div 
+                    key={i}
+                    className={styles.skeletonCard}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <div className={styles.skeletonHeader}>
+                      <div className={styles.skeletonCircle}></div>
+                      <div className={styles.skeletonLines}>
+                        <div className={styles.skeletonLine}></div>
+                        <div className={styles.skeletonLineShort}></div>
+                      </div>
+                    </div>
+                    <div className={styles.skeletonMetrics}>
+                      <div className={styles.skeletonMetric}></div>
+                      <div className={styles.skeletonMetric}></div>
+                      <div className={styles.skeletonMetric}></div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             ) : filteredSites.length === 0 && sites.length === 0 ? (
               <motion.div 
                 className={styles.emptyState}
@@ -493,16 +585,22 @@ export default function Dashboard() {
                 <h3>Nog geen monitors</h3>
                 <p>Voeg je eerste WordPress site toe om te beginnen met monitoren</p>
                 <div className={styles.emptySteps}>
-                  {['Voeg URL toe', 'Wij checken 24/7', 'Ontvang alerts'].map((step, i) => (
+                  {[
+                    { icon: Plus, text: 'Voeg URL toe' },
+                    { icon: Activity, text: 'Wij checken 24/7' },
+                    { icon: Bell, text: 'Ontvang alerts' }
+                  ].map((step, i) => (
                     <motion.div 
-                      key={step}
+                      key={step.text}
                       className={styles.emptyStep}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 + i * 0.1 }}
                     >
-                      <span className={styles.stepNumber}>{i + 1}</span>
-                      <span className={styles.stepText}>{step}</span>
+                      <span className={styles.stepIcon}>
+                        <step.icon size={16} />
+                      </span>
+                      <span className={styles.stepText}>{step.text}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -523,7 +621,7 @@ export default function Dashboard() {
                 animate={{ opacity: 1 }}
               >
                 <Search size={24} />
-                <p>Geen monitors gevonden</p>
+                <p>Geen monitors gevonden voor &quot;{searchQuery}&quot;</p>
               </motion.div>
             ) : (
               <div className={styles.sitesList}>
@@ -532,7 +630,7 @@ export default function Dashboard() {
                     const status = getStatus(site);
                     const responseTime = getResponseTime(site);
                     const uptime = getUptime(site);
-                    const history = uptimeHistory[site.id] || generateMockHistory();
+                    const history = getHistoryData(site.id);
                     
                     return (
                       <motion.div 
@@ -565,7 +663,7 @@ export default function Dashboard() {
                               rel="noopener noreferrer" 
                               className={styles.siteUrl}
                             >
-                              {site.url.replace(/^https?:\/\//, '')}
+                              {site.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
                               <ExternalLink size={12} />
                             </a>
                           </div>
@@ -594,7 +692,7 @@ export default function Dashboard() {
 
                         <div className={styles.siteMetrics}>
                           <div className={styles.metric}>
-                            <span className={styles.metricValue}>{uptime.toFixed(2)}%</span>
+                            <span className={styles.metricValue}>{uptime.toFixed(1)}%</span>
                             <span className={styles.metricLabel}>Uptime</span>
                           </div>
                           <div className={styles.metric}>
@@ -621,20 +719,26 @@ export default function Dashboard() {
 
                         <div className={styles.uptimeTimeline}>
                           <div className={styles.timelineHeader}>
-                            <span>Laatste 30 dagen</span>
-                            <span>{uptime.toFixed(2)}% uptime</span>
+                            <span>Laatste checks</span>
+                            <span>{uptime.toFixed(1)}% uptime</span>
                           </div>
                           <div className={styles.timelineBars}>
-                            {history.map((day, j) => (
-                              <motion.div 
-                                key={j} 
-                                className={`${styles.timelineBar} ${styles[day]}`}
-                                title={`Dag ${j + 1}: ${day === 'up' ? 'Online' : 'Offline'}`}
-                                initial={{ scaleY: 0 }}
-                                animate={{ scaleY: 1 }}
-                                transition={{ delay: i * 0.05 + j * 0.01 }}
-                              />
-                            ))}
+                            {history.length > 0 ? (
+                              history.map((day, j) => (
+                                <motion.div 
+                                  key={j} 
+                                  className={`${styles.timelineBar} ${styles[day]}`}
+                                  title={`Check ${j + 1}: ${day === 'up' ? 'Online' : 'Offline'}`}
+                                  initial={{ scaleY: 0 }}
+                                  animate={{ scaleY: 1 }}
+                                  transition={{ delay: i * 0.05 + j * 0.01 }}
+                                />
+                              ))
+                            ) : (
+                              <div className={styles.noHistory}>
+                                <span>Nog geen check history</span>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </motion.div>
@@ -696,6 +800,30 @@ export default function Dashboard() {
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                   />
+                </div>
+                {addError && (
+                  <motion.div 
+                    className={styles.formError}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    <AlertTriangle size={14} />
+                    {addError}
+                  </motion.div>
+                )}
+                <div className={styles.formFeatures}>
+                  <div className={styles.formFeature}>
+                    <CheckCircle2 size={14} />
+                    <span>Elke 5 minuten gemonitord</span>
+                  </div>
+                  <div className={styles.formFeature}>
+                    <Bell size={14} />
+                    <span>Instant email alerts</span>
+                  </div>
+                  <div className={styles.formFeature}>
+                    <Shield size={14} />
+                    <span>SSL & performance check</span>
+                  </div>
                 </div>
                 <div className={styles.modalActions}>
                   <motion.button 
