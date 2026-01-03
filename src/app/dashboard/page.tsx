@@ -18,6 +18,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { useDashboardStats } from '@/hooks';
+import { OnboardingTour, EmptyState, StatsSkeleton, SitesSkeleton } from '@/components/dashboard';
 import styles from './page.module.css';
 
 // Helper function to format time ago
@@ -34,6 +35,7 @@ function formatTimeAgo(date: Date): string {
 
 export default function DashboardPage() {
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('7d');
+  const [showOnboarding, setShowOnboarding] = useState(true);
   const { stats, sites: apiSites, alerts: apiAlerts, loading } = useDashboardStats();
 
   // Prepare stats data
@@ -117,6 +119,11 @@ export default function DashboardPage() {
 
   return (
     <div className={styles.dashboard}>
+      {/* Onboarding Tour */}
+      {showOnboarding && apiSites.length === 0 && !loading && (
+        <OnboardingTour onComplete={() => setShowOnboarding(false)} />
+      )}
+
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerContent}>
@@ -143,8 +150,11 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className={styles.statsGrid}>
-        {statsData.map((stat, index) => (
+      {loading ? (
+        <StatsSkeleton />
+      ) : (
+        <div className={styles.statsGrid}>
+          {statsData.map((stat, index) => (
           <div key={index} className={styles.statCard}>
             <div className={styles.statIcon}>
               <stat.icon size={20} />
@@ -161,7 +171,8 @@ export default function DashboardPage() {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
 
       {/* Main Content Grid */}
       <div className={styles.contentGrid}>
@@ -175,19 +186,9 @@ export default function DashboardPage() {
             </Link>
           </div>
           {loading ? (
-            <div className={styles.emptyState}>
-              <Loader2 size={32} className={styles.spinner} />
-              <p>Sites laden...</p>
-            </div>
+            <SitesSkeleton />
           ) : sites.length === 0 ? (
-            <div className={styles.emptyState}>
-              <Globe size={32} />
-              <p>Nog geen sites toegevoegd</p>
-              <Link href="/dashboard/sites/new" className={styles.addBtn}>
-                <Plus size={16} />
-                Eerste site toevoegen
-              </Link>
-            </div>
+            <EmptyState type="sites" onAction={() => window.location.href = '/dashboard/sites/new'} />
           ) : (
             <div className={styles.sitesList}>
               {sites.map((site) => (
@@ -231,24 +232,22 @@ export default function DashboardPage() {
               <ChevronRight size={16} />
             </Link>
           </div>
-          <div className={styles.alertsList}>
-            {recentAlerts.map((alert) => (
-              <div key={alert.id} className={styles.alertCard}>
-                <div className={styles.alertIcon}>
-                  {getAlertIcon(alert.severity)}
+          {recentAlerts.length === 0 ? (
+            <EmptyState type="alerts" />
+          ) : (
+            <div className={styles.alertsList}>
+              {recentAlerts.map((alert) => (
+                <div key={alert.id} className={styles.alertCard}>
+                  <div className={styles.alertIcon}>
+                    {getAlertIcon(alert.severity)}
+                  </div>
+                  <div className={styles.alertContent}>
+                    <span className={styles.alertSite}>{alert.site}</span>
+                    <span className={styles.alertMessage}>{alert.message}</span>
+                    <span className={styles.alertTime}>{alert.time}</span>
+                  </div>
                 </div>
-                <div className={styles.alertContent}>
-                  <span className={styles.alertSite}>{alert.site}</span>
-                  <span className={styles.alertMessage}>{alert.message}</span>
-                  <span className={styles.alertTime}>{alert.time}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          {recentAlerts.length === 0 && (
-            <div className={styles.emptyState}>
-              <CheckCircle size={32} />
-              <p>Geen recente alerts</p>
+              ))}
             </div>
           )}
         </div>

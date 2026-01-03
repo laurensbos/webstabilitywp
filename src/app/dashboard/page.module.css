@@ -1,6 +1,18 @@
 .dashboard {
   max-width: 1200px;
   margin: 0 auto;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Header */
@@ -93,6 +105,30 @@
   background: rgba(25, 30, 35, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 16px;
+  transition: all 0.3s ease;
+  animation: slideUp 0.5s ease-out backwards;
+}
+
+.statCard:nth-child(1) { animation-delay: 0.1s; }
+.statCard:nth-child(2) { animation-delay: 0.15s; }
+.statCard:nth-child(3) { animation-delay: 0.2s; }
+.statCard:nth-child(4) { animation-delay: 0.25s; }
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.statCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
 }
 
 .statIcon {
@@ -209,12 +245,31 @@
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 12px;
   text-decoration: none;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  animation: slideIn 0.4s ease-out backwards;
+}
+
+.sitesList .siteCard:nth-child(1) { animation-delay: 0.1s; }
+.sitesList .siteCard:nth-child(2) { animation-delay: 0.15s; }
+.sitesList .siteCard:nth-child(3) { animation-delay: 0.2s; }
+.sitesList .siteCard:nth-child(4) { animation-delay: 0.25s; }
+.sitesList .siteCard:nth-child(5) { animation-delay: 0.3s; }
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .siteCard:hover {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
 }
 
 .siteStatus {
