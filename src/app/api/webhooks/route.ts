@@ -16,7 +16,8 @@ export async function GET() {
       .from(webhooks)
       .where(eq(webhooks.userId, session.user.id));
 
-    return NextResponse.json({ webhooks: userWebhooks });
+    // Return array directly, not wrapped in object
+    return NextResponse.json(userWebhooks);
   } catch (error) {
     console.error('Error fetching webhooks:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
