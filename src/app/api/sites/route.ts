@@ -3,6 +3,8 @@ import { auth } from '@/lib/auth';
 import { db, sites } from '@/lib/db';
 import { eq, and } from 'drizzle-orm';
 import { getPlan, canAddSite, getCheckInterval } from '@/lib/plans';
+import { performSSLCheck } from '@/lib/monitoring/ssl';
+import { performUptimeCheck } from '@/lib/monitoring/uptime';
 
 export async function GET() {
   try {
@@ -91,6 +93,12 @@ export async function POST(request: NextRequest) {
         checkInterval,
       })
       .returning();
+
+    // Perform initial checks in background (don't await to speed up response)
+    Promise.all([
+      performSSLCheck(site.id).catch(e => console.error('Initial SSL check failed:', e)),
+      performUptimeCheck(site.id).catch(e => console.error('Initial uptime check failed:', e)),
+    ]);
 
     return NextResponse.json({ site });
   } catch (error) {

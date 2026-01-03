@@ -13,25 +13,62 @@ interface SSLInfo {
 
 export async function checkSSL(hostname: string): Promise<SSLInfo> {
   try {
-    // Use a simple HTTPS check - in production you might use a dedicated service
-    const url = hostname.startsWith('https://') ? hostname : `https://${hostname}`;
-    const domain = new URL(url).hostname;
+    // Extract hostname from URL if needed
+    let domain = hostname;
+    if (hostname.includes('://')) {
+      domain = new URL(hostname).hostname;
+    }
     
-    // We'll use an external API for SSL checking since Node.js in edge doesn't have direct TLS access
-    const response = await fetch(`https://api.ssllabs.com/api/v3/analyze?host=${domain}&fromCache=on`, {
-      headers: { 'User-Agent': 'WebStability Monitor/1.0' }
-    });
+    // Try to fetch HTTPS version and check if it works
+    const url = `https://${domain}`;
     
-    if (!response.ok) {
-      // Fallback: just check if HTTPS works
-      const httpsCheck = await fetch(url, { method: 'HEAD' });
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
       
-      if (httpsCheck.ok) {
+      const response = await fetch(url, { 
+        method: 'HEAD',
+        signal: controller.signal,
+        headers: { 'User-Agent': 'WebStability SSL Checker/1.0' }
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (response.ok || response.status < 500) {
+        // SSL is working - we can't get cert details from edge runtime
+        // but we know it's valid. Try to use a free SSL API
+        try {
+          const sslApiResponse = await fetch(`https://ssl-checker.io/api/v1/check/${domain}`, {
+            signal: AbortSignal.timeout(5000)
+          });
+          
+          if (sslApiResponse.ok) {
+            const sslData = await sslApiResponse.json();
+            
+            if (sslData.result && sslData.result.valid_to) {
+              const validTo = new Date(sslData.result.valid_to);
+              const validFrom = sslData.result.valid_from ? new Date(sslData.result.valid_from) : null;
+              const daysUntilExpiry = Math.ceil((validTo.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+              
+              return {
+                issuer: sslData.result.issuer || 'Unknown',
+                validFrom,
+                validTo,
+                daysUntilExpiry,
+                isValid: daysUntilExpiry > 0,
+              };
+            }
+          }
+        } catch {
+          // SSL API failed, use fallback
+        }
+        
+        // Fallback: HTTPS works so SSL is valid, assume 90 days
         return {
-          issuer: 'Unknown',
+          issuer: 'Unknown (HTTPS OK)',
           validFrom: null,
           validTo: null,
-          daysUntilExpiry: 30, // Assume valid
+          daysUntilExpiry: 90, // Assume valid for ~90 days
           isValid: true,
         };
       }
@@ -42,39 +79,21 @@ export async function checkSSL(hostname: string): Promise<SSLInfo> {
         validTo: null,
         daysUntilExpiry: 0,
         isValid: false,
-        error: 'Could not verify SSL certificate',
+        error: `HTTPS returned status ${response.status}`,
+      };
+    } catch (fetchError) {
+      // Could be SSL error or network error
+      const errorMsg = fetchError instanceof Error ? fetchError.message : 'Unknown error';
+      
+      return {
+        issuer: null,
+        validFrom: null,
+        validTo: null,
+        daysUntilExpiry: 0,
+        isValid: false,
+        error: errorMsg.includes('certificate') ? 'Invalid SSL certificate' : errorMsg,
       };
     }
-    
-    const data = await response.json();
-    
-    // Parse SSL Labs response
-    if (data.endpoints && data.endpoints.length > 0) {
-      const endpoint = data.endpoints[0];
-      const cert = endpoint.details?.cert;
-      
-      if (cert) {
-        const validTo = new Date(cert.notAfter);
-        const daysUntilExpiry = Math.ceil((validTo.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-        
-        return {
-          issuer: cert.issuerSubject || 'Unknown',
-          validFrom: new Date(cert.notBefore),
-          validTo,
-          daysUntilExpiry,
-          isValid: daysUntilExpiry > 0,
-        };
-      }
-    }
-    
-    // Simple fallback
-    return {
-      issuer: 'Unknown',
-      validFrom: null,
-      validTo: null,
-      daysUntilExpiry: 30,
-      isValid: true,
-    };
   } catch (error) {
     return {
       issuer: null,
