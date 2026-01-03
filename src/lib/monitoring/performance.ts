@@ -22,10 +22,21 @@ export async function checkPerformance(url: string): Promise<PerformanceResult |
       ? `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodedUrl}&key=${apiKey}&strategy=mobile&category=performance&category=accessibility&category=best-practices&category=seo`
       : `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodedUrl}&strategy=mobile&category=performance&category=accessibility&category=best-practices&category=seo`;
     
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, {
+      signal: AbortSignal.timeout(60000), // 60 second timeout
+    });
     
     if (!response.ok) {
-      console.error('PageSpeed API error:', await response.text());
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage = errorData?.error?.message || `HTTP ${response.status}`;
+      
+      // Check for rate limiting
+      if (response.status === 429 || errorData?.error?.status === 'RESOURCE_EXHAUSTED') {
+        console.error('PageSpeed API rate limited. Consider adding PAGESPEED_API_KEY to .env.local');
+        console.error('Get a free API key at: https://developers.google.com/speed/docs/insights/v5/get-started');
+      } else {
+        console.error('PageSpeed API error:', errorMessage);
+      }
       return null;
     }
     

@@ -15,10 +15,13 @@ import {
   ChevronRight,
   Plus,
   ExternalLink,
-  Loader2
+  Loader2,
+  Zap,
+  Activity
 } from 'lucide-react';
 import { useDashboardStats } from '@/hooks';
-import { OnboardingTour, EmptyState, StatsSkeleton, SitesSkeleton } from '@/components/dashboard';
+import { OnboardingTour, EmptyState, StatsSkeleton, SitesSkeleton, UsageIndicator, UpgradePrompt } from '@/components/dashboard';
+import { useSession } from 'next-auth/react';
 import styles from './page.module.css';
 
 // Helper function to format time ago
@@ -37,6 +40,12 @@ export default function DashboardPage() {
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('7d');
   const [showOnboarding, setShowOnboarding] = useState(true);
   const { stats, sites: apiSites, alerts: apiAlerts, loading } = useDashboardStats();
+  const { data: session } = useSession();
+
+  // Get plan info
+  const planLimits: Record<string, number> = { free: 3, pro: 20, business: 100, enterprise: 1000 };
+  const userPlan = session?.user?.plan || 'free';
+  const maxSites = planLimits[userPlan] || 3;
 
   // Prepare stats data
   const statsData = [
@@ -153,7 +162,24 @@ export default function DashboardPage() {
       {loading ? (
         <StatsSkeleton />
       ) : (
-        <div className={styles.statsGrid}>
+        <>
+          {/* Usage Indicator */}
+          <UsageIndicator 
+            current={stats.totalSites} 
+            max={maxSites} 
+            label="Sites gebruikt" 
+            planName={userPlan}
+          />
+          
+          {/* Contextual upgrade prompt for free users */}
+          {userPlan === 'free' && stats.totalSites >= 2 && (
+            <UpgradePrompt 
+              type="contextual"
+              message="Upgrade naar Pro voor 1-minuut checks en snellere detectie van problemen"
+            />
+          )}
+
+          <div className={styles.statsGrid}>
           {statsData.map((stat, index) => (
           <div key={index} className={styles.statCard}>
             <div className={styles.statIcon}>
@@ -172,6 +198,7 @@ export default function DashboardPage() {
           </div>
         ))}
         </div>
+        </>
       )}
 
       {/* Main Content Grid */}

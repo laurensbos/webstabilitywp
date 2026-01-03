@@ -21,8 +21,10 @@ import {
   Crown,
   Check,
   Sparkles,
-  AlertTriangle
+  AlertTriangle,
+  Command
 } from 'lucide-react';
+import { CommandPalette, ThemeToggle, UpgradeModal } from '@/components/dashboard';
 import styles from './layout.module.css';
 
 // Plan limits
@@ -139,6 +141,9 @@ export default function DashboardLayout({
 
   return (
     <div className={styles.dashboardLayout}>
+      {/* Command Palette (⌘K) */}
+      <CommandPalette />
+
       {/* Mobile Header */}
       <header className={styles.mobileHeader}>
         <button 
@@ -151,9 +156,12 @@ export default function DashboardLayout({
         <Link href="/dashboard" className={styles.mobileLogo}>
           <span className={styles.logoTextMobile}>webstability</span>
         </Link>
-        <Link href="/dashboard/sites/new" className={styles.mobileAddBtn}>
-          <Plus size={20} />
-        </Link>
+        <div className={styles.mobileHeaderActions}>
+          <ThemeToggle />
+          <Link href="/dashboard/sites/new" className={styles.mobileAddBtn}>
+            <Plus size={20} />
+          </Link>
+        </div>
       </header>
 
       {/* Sidebar Overlay (mobile) */}
@@ -237,15 +245,25 @@ export default function DashboardLayout({
               <span className={styles.userEmail}>{session?.user?.email || ''}</span>
             </div>
           </div>
-          <button 
-            className={styles.logoutBtn} 
-            aria-label="Uitloggen"
-            onClick={() => signOut({ callbackUrl: '/' })}
-          >
-            <LogOut size={18} />
-          </button>
+          <div className={styles.userActions}>
+            <ThemeToggle />
+            <button 
+              className={styles.logoutBtn} 
+              aria-label="Uitloggen"
+              onClick={() => signOut({ callbackUrl: '/' })}
+            >
+              <LogOut size={18} />
+            </button>
+          </div>
         </div>
       </aside>
+
+      {/* Upgrade Modal */}
+      <UpgradeModal 
+        isOpen={showUpgradeModal} 
+        onClose={() => setShowUpgradeModal(false)} 
+        currentPlan={session?.user?.plan || 'free'}
+      />
 
       {/* Main Content */}
       <main className={styles.mainContent}>

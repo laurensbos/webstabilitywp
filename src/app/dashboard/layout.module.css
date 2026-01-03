@@ -312,6 +312,12 @@
   color: #64748b;
 }
 
+.userActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .logoutBtn {
   display: flex;
   align-items: center;
@@ -329,6 +335,13 @@
 .logoutBtn:hover {
   background: rgba(239, 68, 68, 0.1);
   color: #ef4444;
+}
+
+/* Mobile Header Actions */
+.mobileHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* Main Content */

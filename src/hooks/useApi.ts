@@ -205,6 +205,66 @@ export function useDeleteSite() {
   return { deleteSite, loading, error };
 }
 
+// Performance hooks
+export interface PerformanceMetric {
+  id: string;
+  siteId: string;
+  performanceScore: number | null;
+  accessibilityScore: number | null;
+  bestPracticesScore: number | null;
+  seoScore: number | null;
+  lcp: string | null;
+  fid: string | null;
+  cls: string | null;
+  ttfb: string | null;
+  createdAt: string;
+}
+
+export function useSitePerformance(siteId: string) {
+  const { data, loading, error, refetch } = useApi<{
+    latest: PerformanceMetric | null;
+    history: PerformanceMetric[];
+  }>(`/api/sites/${siteId}/performance`, { skip: !siteId });
+
+  return {
+    latest: data?.latest ?? null,
+    history: data?.history ?? [],
+    loading,
+    error,
+    refetch,
+  };
+}
+
+export function useRunPerformanceCheck() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const runCheck = async (siteId: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/sites/${siteId}/performance`, {
+        method: 'POST',
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Er ging iets mis');
+      }
+
+      const data = await res.json();
+      setLoading(false);
+      return data.metric as PerformanceMetric;
+    } catch (err) {
+      setError((err as Error).message);
+      setLoading(false);
+      return null;
+    }
+  };
+
+  return { runCheck, loading, error };
+}
+
 // Alerts hooks
 export function useAlerts() {
   const { data, loading, error, refetch } = useApi<{ alerts: Alert[] }>('/api/alerts');

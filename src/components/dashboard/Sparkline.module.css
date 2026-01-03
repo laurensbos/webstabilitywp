@@ -1,0 +1,78 @@
+.sparkline {
+  width: 80px;
+  height: 24px;
+  overflow: visible;
+}
+
+.line {
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.3s;
+}
+
+.area {
+  opacity: 0.2;
+  transition: fill 0.3s;
+}
+
+.dot {
+  transition: fill 0.3s;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Colors */
+.green .line { stroke: #22c55e; }
+.green .dot { fill: #22c55e; }
+.green .gradientStart { stop-color: #22c55e; }
+.green .gradientEnd { stop-color: transparent; }
+
+.blue .line { stroke: #3b82f6; }
+.blue .dot { fill: #3b82f6; }
+.blue .gradientStart { stop-color: #3b82f6; }
+.blue .gradientEnd { stop-color: transparent; }
+
+.orange .line { stroke: #f59e0b; }
+.orange .dot { fill: #f59e0b; }
+.orange .gradientStart { stop-color: #f59e0b; }
+.orange .gradientEnd { stop-color: transparent; }
+
+.red .line { stroke: #ef4444; }
+.red .dot { fill: #ef4444; }
+.red .gradientStart { stop-color: #ef4444; }
+.red .gradientEnd { stop-color: transparent; }
+
+/* Uptime Bars */
+.uptimeBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 20px;
+}
+
+.uptimeBar {
+  flex: 1;
+  min-width: 2px;
+  max-width: 4px;
+  height: 100%;
+  border-radius: 1px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.uptimeBar:hover {
+  transform: scaleY(1.2);
+  opacity: 0.8;
+}
+
+.uptimeBar.up {
+  background: #22c55e;
+}
+
+.uptimeBar.down {
+  background: #ef4444;
+}

@@ -181,6 +181,25 @@ export const statusSubscribers = pgTable('status_subscribers', {
   emailIdx: index('status_subscribers_email_idx').on(table.email),
 }));
 
+// Team Members - for team collaboration
+export const teamMembers = pgTable('team_members', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  ownerId: uuid('owner_id').references(() => users.id, { onDelete: 'cascade' }).notNull(), // Account owner
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }), // The team member (if registered)
+  email: text('email').notNull(), // Email of invited member
+  role: text('role').default('viewer'), // admin, editor, viewer
+  status: text('status').default('pending'), // pending, active, revoked
+  inviteToken: text('invite_token'),
+  invitedAt: timestamp('invited_at').defaultNow(),
+  acceptedAt: timestamp('accepted_at'),
+  permissions: text('permissions').array(), // ['view_sites', 'manage_sites', 'view_alerts', 'manage_alerts']
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+  ownerIdIdx: index('team_members_owner_id_idx').on(table.ownerId),
+  userIdIdx: index('team_members_user_id_idx').on(table.userId),
+  emailIdx: index('team_members_email_idx').on(table.email),
+}));
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   sites: many(sites),
@@ -254,6 +273,19 @@ export const statusSubscribersRelations = relations(statusSubscribers, ({ one })
   }),
 }));
 
+export const teamMembersRelations = relations(teamMembers, ({ one }) => ({
+  owner: one(users, {
+    fields: [teamMembers.ownerId],
+    references: [users.id],
+    relationName: 'teamOwner',
+  }),
+  member: one(users, {
+    fields: [teamMembers.userId],
+    references: [users.id],
+    relationName: 'teamMember',
+  }),
+}));
+
 // Types
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -269,3 +301,5 @@ export type Incident = typeof incidents.$inferSelect;
 export type NewIncident = typeof incidents.$inferInsert;
 export type MaintenanceWindow = typeof maintenanceWindows.$inferSelect;
 export type StatusSubscriber = typeof statusSubscribers.$inferSelect;
+export type TeamMember = typeof teamMembers.$inferSelect;
+export type NewTeamMember = typeof teamMembers.$inferInsert;

@@ -2,7 +2,7 @@
 
 import { useState, use } from 'react';
 import Link from 'next/link';
-import { useSite, useDeleteSite, useUpdateSite, useForceCheck, useSiteAlerts } from '@/hooks';
+import { useSite, useDeleteSite, useUpdateSite, useForceCheck, useSiteAlerts, useSitePerformance, useRunPerformanceCheck } from '@/hooks';
 import styles from './page.module.css';
 
 interface UptimeDataPoint {
@@ -79,6 +79,28 @@ const generateUptimeDataFromChecks = (
   }));
 };
 
+// Helper to get color based on score
+function getScoreColor(score: number): string {
+  if (score >= 90) return '#22c55e'; // Green
+  if (score >= 50) return '#f59e0b'; // Orange
+  return '#ef4444'; // Red
+}
+
+// Helper to get vital status class
+function getVitalStatus(value: number, type: 'lcp' | 'fid' | 'cls' | 'ttfb'): string {
+  const thresholds = {
+    lcp: { good: 2500, needsImprovement: 4000 },
+    fid: { good: 100, needsImprovement: 300 },
+    cls: { good: 0.1, needsImprovement: 0.25 },
+    ttfb: { good: 800, needsImprovement: 1800 },
+  };
+  
+  const threshold = thresholds[type];
+  if (value <= threshold.good) return styles.vitalGood;
+  if (value <= threshold.needsImprovement) return styles.vitalWarning;
+  return styles.vitalPoor;
+}
+
 export default function SiteDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const { site: apiSite, uptime: apiUptime, ssl: apiSsl, recentChecks, loading, error, refetch } = useSite(resolvedParams.id);
@@ -86,9 +108,11 @@ export default function SiteDetailPage({ params }: { params: Promise<{ id: strin
   const { updateSite, loading: updating } = useUpdateSite();
   const { forceCheck, loading: checking } = useForceCheck();
   const { alerts: siteAlertsData } = useSiteAlerts(resolvedParams.id);
+  const { latest: performanceData, history: performanceHistory, refetch: refetchPerformance } = useSitePerformance(resolvedParams.id);
+  const { runCheck: runPerformanceCheck, loading: checkingPerformance } = useRunPerformanceCheck();
   
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d' | '90d'>('24h');
-  const [activeTab, setActiveTab] = useState<'overview' | 'alerts' | 'settings'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'performance' | 'alerts' | 'settings'>('overview');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [checkResult, setCheckResult] = useState<{ success: boolean; message: string } | null>(null);
@@ -294,6 +318,12 @@ export default function SiteDetailPage({ params }: { params: Promise<{ id: strin
           onClick={() => setActiveTab('overview')}
         >
           Overzicht
+        </button>
+        <button 
+          className={`${styles.tab} ${activeTab === 'performance' ? styles.active : ''}`}
+          onClick={() => setActiveTab('performance')}
+        >
+          Performance
         </button>
         <button 
           className={`${styles.tab} ${activeTab === 'alerts' ? styles.active : ''}`}
@@ -511,6 +541,160 @@ export default function SiteDetailPage({ params }: { params: Promise<{ id: strin
         </div>
       )}
 
+      {activeTab === 'performance' && (
+        <div className={styles.performanceContent}>
+          <div className={styles.performanceHeader}>
+            <h3>Performance & SEO Scores</h3>
+            <button 
+              className={styles.runCheckButton}
+              onClick={async () => {
+                const result = await runPerformanceCheck(resolvedParams.id);
+                if (result) {
+                  refetchPerformance();
+                }
+              }}
+              disabled={checkingPerformance}
+            >
+              {checkingPerformance ? (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={styles.spinner}>
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                  </svg>
+                  Analyseren...
+                </>
+              ) : (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M23 4v6h-6" />
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                  </svg>
+                  Nieuwe analyse
+                </>
+              )}
+            </button>
+          </div>
+
+          {!performanceData ? (
+            <div className={styles.emptyState}>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+              </svg>
+              <p>Nog geen performance data beschikbaar</p>
+              <button 
+                className={styles.runCheckButton}
+                onClick={async () => {
+                  const result = await runPerformanceCheck(resolvedParams.id);
+                  if (result) {
+                    refetchPerformance();
+                  }
+                }}
+                disabled={checkingPerformance}
+              >
+                {checkingPerformance ? 'Analyseren...' : 'Start eerste analyse'}
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* Score Cards */}
+              <div className={styles.scoreGrid}>
+                <div className={styles.scoreCard}>
+                  <div className={styles.scoreCircle} style={{ 
+                    background: `conic-gradient(${getScoreColor(performanceData.performanceScore || 0)} ${(performanceData.performanceScore || 0) * 3.6}deg, rgba(255,255,255,0.1) 0deg)` 
+                  }}>
+                    <span className={styles.scoreValue}>{performanceData.performanceScore || 0}</span>
+                  </div>
+                  <span className={styles.scoreLabel}>Performance</span>
+                </div>
+                <div className={styles.scoreCard}>
+                  <div className={styles.scoreCircle} style={{ 
+                    background: `conic-gradient(${getScoreColor(performanceData.accessibilityScore || 0)} ${(performanceData.accessibilityScore || 0) * 3.6}deg, rgba(255,255,255,0.1) 0deg)` 
+                  }}>
+                    <span className={styles.scoreValue}>{performanceData.accessibilityScore || 0}</span>
+                  </div>
+                  <span className={styles.scoreLabel}>Accessibility</span>
+                </div>
+                <div className={styles.scoreCard}>
+                  <div className={styles.scoreCircle} style={{ 
+                    background: `conic-gradient(${getScoreColor(performanceData.bestPracticesScore || 0)} ${(performanceData.bestPracticesScore || 0) * 3.6}deg, rgba(255,255,255,0.1) 0deg)` 
+                  }}>
+                    <span className={styles.scoreValue}>{performanceData.bestPracticesScore || 0}</span>
+                  </div>
+                  <span className={styles.scoreLabel}>Best Practices</span>
+                </div>
+                <div className={styles.scoreCard}>
+                  <div className={styles.scoreCircle} style={{ 
+                    background: `conic-gradient(${getScoreColor(performanceData.seoScore || 0)} ${(performanceData.seoScore || 0) * 3.6}deg, rgba(255,255,255,0.1) 0deg)` 
+                  }}>
+                    <span className={styles.scoreValue}>{performanceData.seoScore || 0}</span>
+                  </div>
+                  <span className={styles.scoreLabel}>SEO</span>
+                </div>
+              </div>
+
+              {/* Core Web Vitals */}
+              <div className={styles.webVitalsCard}>
+                <h4>Core Web Vitals</h4>
+                <div className={styles.vitalsGrid}>
+                  <div className={styles.vitalItem}>
+                    <div className={styles.vitalHeader}>
+                      <span className={styles.vitalName}>LCP</span>
+                      <span className={styles.vitalFullName}>Largest Contentful Paint</span>
+                    </div>
+                    <div className={styles.vitalValue}>
+                      <span className={`${styles.vitalNumber} ${getVitalStatus(parseFloat(performanceData.lcp || '0'), 'lcp')}`}>
+                        {(parseFloat(performanceData.lcp || '0') / 1000).toFixed(2)}s
+                      </span>
+                      <span className={styles.vitalTarget}>Doel: &lt; 2.5s</span>
+                    </div>
+                  </div>
+                  <div className={styles.vitalItem}>
+                    <div className={styles.vitalHeader}>
+                      <span className={styles.vitalName}>FID</span>
+                      <span className={styles.vitalFullName}>First Input Delay</span>
+                    </div>
+                    <div className={styles.vitalValue}>
+                      <span className={`${styles.vitalNumber} ${getVitalStatus(parseFloat(performanceData.fid || '0'), 'fid')}`}>
+                        {parseFloat(performanceData.fid || '0').toFixed(0)}ms
+                      </span>
+                      <span className={styles.vitalTarget}>Doel: &lt; 100ms</span>
+                    </div>
+                  </div>
+                  <div className={styles.vitalItem}>
+                    <div className={styles.vitalHeader}>
+                      <span className={styles.vitalName}>CLS</span>
+                      <span className={styles.vitalFullName}>Cumulative Layout Shift</span>
+                    </div>
+                    <div className={styles.vitalValue}>
+                      <span className={`${styles.vitalNumber} ${getVitalStatus(parseFloat(performanceData.cls || '0'), 'cls')}`}>
+                        {parseFloat(performanceData.cls || '0').toFixed(3)}
+                      </span>
+                      <span className={styles.vitalTarget}>Doel: &lt; 0.1</span>
+                    </div>
+                  </div>
+                  <div className={styles.vitalItem}>
+                    <div className={styles.vitalHeader}>
+                      <span className={styles.vitalName}>TTFB</span>
+                      <span className={styles.vitalFullName}>Time to First Byte</span>
+                    </div>
+                    <div className={styles.vitalValue}>
+                      <span className={`${styles.vitalNumber} ${getVitalStatus(parseFloat(performanceData.ttfb || '0'), 'ttfb')}`}>
+                        {parseFloat(performanceData.ttfb || '0').toFixed(0)}ms
+                      </span>
+                      <span className={styles.vitalTarget}>Doel: &lt; 800ms</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Last updated */}
+              <p className={styles.lastUpdated}>
+                Laatst geanalyseerd: {new Date(performanceData.createdAt).toLocaleString('nl-NL')}
+              </p>
+            </>
+          )}
+        </div>
+      )}
+
       {activeTab === 'alerts' && (
         <div className={styles.alertsContent}>
           <div className={styles.alertsList}>
@@ -606,6 +790,37 @@ export default function SiteDetailPage({ params }: { params: Promise<{ id: strin
             </div>
           </div>
 
+          <div className={styles.settingsSection}>
+            <h3>Rapporten Exporteren</h3>
+            <p className={styles.settingsDescription}>Download monitoring data als CSV bestand voor verdere analyse.</p>
+            <div className={styles.exportButtons}>
+              <a 
+                href={`/api/sites/${resolvedParams.id}/export?type=uptime&format=csv&days=30`}
+                className={styles.exportButton}
+                download
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Uptime Data (30 dagen)
+              </a>
+              <a 
+                href={`/api/sites/${resolvedParams.id}/export?type=performance&format=csv&days=30`}
+                className={styles.exportButton}
+                download
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Performance Data (30 dagen)
+              </a>
+            </div>
+          </div>
+
           <div className={styles.settingsActions}>
             <button className={styles.saveButton}>Wijzigingen opslaan</button>
           </div>
@@ -629,8 +844,17 @@ export default function SiteDetailPage({ params }: { params: Promise<{ id: strin
               <button className={styles.cancelButton} onClick={() => setShowDeleteModal(false)}>
                 Annuleren
               </button>
-              <button className={styles.deleteConfirmButton}>
-                Ja, verwijderen
+              <button 
+                className={styles.deleteConfirmButton}
+                disabled={deleting}
+                onClick={async () => {
+                  const success = await deleteSite(resolvedParams.id);
+                  if (success) {
+                    window.location.href = '/dashboard/sites';
+                  }
+                }}
+              >
+                {deleting ? 'Bezig...' : 'Ja, verwijderen'}
               </button>
             </div>
           </div>

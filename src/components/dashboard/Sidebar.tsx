@@ -10,10 +10,10 @@ import {
   Bell, 
   Settings, 
   LogOut,
-  Activity,
   Zap,
   Share2,
-  Webhook
+  Webhook,
+  Users
 } from 'lucide-react';
 
 const navigation = [
@@ -22,6 +22,7 @@ const navigation = [
   { name: 'Alerts', href: '/dashboard/alerts', icon: Bell },
   { name: 'Webhooks', href: '/dashboard/webhooks', icon: Webhook },
   { name: 'Status Pagina', href: '/dashboard/status-page', icon: Share2 },
+  { name: 'Team', href: '/dashboard/team', icon: Users },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ];
 

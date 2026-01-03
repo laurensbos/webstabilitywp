@@ -4,17 +4,64 @@
   --background: #000000;
   --background-secondary: #0a0a0a;
   --foreground: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
   --muted: #71717a;
   --muted-light: #a1a1aa;
   --border: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(255, 255, 255, 0.15);
+  --border-color: rgba(255, 255, 255, 0.08);
   --primary: #22c55e;
   --primary-dark: #16a34a;
+  --primary-hover: #16a34a;
   --primary-glow: rgba(34, 197, 94, 0.15);
   --card-bg: rgba(10, 10, 10, 0.8);
   --card-bg-solid: #0a0a0a;
+  --bg-secondary: #0a0a0a;
   --gradient-start: #22c55e;
   --gradient-end: #10b981;
+  color-scheme: dark;
+}
+
+/* Light mode */
+[data-theme="light"] {
+  --background: #ffffff;
+  --background-secondary: #f8fafc;
+  --foreground: #0f172a;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --muted: #94a3b8;
+  --muted-light: #cbd5e1;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 0, 0, 0.15);
+  --border-color: rgba(0, 0, 0, 0.1);
+  --primary: #16a34a;
+  --primary-dark: #15803d;
+  --primary-hover: #15803d;
+  --primary-glow: rgba(22, 163, 74, 0.15);
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-bg-solid: #ffffff;
+  --bg-secondary: #f1f5f9;
+  color-scheme: light;
+}
+
+[data-theme="light"] ::selection {
+  background: rgba(22, 163, 74, 0.3);
+  color: #0f172a;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] .grid-background {
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
 }
 
 * {
