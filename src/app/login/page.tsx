@@ -1,14 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Github, Chrome } from 'lucide-react';
 import { Header, Footer, Background } from '@/components/layout';
 import styles from './page.module.css';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -17,8 +21,28 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // TODO: Implement login logic
-    setTimeout(() => setIsLoading(false), 1500);
+    setError('');
+
+    try {
+      const result = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError('Onjuiste email of wachtwoord');
+        setIsLoading(false);
+        return;
+      }
+
+      // Successful login - redirect to dashboard
+      router.push('/dashboard');
+      router.refresh();
+    } catch {
+      setError('Er is iets misgegaan');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -76,6 +100,12 @@ export default function LoginPage() {
                 </button>
               </div>
             </div>
+
+            {error && (
+              <div className={styles.error}>
+                {error}
+              </div>
+            )}
 
             <button 
               type="submit" 
