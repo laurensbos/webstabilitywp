@@ -21,11 +21,34 @@
   border-radius: 24px;
   padding: 2.5rem;
   backdrop-filter: blur(20px);
+  animation: authCardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes authCardIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .authHeader {
   text-align: center;
   margin-bottom: 2rem;
+  animation: fadeInDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .authHeader h1 {
@@ -51,12 +74,34 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.inputGroup:nth-child(1) { animation-delay: 0.15s; }
+.inputGroup:nth-child(2) { animation-delay: 0.2s; }
+.inputGroup:nth-child(3) { animation-delay: 0.25s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .inputGroup label {
   font-size: 0.875rem;
   font-weight: 500;
   color: #e2e8f0;
+  transition: color 0.2s ease;
+}
+
+.inputGroup:focus-within label {
+  color: #22c55e;
 }
 
 .labelRow {
@@ -69,11 +114,12 @@
   font-size: 0.8125rem;
   color: #22c55e;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .forgotLink:hover {
   color: #16a34a;
+  transform: translateX(2px);
 }
 
 .inputWrapper {
@@ -87,6 +133,12 @@
   left: 1rem;
   color: #64748b;
   pointer-events: none;
+  transition: all 0.25s ease;
+}
+
+.inputWrapper:focus-within .inputIcon {
+  color: #22c55e;
+  transform: scale(1.1);
 }
 
 .inputWrapper input {
@@ -97,7 +149,7 @@
   border-radius: 12px;
   color: #fff;
   font-size: 0.9375rem;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .inputWrapper input::placeholder {
@@ -136,6 +188,13 @@
   border-radius: 8px;
   font-size: 0.875rem;
   text-align: center;
+  animation: errorShake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97), fadeIn 0.3s ease;
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
 }
 
 .submitBtn {
@@ -152,14 +211,36 @@
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   margin-top: 0.5rem;
   min-height: 48px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+  opacity: 0;
+}
+
+.submitBtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.submitBtn:hover:not(:disabled)::before {
+  opacity: 1;
 }
 
 .submitBtn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+}
+
+.submitBtn:active:not(:disabled) {
+  transform: translateY(-1px) scale(0.98);
+  transition-duration: 0.1s;
 }
 
 .submitBtn:disabled {
@@ -222,8 +303,13 @@
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
 }
+
+.socialBtn:nth-child(1) { animation-delay: 0.35s; }
+.socialBtn:nth-child(2) { animation-delay: 0.4s; }
 
 .socialBtn:hover {
   background: rgba(255, 255, 255, 0.1);

@@ -1320,3 +1320,564 @@
 .exportButton svg {
   flex-shrink: 0;
 }
+
+/* ========================================
+   NEW IMPROVED OVERVIEW STYLES
+   ======================================== */
+
+/* Hero Section */
+.heroSection {
+  background: linear-gradient(135deg, rgba(25, 30, 35, 0.9), rgba(30, 35, 40, 0.8));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.heroMain {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 32px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+/* Uptime Ring */
+.uptimeRing {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.uptimeRingSvg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.uptimeRingProgress {
+  transition: stroke-dasharray 0.6s ease;
+}
+
+.uptimeRingCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.uptimeRingValue {
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.uptimeRingLabel {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Hero Info */
+.heroInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.uptimeTimeSelect {
+  display: flex;
+}
+
+.heroTimeSelect {
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.heroTimeSelect:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.heroTimeSelect:focus {
+  outline: none;
+  border-color: #22c55e;
+}
+
+/* Uptime History Bar */
+.uptimeHistory {
+  display: flex;
+  gap: 2px;
+  height: 32px;
+}
+
+.uptimeHistoryBar {
+  flex: 1;
+  border-radius: 3px;
+  min-width: 4px;
+  transition: transform 0.15s ease;
+  cursor: pointer;
+}
+
+.uptimeHistoryBar:hover {
+  transform: scaleY(1.15);
+}
+
+.uptimeHistoryBar.up {
+  background: #22c55e;
+}
+
+.uptimeHistoryBar.down {
+  background: #ef4444;
+}
+
+.uptimeHistoryBar.degraded {
+  background: #eab308;
+}
+
+.uptimeLegend {
+  display: flex;
+  gap: 20px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.uptimeLegend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Quick Stats Row */
+.quickStats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 16px 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+}
+
+.quickStat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  text-align: center;
+}
+
+.quickStatLabel {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.quickStatValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.quickStatValue.good {
+  color: #22c55e;
+}
+
+.quickStatValue.warning {
+  color: #eab308;
+}
+
+.quickStatValue.bad {
+  color: #ef4444;
+}
+
+.quickStatDivider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 12px;
+}
+
+/* Info Grid */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.infoCard {
+  background: rgba(25, 30, 35, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.infoCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.infoCardIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.infoCardHeader h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  flex: 1;
+}
+
+/* Response Time Grid */
+.responseTimeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.responseMetric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.responseMetricLabel {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.responseMetricValue {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.responseMetricValue small {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.responseMetricValue.good {
+  color: #22c55e;
+}
+
+.responseMetricValue.warning {
+  color: #eab308;
+}
+
+.responseMetricValue.bad {
+  color: #ef4444;
+}
+
+/* Mini Sparkline */
+.miniSparkline {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 40px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sparklineBar {
+  flex: 1;
+  min-height: 4px;
+  border-radius: 2px;
+  transition: height 0.3s ease;
+}
+
+.sparklineBar.up {
+  background: linear-gradient(to top, rgba(34, 197, 94, 0.3), #22c55e);
+}
+
+.sparklineBar.degraded {
+  background: linear-gradient(to top, rgba(234, 179, 8, 0.3), #eab308);
+}
+
+.sparklineBar.down {
+  background: #ef4444;
+}
+
+/* Refresh Button */
+.refreshButton {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.refreshButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.refreshButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+/* SSL Card Styles */
+.sslCard {
+  min-height: 200px;
+}
+
+.sslContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sslStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.sslStatusBadge.valid {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.sslStatusBadge.expiring {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+}
+
+.sslStatusBadge.expired {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.sslGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sslGridItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.sslLabel {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.sslValue {
+  color: #fff;
+  font-weight: 500;
+}
+
+.sslValue.warning {
+  color: #eab308;
+}
+
+.sslEmpty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.sslEmptyIcon {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.sslEmpty p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
+
+.sslCheckButton {
+  padding: 10px 18px;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 8px;
+  color: #3b82f6;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sslCheckButton:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.25);
+}
+
+.sslCheckButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Monitoring Grid */
+.monitoringGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.monitoringItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.monitoringItem svg {
+  color: rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
+
+.monitoringItem > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.monitoringLabel {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.monitoringValue {
+  font-size: 13px;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Chart Improvements */
+.chartBarWrapper {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.chartBarLabel {
+  position: absolute;
+  bottom: -18px;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.chartBarWrapper:hover .chartBarLabel {
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .infoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .heroMain {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .uptimeRing {
+    margin: 0 auto;
+  }
+  
+  .quickStats {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .quickStat {
+    min-width: calc(50% - 6px);
+  }
+  
+  .quickStatDivider {
+    display: none;
+  }
+  
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .heroSection {
+    padding: 20px;
+  }
+  
+  .uptimeRing {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .uptimeRingValue {
+    font-size: 26px;
+  }
+  
+  .responseTimeGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  
+  .responseMetricValue {
+    font-size: 18px;
+  }
+}
+

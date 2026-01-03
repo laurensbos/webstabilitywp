@@ -3,6 +3,12 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 1rem;
   overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .none { padding: 0; }
@@ -30,3 +36,4 @@
 .content {
   color: #e2e8f0;
 }
+

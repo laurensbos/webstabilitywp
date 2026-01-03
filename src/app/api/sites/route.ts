@@ -5,6 +5,7 @@ import { eq, and } from 'drizzle-orm';
 import { getPlan, canAddSite, getCheckInterval } from '@/lib/plans';
 import { performSSLCheck } from '@/lib/monitoring/ssl';
 import { performUptimeCheck } from '@/lib/monitoring/uptime';
+import { performPerformanceCheck } from '@/lib/monitoring/performance';
 
 export async function GET() {
   try {
@@ -94,13 +95,39 @@ export async function POST(request: NextRequest) {
       })
       .returning();
 
-    // Perform initial checks in background (don't await to speed up response)
-    Promise.all([
-      performSSLCheck(site.id).catch(e => console.error('Initial SSL check failed:', e)),
-      performUptimeCheck(site.id).catch(e => console.error('Initial uptime check failed:', e)),
+    // Perform ALL initial checks - await them so data is ready when user views site
+    // Run in parallel for speed
+    const [uptimeResult, sslResult, performanceResult] = await Promise.allSettled([
+      performUptimeCheck(site.id),
+      performSSLCheck(site.id),
+      performPerformanceCheck(site.id),
     ]);
 
-    return NextResponse.json({ site });
+    // Log any failures but don't fail the request
+    if (uptimeResult.status === 'rejected') {
+      console.error('Initial uptime check failed:', uptimeResult.reason);
+    }
+    if (sslResult.status === 'rejected') {
+      console.error('Initial SSL check failed:', sslResult.reason);
+    }
+    if (performanceResult.status === 'rejected') {
+      console.error('Initial performance check failed:', performanceResult.reason);
+    }
+
+    // Fetch the updated site with current status
+    const [updatedSite] = await db
+      .select()
+      .from(sites)
+      .where(eq(sites.id, site.id));
+
+    return NextResponse.json({ 
+      site: updatedSite,
+      initialChecks: {
+        uptime: uptimeResult.status === 'fulfilled',
+        ssl: sslResult.status === 'fulfilled',
+        performance: performanceResult.status === 'fulfilled',
+      }
+    });
   } catch (error) {
     console.error('Error creating site:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });

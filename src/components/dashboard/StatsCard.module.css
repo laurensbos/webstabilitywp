@@ -6,6 +6,28 @@
   display: flex;
   align-items: flex-start;
   gap: 1rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: cardAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.card:nth-child(1) { animation-delay: 0ms; }
+.card:nth-child(2) { animation-delay: 75ms; }
+.card:nth-child(3) { animation-delay: 150ms; }
+.card:nth-child(4) { animation-delay: 225ms; }
+
+@keyframes cardAppear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
 }
 
 .iconWrapper {
@@ -16,6 +38,11 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.card:hover .iconWrapper {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .green .iconWrapper {
@@ -53,6 +80,7 @@
 .icon {
   width: 1.5rem;
   height: 1.5rem;
+  transition: transform 0.2s ease;
 }
 
 .content {
@@ -76,6 +104,11 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: white;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .value {
+  transform: scale(1.02);
 }
 
 .trend {

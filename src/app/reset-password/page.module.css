@@ -21,11 +21,29 @@
   border-radius: 24px;
   padding: 40px;
   backdrop-filter: blur(20px);
+  animation: cardSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes cardSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .authHeader {
   text-align: center;
   margin-bottom: 32px;
+  animation: fadeIn 0.5s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
 
 .authHeader h1 {
@@ -48,6 +66,8 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  animation: fadeIn 0.5s ease-out 0.3s forwards;
+  opacity: 0;
 }
 
 .error {
@@ -60,6 +80,15 @@
   border-radius: 12px;
   color: #ef4444;
   font-size: 0.9rem;
+  animation: shakeError 0.4s ease-out;
+}
+
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
 }
 
 .inputGroup {

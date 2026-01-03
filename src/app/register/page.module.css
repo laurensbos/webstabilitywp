@@ -21,11 +21,29 @@
   border-radius: 24px;
   padding: 2.5rem;
   backdrop-filter: blur(20px);
+  animation: cardSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes cardSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .authHeader {
   text-align: center;
   margin-bottom: 1.5rem;
+  animation: fadeIn 0.5s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
 
 .authHeader h1 {
@@ -48,6 +66,8 @@
   justify-content: center;
   gap: 0.75rem;
   margin-bottom: 2rem;
+  animation: fadeIn 0.5s ease-out 0.25s forwards;
+  opacity: 0;
 }
 
 .step {
@@ -67,7 +87,7 @@
   color: #64748b;
   font-size: 0.8125rem;
   font-weight: 600;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .stepLabel {
@@ -79,6 +99,13 @@
 .stepActive .stepNumber {
   background: #22c55e;
   color: #fff;
+  animation: stepPulse 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes stepPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
 .stepActive .stepLabel {
@@ -89,12 +116,15 @@
   width: 40px;
   height: 2px;
   background: rgba(255, 255, 255, 0.1);
+  transition: background 0.3s ease;
 }
 
 .authForm {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  animation: fadeIn 0.5s ease-out 0.3s forwards;
+  opacity: 0;
 }
 
 .inputGroup {

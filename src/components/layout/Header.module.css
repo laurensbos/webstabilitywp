@@ -136,15 +136,33 @@
   font-size: 1.0625rem;
   font-weight: 500;
   border-radius: 0.5rem;
-  transition: color 0.2s, background 0.2s;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   background: transparent;
   border: none;
   cursor: pointer;
+  position: relative;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #22c55e;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateX(-50%);
+  border-radius: 2px;
 }
 
 .navLink:hover {
   color: white;
   background: rgba(255, 255, 255, 0.05);
+}
+
+.navLink:hover::after {
+  width: 40%;
 }
 
 .navItem {
