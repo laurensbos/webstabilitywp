@@ -38,9 +38,9 @@ function VerifyEmailContent() {
 
       if (response.ok) {
         setStatus('success');
-        // Redirect to dashboard after 3 seconds
+        // Redirect to login after 3 seconds
         setTimeout(() => {
-          router.push('/dashboard');
+          router.push('/login');
         }, 3000);
       } else {
         setStatus('error');
@@ -133,10 +133,10 @@ function VerifyEmailContent() {
             </div>
             <h1 className={styles.title}>Email geverifieerd! 🎉</h1>
             <p className={styles.description}>
-              Je email is succesvol geverifieerd. Je wordt doorgestuurd naar het dashboard...
+              Je email is succesvol geverifieerd. Log nu in om naar je dashboard te gaan.
             </p>
-            <Link href="/dashboard" className={styles.button}>
-              Ga naar Dashboard
+            <Link href="/login" className={styles.button}>
+              Inloggen
               <ArrowRight size={18} />
             </Link>
           </div>
