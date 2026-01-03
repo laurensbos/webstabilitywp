@@ -47,6 +47,43 @@ export default function PublicStatusPage({ params }: { params: Promise<{ slug: s
   const [data, setData] = useState<StatusPageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [subscribeEmail, setSubscribeEmail] = useState('');
+  const [subscribeStatus, setSubscribeStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [subscribeMessage, setSubscribeMessage] = useState('');
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!subscribeEmail) return;
+    
+    setSubscribeStatus('loading');
+    try {
+      const res = await fetch('/api/status-subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: subscribeEmail, slug: resolvedParams.slug }),
+      });
+      
+      const result = await res.json();
+      
+      if (res.ok) {
+        setSubscribeStatus('success');
+        setSubscribeMessage(result.message || 'Je ontvangt nu updates!');
+        setSubscribeEmail('');
+      } else {
+        setSubscribeStatus('error');
+        setSubscribeMessage(result.error || 'Er ging iets mis');
+      }
+    } catch {
+      setSubscribeStatus('error');
+      setSubscribeMessage('Er ging iets mis');
+    }
+    
+    // Reset after 5 seconds
+    setTimeout(() => {
+      setSubscribeStatus('idle');
+      setSubscribeMessage('');
+    }, 5000);
+  };
 
   useEffect(() => {
     const fetchStatus = async () => {
@@ -242,6 +279,37 @@ export default function PublicStatusPage({ params }: { params: Promise<{ slug: s
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Subscribe Section */}
+      <div className={styles.subscribeSection}>
+        <h2 className={styles.sectionTitle}>Blijf op de hoogte</h2>
+        <p className={styles.subscribeDescription}>
+          Ontvang een email wanneer er een incident is of onderhoud gepland staat.
+        </p>
+        <form onSubmit={handleSubscribe} className={styles.subscribeForm}>
+          <input
+            type="email"
+            placeholder="je@email.nl"
+            value={subscribeEmail}
+            onChange={(e) => setSubscribeEmail(e.target.value)}
+            className={styles.subscribeInput}
+            disabled={subscribeStatus === 'loading'}
+            required
+          />
+          <button 
+            type="submit" 
+            className={styles.subscribeButton}
+            disabled={subscribeStatus === 'loading'}
+          >
+            {subscribeStatus === 'loading' ? 'Even geduld...' : 'Inschrijven'}
+          </button>
+        </form>
+        {subscribeMessage && (
+          <p className={`${styles.subscribeMessage} ${subscribeStatus === 'success' ? styles.success : styles.error}`}>
+            {subscribeMessage}
+          </p>
+        )}
       </div>
 
       {/* Footer */}

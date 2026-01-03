@@ -20,7 +20,8 @@ import {
   Loader2,
   Crown,
   Check,
-  Sparkles
+  Sparkles,
+  AlertTriangle
 } from 'lucide-react';
 import styles from './layout.module.css';
 
@@ -102,6 +103,7 @@ export default function DashboardLayout({
   const navItems = [
     { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
     { href: '/dashboard/sites', label: 'Sites', icon: Globe },
+    { href: '/dashboard/incidents', label: 'Incidenten', icon: AlertTriangle },
     { href: '/dashboard/alerts', label: 'Alerts', icon: Bell, badge: alertsCount > 0 ? alertsCount : undefined },
     { href: '/dashboard/webhooks', label: 'Webhooks', icon: Webhook },
     { href: '/dashboard/status-page', label: 'Status', icon: Share2 },

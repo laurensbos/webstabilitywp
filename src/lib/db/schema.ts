@@ -130,6 +130,57 @@ export const webhooks = pgTable('webhooks', {
   userIdIdx: index('webhooks_user_id_idx').on(table.userId),
 }));
 
+// Incidents - Track outages with timeline
+export const incidents = pgTable('incidents', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  siteId: uuid('site_id').references(() => sites.id, { onDelete: 'cascade' }).notNull(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  status: text('status').default('ongoing'), // ongoing, resolved, investigating
+  cause: text('cause'), // User-added root cause
+  screenshotUrl: text('screenshot_url'), // Screenshot when incident started
+  errorMessage: text('error_message'), // HTTP error or timeout message
+  httpStatus: integer('http_status'), // HTTP status code when down
+  startedAt: timestamp('started_at').defaultNow(),
+  resolvedAt: timestamp('resolved_at'),
+  duration: integer('duration'), // Total downtime in seconds
+  acknowledgedAt: timestamp('acknowledged_at'),
+  acknowledgedBy: text('acknowledged_by'),
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+  siteIdIdx: index('incidents_site_id_idx').on(table.siteId),
+  userIdIdx: index('incidents_user_id_idx').on(table.userId),
+  statusIdx: index('incidents_status_idx').on(table.status),
+}));
+
+// Maintenance Windows
+export const maintenanceWindows = pgTable('maintenance_windows', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  siteId: uuid('site_id').references(() => sites.id, { onDelete: 'cascade' }).notNull(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  title: text('title').notNull(),
+  description: text('description'),
+  startsAt: timestamp('starts_at').notNull(),
+  endsAt: timestamp('ends_at').notNull(),
+  isActive: boolean('is_active').default(true),
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+  siteIdIdx: index('maintenance_site_id_idx').on(table.siteId),
+}));
+
+// Status Page Subscribers
+export const statusSubscribers = pgTable('status_subscribers', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  email: text('email').notNull(),
+  isVerified: boolean('is_verified').default(false),
+  verificationToken: text('verification_token'),
+  subscribedAt: timestamp('subscribed_at').defaultNow(),
+  unsubscribedAt: timestamp('unsubscribed_at'),
+}, (table) => ({
+  userIdIdx: index('status_subscribers_user_id_idx').on(table.userId),
+  emailIdx: index('status_subscribers_email_idx').on(table.email),
+}));
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   sites: many(sites),
@@ -174,6 +225,35 @@ export const webhooksRelations = relations(webhooks, ({ one }) => ({
   }),
 }));
 
+export const incidentsRelations = relations(incidents, ({ one }) => ({
+  site: one(sites, {
+    fields: [incidents.siteId],
+    references: [sites.id],
+  }),
+  user: one(users, {
+    fields: [incidents.userId],
+    references: [users.id],
+  }),
+}));
+
+export const maintenanceWindowsRelations = relations(maintenanceWindows, ({ one }) => ({
+  site: one(sites, {
+    fields: [maintenanceWindows.siteId],
+    references: [sites.id],
+  }),
+  user: one(users, {
+    fields: [maintenanceWindows.userId],
+    references: [users.id],
+  }),
+}));
+
+export const statusSubscribersRelations = relations(statusSubscribers, ({ one }) => ({
+  user: one(users, {
+    fields: [statusSubscribers.userId],
+    references: [users.id],
+  }),
+}));
+
 // Types
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -185,3 +265,7 @@ export type PerformanceMetric = typeof performanceMetrics.$inferSelect;
 export type SSLCertificate = typeof sslCertificates.$inferSelect;
 export type Webhook = typeof webhooks.$inferSelect;
 export type NewWebhook = typeof webhooks.$inferInsert;
+export type Incident = typeof incidents.$inferSelect;
+export type NewIncident = typeof incidents.$inferInsert;
+export type MaintenanceWindow = typeof maintenanceWindows.$inferSelect;
+export type StatusSubscriber = typeof statusSubscribers.$inferSelect;

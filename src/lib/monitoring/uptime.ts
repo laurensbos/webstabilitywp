@@ -1,5 +1,5 @@
-import { db, uptimeChecks, sites, alerts, webhooks } from '@/lib/db';
-import { eq, desc, and, gte, sql } from 'drizzle-orm';
+import { db, uptimeChecks, sites, alerts, webhooks, incidents, maintenanceWindows } from '@/lib/db';
+import { eq, desc, and, gte, sql, isNull, lte } from 'drizzle-orm';
 import { sendDowntimeAlert } from '@/lib/email';
 import { triggerWebhooks } from '@/lib/webhooks';
 
@@ -53,6 +53,20 @@ export async function performUptimeCheck(siteId: string) {
   const [site] = await db.select().from(sites).where(eq(sites.id, siteId));
   if (!site || !site.isActive) return null;
   
+  // Check if site is in maintenance window
+  const now = new Date();
+  const activeMaintenanceWindows = await db
+    .select()
+    .from(maintenanceWindows)
+    .where(and(
+      eq(maintenanceWindows.siteId, siteId),
+      eq(maintenanceWindows.isActive, true),
+      lte(maintenanceWindows.startsAt, now),
+      gte(maintenanceWindows.endsAt, now)
+    ));
+  
+  const isInMaintenance = activeMaintenanceWindows.length > 0;
+  
   // Perform the check
   const result = await checkUptime(site.url);
   
@@ -76,12 +90,17 @@ export async function performUptimeCheck(siteId: string) {
   const previousCheck = previousChecks[1]; // Second most recent
   const statusChanged = previousCheck && previousCheck.isUp !== result.isUp;
   
-  // Update site status
+  // Update site status (show maintenance if applicable)
   await db.update(sites).set({
-    currentStatus: result.isUp ? 'up' : 'down',
+    currentStatus: isInMaintenance ? 'maintenance' : (result.isUp ? 'up' : 'down'),
     lastCheckedAt: new Date(),
     updatedAt: new Date(),
   }).where(eq(sites.id, siteId));
+  
+  // Skip alerts and incidents if in maintenance
+  if (isInMaintenance) {
+    return check;
+  }
   
   // Create alert if status changed
   if (statusChanged) {
@@ -95,6 +114,41 @@ export async function performUptimeCheck(siteId: string) {
         : `Je website is niet bereikbaar.${result.error ? ` Fout: ${result.error}` : ''}`,
       severity: result.isUp ? 'info' : 'critical',
     });
+    
+    // Create or resolve incident
+    if (!result.isUp) {
+      // Site went down - create new incident
+      await db.insert(incidents).values({
+        siteId,
+        userId: site.userId,
+        status: 'ongoing',
+        errorMessage: result.error || `HTTP ${result.status}`,
+        httpStatus: result.status,
+      });
+    } else {
+      // Site came back up - resolve ongoing incidents
+      const ongoingIncidents = await db
+        .select()
+        .from(incidents)
+        .where(and(
+          eq(incidents.siteId, siteId),
+          eq(incidents.status, 'ongoing')
+        ));
+      
+      for (const incident of ongoingIncidents) {
+        const duration = incident.startedAt 
+          ? Math.floor((Date.now() - new Date(incident.startedAt).getTime()) / 1000)
+          : null;
+        
+        await db.update(incidents)
+          .set({
+            status: 'resolved',
+            resolvedAt: new Date(),
+            duration,
+          })
+          .where(eq(incidents.id, incident.id));
+      }
+    }
     
     // Trigger webhooks
     await triggerWebhooks(site.userId, {
