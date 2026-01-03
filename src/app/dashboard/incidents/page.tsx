@@ -196,7 +196,9 @@ export default function IncidentsPage() {
       {/* Incidents List */}
       {filteredIncidents.length === 0 ? (
         <div className={styles.emptyState}>
-          <CheckCircle size={48} className={styles.emptyIcon} />
+          <div className={styles.emptyIconWrapper}>
+            <AlertTriangle size={32} strokeWidth={1.5} />
+          </div>
           <h3>Geen incidenten gevonden</h3>
           <p>
             {filter === 'all' 
