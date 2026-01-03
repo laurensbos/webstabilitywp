@@ -11,13 +11,17 @@ import {
   Settings, 
   LogOut,
   Activity,
-  Zap
+  Zap,
+  Share2,
+  Webhook
 } from 'lucide-react';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Sites', href: '/dashboard/sites', icon: Globe },
   { name: 'Alerts', href: '/dashboard/alerts', icon: Bell },
+  { name: 'Webhooks', href: '/dashboard/webhooks', icon: Webhook },
+  { name: 'Status Pagina', href: '/dashboard/status-page', icon: Share2 },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ];
 
@@ -28,7 +32,7 @@ export function Sidebar() {
     <aside className={styles.sidebar}>
       <div className={styles.logo}>
         <Zap className={styles.logoIcon} />
-        <span>Web Stability</span>
+        <span>webstability</span>
       </div>
 
       <nav className={styles.nav}>

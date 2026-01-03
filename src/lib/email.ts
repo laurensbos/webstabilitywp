@@ -1,4 +1,14 @@
 import nodemailer from 'nodemailer';
+import {
+  welcomeEmail,
+  verificationEmail,
+  passwordResetEmail,
+  downtimeAlertEmail,
+  recoveryAlertEmail,
+  sslWarningEmail,
+  upgradeConfirmationEmail,
+  weeklyReportEmail,
+} from './email/templates';
 
 // SMTP Configuration
 const transporter = nodemailer.createTransport({
@@ -11,6 +21,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Base send function
 async function sendEmail(to: string, subject: string, html: string) {
   if (!process.env.SMTP_PASS) {
     console.log('SMTP not configured, skipping email:', subject);
@@ -19,11 +30,12 @@ async function sendEmail(to: string, subject: string, html: string) {
 
   try {
     await transporter.sendMail({
-      from: '"Web Stability" <info@webstability.nl>',
+      from: '"webstability" <info@webstability.nl>',
       to,
       subject,
       html,
     });
+    console.log(`Email sent: ${subject} to ${to}`);
     return { success: true };
   } catch (error) {
     console.error('Failed to send email:', error);
@@ -31,6 +43,167 @@ async function sendEmail(to: string, subject: string, html: string) {
   }
 }
 
+// ============================================
+// PUBLIC EMAIL FUNCTIONS
+// ============================================
+
+// Welcome email after registration
+export async function sendWelcomeEmail(to: string, name: string) {
+  const { subject, html } = welcomeEmail({
+    userName: name,
+    loginUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
+  });
+  return sendEmail(to, subject, html);
+}
+
+// Email verification
+export async function sendVerificationEmail(to: string, name: string, verifyUrl: string, code?: string) {
+  const { subject, html } = verificationEmail({
+    userName: name,
+    verifyUrl,
+    code,
+  });
+  return sendEmail(to, subject, html);
+}
+
+// Password reset
+export async function sendPasswordResetEmail(to: string, name: string, resetUrl: string) {
+  const { subject, html } = passwordResetEmail({
+    userName: name,
+    resetUrl,
+  });
+  return sendEmail(to, subject, html);
+}
+
+// Downtime alert
+export async function sendDowntimeAlert(
+  to: string, 
+  siteName: string, 
+  siteUrl: string, 
+  isDown: boolean, 
+  error?: string,
+  downtimeStart?: Date
+) {
+  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/sites`;
+  
+  if (isDown) {
+    const { subject, html } = downtimeAlertEmail({
+      userName: 'Gebruiker',
+      siteName,
+      siteUrl,
+      error,
+      detectedAt: new Date(),
+      dashboardUrl,
+    });
+    return sendEmail(to, subject, html);
+  } else {
+    // Calculate downtime duration
+    const downtimeDuration = downtimeStart 
+      ? formatDuration(new Date().getTime() - downtimeStart.getTime())
+      : 'onbekend';
+    
+    const { subject, html } = recoveryAlertEmail({
+      userName: 'Gebruiker',
+      siteName,
+      siteUrl,
+      downtimeDuration,
+      recoveredAt: new Date(),
+      dashboardUrl,
+    });
+    return sendEmail(to, subject, html);
+  }
+}
+
+// SSL warning
+export async function sendSSLWarningEmail(
+  to: string,
+  siteName: string,
+  siteUrl: string,
+  expiresAt: Date,
+  daysRemaining: number
+) {
+  const { subject, html } = sslWarningEmail({
+    userName: 'Gebruiker',
+    siteName,
+    siteUrl,
+    expiresAt,
+    daysRemaining,
+    dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/sites`,
+  });
+  return sendEmail(to, subject, html);
+}
+
+// Upgrade confirmation
+export async function sendUpgradeConfirmationEmail(
+  to: string,
+  userName: string,
+  planName: string,
+  amount: string,
+  billingCycle: 'monthly' | 'yearly',
+  nextBillingDate: Date,
+  invoiceUrl?: string
+) {
+  const { subject, html } = upgradeConfirmationEmail({
+    userName,
+    planName,
+    amount,
+    billingCycle,
+    nextBillingDate,
+    invoiceUrl,
+    dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
+  });
+  return sendEmail(to, subject, html);
+}
+
+// Weekly report
+export async function sendWeeklyReportEmail(
+  to: string,
+  userName: string,
+  data: {
+    period: string;
+    totalSites: number;
+    avgUptime: string;
+    totalIncidents: number;
+    totalAlerts: number;
+    sites: Array<{
+      name: string;
+      url: string;
+      uptime: string;
+      avgResponseTime: number;
+      incidents: number;
+      status: 'up' | 'down' | 'degraded';
+    }>;
+    dashboardUrl: string;
+  }
+) {
+  // Find top performer and needs attention
+  const sortedByUptime = [...data.sites].sort((a, b) => parseFloat(b.uptime) - parseFloat(a.uptime));
+  const topPerformer = sortedByUptime[0];
+  const needsAttention = sortedByUptime.find(s => parseFloat(s.uptime) < 99);
+
+  const { subject, html } = weeklyReportEmail({
+    userName,
+    weekNumber: getWeekNumber(new Date()),
+    totalSites: data.totalSites,
+    avgUptime: parseFloat(data.avgUptime),
+    totalIncidents: data.totalIncidents,
+    topPerformer: topPerformer ? { name: topPerformer.name, uptime: parseFloat(topPerformer.uptime) } : { name: 'N/A', uptime: 100 },
+    needsAttention: needsAttention ? { name: needsAttention.name, uptime: parseFloat(needsAttention.uptime) } : undefined,
+    dashboardUrl: data.dashboardUrl,
+  });
+  return sendEmail(to, subject, html);
+}
+
+// Get ISO week number
+function getWeekNumber(date: Date): number {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+}
+
+// Legacy alert email (for backwards compatibility)
 export async function sendAlertEmail(
   to: string,
   subject: string,
@@ -38,100 +211,42 @@ export async function sendAlertEmail(
   alertType: string,
   message: string
 ) {
-  const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <style>
-          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0f0d; color: #fff; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; border-radius: 12px 12px 0 0; }
-          .content { background: #141918; padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid rgba(255,255,255,0.1); }
-          .alert-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-          .alert-critical { background: rgba(239,68,68,0.2); color: #ef4444; }
-          .alert-warning { background: rgba(245,158,11,0.2); color: #f59e0b; }
-          .button { display: inline-block; background: #10b981; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin-top: 20px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1 style="margin: 0;">⚡ Web Stability Alert</h1>
-          </div>
-          <div class="content">
-            <p><strong>Site:</strong> ${siteName}</p>
-            <p><span class="alert-badge alert-${alertType === 'downtime' ? 'critical' : 'warning'}">${alertType.toUpperCase()}</span></p>
-            <p style="color: #94a3b8;">${message}</p>
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard" class="button">View Dashboard →</a>
-          </div>
-        </div>
-      </body>
-    </html>
-  `;
+  // Use new downtime template
+  if (alertType === 'downtime') {
+    return sendDowntimeAlert(to, siteName, '', true, message);
+  } else if (alertType === 'recovery') {
+    return sendDowntimeAlert(to, siteName, '', false);
+  }
   
+  // Fallback for other alert types
+  const { html } = downtimeAlertEmail({
+    userName: 'Gebruiker',
+    siteName,
+    siteUrl: '',
+    error: message,
+    detectedAt: new Date(),
+    dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
+  });
   return sendEmail(to, subject, html);
 }
 
-export async function sendWelcomeEmail(to: string, name: string) {
-  const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <style>
-          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0f0d; color: #fff; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
-          .content { background: #141918; padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid rgba(255,255,255,0.1); }
-          .button { display: inline-block; background: #10b981; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin-top: 20px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1 style="margin: 0;">Welkom, ${name}! 👋</h1>
-            <p style="margin: 10px 0 0; opacity: 0.9;">Je website monitoring is bijna klaar</p>
-          </div>
-          <div class="content">
-            <h2 style="color: #fff;">Aan de slag in 3 stappen:</h2>
-            
-            <div style="margin: 20px 0; padding-left: 45px; position: relative;">
-              <div style="position: absolute; left: 0; top: 0; background: #10b981; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
-              <strong style="color: #fff;">Voeg je eerste site toe</strong>
-              <p style="color: #94a3b8; margin: 5px 0 0;">Vul de URL in en wij beginnen direct met monitoren.</p>
-            </div>
-            
-            <div style="margin: 20px 0; padding-left: 45px; position: relative;">
-              <div style="position: absolute; left: 0; top: 0; background: #10b981; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
-              <strong style="color: #fff;">Configureer je alerts</strong>
-              <p style="color: #94a3b8; margin: 5px 0 0;">Kies hoe je gewaarschuwd wilt worden.</p>
-            </div>
-            
-            <div style="margin: 20px 0; padding-left: 45px; position: relative;">
-              <div style="position: absolute; left: 0; top: 0; background: #10b981; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
-              <strong style="color: #fff;">Relax</strong>
-              <p style="color: #94a3b8; margin: 5px 0 0;">Wij houden alles in de gaten terwijl jij slaapt.</p>
-            </div>
-            
-            <center>
-              <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard" class="button">Naar Dashboard →</a>
-            </center>
-          </div>
-        </div>
-      </body>
-    </html>
-  `;
+// ============================================
+// HELPERS
+// ============================================
 
-  return sendEmail(to, 'Welkom bij Web Stability! 🎉', html);
-}
-
-export async function sendDowntimeAlert(to: string, siteName: string, siteUrl: string, isDown: boolean, error?: string) {
-  const subject = isDown 
-    ? `🚨 ALERT: ${siteName} is offline!`
-    : `✅ RECOVERED: ${siteName} is weer online`;
+function formatDuration(ms: number): string {
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
   
-  const message = isDown
-    ? `Je website ${siteUrl} is offline gegaan.${error ? ` Fout: ${error}` : ''}`
-    : `Je website ${siteUrl} is weer online en bereikbaar.`;
-
-  return sendAlertEmail(to, subject, siteName, isDown ? 'downtime' : 'recovery', message);
+  if (days > 0) {
+    return `${days} dag${days > 1 ? 'en' : ''} ${hours % 24} uur`;
+  } else if (hours > 0) {
+    return `${hours} uur ${minutes % 60} min`;
+  } else if (minutes > 0) {
+    return `${minutes} minuten`;
+  } else {
+    return `${seconds} seconden`;
+  }
 }

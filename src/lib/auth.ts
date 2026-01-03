@@ -40,6 +40,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           name: user.name || undefined,
           plan: user.plan || undefined,
+          emailVerified: user.emailVerified || false,
         };
       },
     }),
@@ -49,6 +50,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id;
         token.plan = (user as { plan?: string }).plan;
+        token.emailVerified = (user as { emailVerified?: boolean }).emailVerified;
       }
       return token;
     },
@@ -56,6 +58,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         (session.user as { plan?: string }).plan = token.plan as string;
+        (session.user as { emailVerified?: boolean }).emailVerified = token.emailVerified as boolean;
       }
       return session;
     },

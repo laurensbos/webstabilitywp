@@ -15,9 +15,9 @@ export function getMollie(): MollieClient {
 
 // Plan prices in cents
 const PLAN_PRICES: Record<string, { amount: string; description: string }> = {
-  starter: { amount: '9.00', description: 'Web Stability Starter - Maandelijks' },
-  pro: { amount: '29.00', description: 'Web Stability Pro - Maandelijks' },
-  agency: { amount: '79.00', description: 'Web Stability Agency - Maandelijks' },
+  starter: { amount: '9.00', description: 'webstability Starter - Maandelijks' },
+  pro: { amount: '29.00', description: 'webstability Pro - Maandelijks' },
+  agency: { amount: '79.00', description: 'webstability Agency - Maandelijks' },
 };
 
 export async function createCustomer(email: string, name?: string) {

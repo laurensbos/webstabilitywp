@@ -13,6 +13,11 @@ export const users = pgTable('users', {
   alertEmail: text('alert_email'),
   alertPhone: text('alert_phone'),
   emailVerified: boolean('email_verified').default(false),
+  // Notification preferences (stored as JSON string)
+  notifyDowntime: boolean('notify_downtime').default(true),
+  notifyRecovery: boolean('notify_recovery').default(true),
+  notifySslExpiry: boolean('notify_ssl_expiry').default(true),
+  notifyWeeklyReport: boolean('notify_weekly_report').default(true),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
@@ -109,10 +114,27 @@ export const sslCertificates = pgTable('ssl_certificates', {
   siteIdIdx: index('ssl_certificates_site_id_idx').on(table.siteId),
 }));
 
+// Webhooks
+export const webhooks = pgTable('webhooks', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  name: text('name').notNull(),
+  type: text('type').notNull(), // slack, discord, teams, generic
+  url: text('url').notNull(),
+  isActive: boolean('is_active').default(true),
+  events: text('events').array(), // ['downtime', 'recovery', 'ssl_expiry', 'slow_response']
+  lastTriggeredAt: timestamp('last_triggered_at'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => ({
+  userIdIdx: index('webhooks_user_id_idx').on(table.userId),
+}));
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   sites: many(sites),
   alerts: many(alerts),
+  webhooks: many(webhooks),
 }));
 
 export const sitesRelations = relations(sites, ({ one, many }) => ({
@@ -145,6 +167,13 @@ export const alertsRelations = relations(alerts, ({ one }) => ({
   }),
 }));
 
+export const webhooksRelations = relations(webhooks, ({ one }) => ({
+  user: one(users, {
+    fields: [webhooks.userId],
+    references: [users.id],
+  }),
+}));
+
 // Types
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -154,3 +183,5 @@ export type UptimeCheck = typeof uptimeChecks.$inferSelect;
 export type Alert = typeof alerts.$inferSelect;
 export type PerformanceMetric = typeof performanceMetrics.$inferSelect;
 export type SSLCertificate = typeof sslCertificates.$inferSelect;
+export type Webhook = typeof webhooks.$inferSelect;
+export type NewWebhook = typeof webhooks.$inferInsert;

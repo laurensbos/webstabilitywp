@@ -94,3 +94,35 @@ export async function PATCH(
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { id } = await params;
+
+    // Verify ownership
+    const [site] = await db
+      .select()
+      .from(sites)
+      .where(and(eq(sites.id, id), eq(sites.userId, session.user.id)));
+
+    if (!site) {
+      return NextResponse.json({ error: 'Site niet gevonden' }, { status: 404 });
+    }
+
+    // Delete site (cascade will remove related data)
+    await db.delete(sites).where(eq(sites.id, id));
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting site:', error);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  }
+}

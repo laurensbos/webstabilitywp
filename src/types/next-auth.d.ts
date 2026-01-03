@@ -6,11 +6,13 @@ declare module 'next-auth' {
     user: {
       id: string;
       plan?: string;
+      emailVerified?: boolean;
     } & DefaultSession['user'];
   }
 
   interface User extends DefaultUser {
     plan?: string;
+    emailVerified?: boolean;
   }
 }
 
@@ -18,5 +20,6 @@ declare module 'next-auth/jwt' {
   interface JWT extends DefaultJWT {
     id?: string;
     plan?: string;
+    emailVerified?: boolean;
   }
 }

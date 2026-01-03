@@ -1,0 +1,326 @@
+.container {
+  min-height: 100vh;
+  background: #0a0c0b;
+  color: #fff;
+}
+
+.loading,
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #22c55e;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading p,
+.error p {
+  color: rgba(255, 255, 255, 0.6);
+  margin: 8px 0 0;
+}
+
+.error svg {
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 16px;
+}
+
+.error h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.homeLink {
+  margin-top: 24px;
+  padding: 12px 24px;
+  background: #22c55e;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.homeLink:hover {
+  background: #16a34a;
+}
+
+/* Header */
+.header {
+  padding: 60px 20px 40px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.headerContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.logo {
+  height: 48px;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.description {
+  color: rgba(255, 255, 255, 0.6);
+  margin: 12px 0 0;
+  font-size: 16px;
+}
+
+/* Status Banner */
+.statusBanner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  margin: 32px auto;
+  max-width: 800px;
+  border-radius: 12px;
+  border: 1px solid;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.statusIndicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+/* Services */
+.services {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 20px;
+}
+
+.serviceCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 12px;
+}
+
+.serviceHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.serviceInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.serviceDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.serviceName {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.serviceStatus {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.serviceUptime {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.serviceStatusLabel {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Uptime Bars */
+.uptimeBars {
+  display: flex;
+  gap: 2px;
+  height: 32px;
+  margin-bottom: 8px;
+}
+
+.uptimeBar {
+  flex: 1;
+  border-radius: 2px;
+  min-width: 3px;
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+
+.uptimeBar:hover {
+  opacity: 0.8;
+  transform: scaleY(1.1);
+}
+
+.uptimeLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Metrics */
+.metrics {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.metricCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.metricLabel {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.metricValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: #22c55e;
+}
+
+/* Footer */
+.footer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.footer p {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 13px;
+  margin: 0 0 16px;
+}
+
+.poweredBy {
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.2s;
+}
+
+.poweredBy:hover {
+  color: #22c55e;
+}
+
+.poweredBy strong {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .header {
+    padding: 40px 20px 30px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .statusBanner {
+    margin: 20px;
+    font-size: 15px;
+    padding: 16px;
+  }
+
+  .serviceHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .serviceStatus {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .uptimeBars {
+    height: 24px;
+  }
+
+  .uptimeBar {
+    min-width: 2px;
+  }
+
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .metricValue {
+    font-size: 20px;
+  }
+}

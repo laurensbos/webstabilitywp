@@ -1,0 +1,342 @@
+.footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(10, 12, 11, 0.95);
+}
+
+.footerContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2.5rem 1rem;
+  /* Mobile-first: Add padding for bottom nav */
+  padding-bottom: calc(2rem + 80px);
+}
+
+.footerTop {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.footerBrand {
+  text-align: center;
+}
+
+.footerLogo {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.875rem;
+  letter-spacing: -0.02em;
+}
+
+.footerTagline {
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footerSocial {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.socialLink {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+  transition: all 0.2s;
+}
+
+.socialLink:hover,
+.socialLink:active {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.footerLinks {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem 1.5rem;
+  text-align: center;
+}
+
+.footerColumn h4 {
+  color: white;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.footerColumn a {
+  display: block;
+  color: #64748b;
+  padding: 0.5rem 0;
+  font-size: 0.9375rem;
+  transition: color 0.2s;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footerColumn a:hover,
+.footerColumn a:active {
+  color: #22c55e;
+}
+
+.footerBottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.footerCopyright {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.footerBottom p {
+  color: #475569;
+  font-size: 0.8125rem;
+}
+
+.businessInfo {
+  color: #334155;
+  font-size: 0.6875rem;
+}
+
+.footerBadges {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footerBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: #64748b;
+  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+
+/* Tablet and up */
+@media (min-width: 640px) {
+  .footerContainer {
+    padding: 3rem 1.5rem;
+    padding-bottom: calc(2rem + 80px);
+  }
+  
+  .footerLinks {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .footerColumn a {
+    min-height: auto;
+    padding: 0.375rem 0;
+  }
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .footerContainer {
+    padding: 4rem 2rem 2rem;
+    padding-bottom: calc(1.5rem + 80px);
+  }
+  
+  .footerTop {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    padding-bottom: 3rem;
+  }
+  
+  .footerBrand {
+    text-align: left;
+    max-width: 300px;
+  }
+  
+  .footerTagline {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: none;
+    font-size: 0.9375rem;
+  }
+  
+  .footerLogo {
+    font-size: 1.5rem;
+  }
+  
+  .footerSocial {
+    justify-content: flex-start;
+  }
+  
+  .footerLinks {
+    text-align: left;
+  }
+  
+  .footerColumn a {
+    justify-content: flex-start;
+  }
+  
+  .footerBottom {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+  
+  .footerBottom p {
+    font-size: 0.875rem;
+  }
+  
+  .businessInfo {
+    font-size: 0.75rem;
+  }
+  
+  .footerBadge {
+    font-size: 0.8125rem;
+  }
+}
+
+/* Large desktop - no bottom nav needed */
+@media (min-width: 769px) {
+  .footerContainer {
+    padding-bottom: 2rem;
+  }
+}
+
+/* ===== MOBILE BOTTOM NAVIGATION ===== */
+.mobileBottomNav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(10, 12, 11, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 0.25rem;
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
+.mobileNavItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.25rem;
+  color: #64748b;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  min-height: 48px;
+  flex: 1;
+  border-radius: 12px;
+}
+
+.mobileNavItem:hover,
+.mobileNavItem:active {
+  color: #94a3b8;
+}
+
+.mobileNavItemActive {
+  color: #22c55e;
+}
+
+.mobileNavItemActive svg {
+  color: #22c55e;
+}
+
+.mobileNavItemCenter {
+  position: relative;
+}
+
+.mobileNavCenterIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  border-radius: 14px;
+  color: white;
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.35);
+  margin-top: -12px;
+  transition: all 0.2s;
+}
+
+.mobileNavItemCenter:hover .mobileNavCenterIcon,
+.mobileNavItemCenter:active .mobileNavCenterIcon {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.45);
+}
+
+.mobileNavItemCenter span {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .mobileBottomNav {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+  }
+}
+
+@media (max-width: 380px) {
+  .mobileNavItem {
+    font-size: 0.625rem;
+  }
+  
+  .mobileNavItem svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .mobileNavCenterIcon {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .mobileNavCenterIcon svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .mobileNavCenterIcon {
+    transition: none;
+  }
+}

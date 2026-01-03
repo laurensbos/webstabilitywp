@@ -1,6 +1,7 @@
-import { db, uptimeChecks, sites, alerts } from '@/lib/db';
+import { db, uptimeChecks, sites, alerts, webhooks } from '@/lib/db';
 import { eq, desc, and, gte, sql } from 'drizzle-orm';
 import { sendDowntimeAlert } from '@/lib/email';
+import { triggerWebhooks } from '@/lib/webhooks';
 
 interface UptimeCheckResult {
   isUp: boolean;
@@ -95,19 +96,39 @@ export async function performUptimeCheck(siteId: string) {
       severity: result.isUp ? 'info' : 'critical',
     });
     
-    // Send email notification
+    // Trigger webhooks
+    await triggerWebhooks(site.userId, {
+      siteName: site.name,
+      siteUrl: site.url,
+      status: result.isUp ? 'up' : 'down',
+      message: result.isUp 
+        ? `Je website is hersteld en weer bereikbaar.`
+        : `Je website is niet bereikbaar.${result.error ? ` Fout: ${result.error}` : ''}`,
+      timestamp: new Date(),
+      responseTime: result.responseTime,
+      error: result.error,
+    });
+    
+    // Send email notification (check user preferences)
     const [user] = await db.query.users.findMany({
       where: (users, { eq }) => eq(users.id, site.userId),
     });
     
     if (user?.email) {
-      await sendDowntimeAlert(
-        user.alertEmail || user.email,
-        site.name,
-        site.url,
-        !result.isUp,
-        result.error
-      );
+      // Check notification preferences
+      const shouldNotify = result.isUp 
+        ? (user.notifyRecovery ?? true)
+        : (user.notifyDowntime ?? true);
+      
+      if (shouldNotify) {
+        await sendDowntimeAlert(
+          user.alertEmail || user.email,
+          site.name,
+          site.url,
+          !result.isUp,
+          result.error
+        );
+      }
     }
   }
   

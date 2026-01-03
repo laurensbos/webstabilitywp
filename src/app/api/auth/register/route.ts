@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db, users } from '@/lib/db';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
-import { sendWelcomeEmail } from '@/lib/email';
+import { sendWelcomeEmail, sendVerificationEmail } from '@/lib/email';
 import { createCustomer } from '@/lib/mollie';
+import { createVerificationToken } from '@/lib/auth/tokens';
 
 export async function POST(request: NextRequest) {
   try {
@@ -59,6 +60,15 @@ export async function POST(request: NextRequest) {
       await sendWelcomeEmail(email, name || 'daar');
     } catch (error) {
       console.error('Failed to send welcome email:', error);
+    }
+
+    // Create verification token and send verification email
+    try {
+      const { token, code } = createVerificationToken(user.id, email);
+      const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${token}`;
+      await sendVerificationEmail(email, name || 'Gebruiker', verifyUrl, code);
+    } catch (error) {
+      console.error('Failed to send verification email:', error);
     }
 
     return NextResponse.json({
