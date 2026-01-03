@@ -2,13 +2,16 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Github, Chrome, User, Building2, Check } from 'lucide-react';
 import { Header, Footer, Background } from '@/components/layout';
 import styles from './page.module.css';
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
@@ -19,13 +22,40 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    
     if (step < 2) {
       setStep(step + 1);
       return;
     }
+    
     setIsLoading(true);
-    // TODO: Implement register logic
-    setTimeout(() => setIsLoading(false), 1500);
+    
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setError(data.error || 'Er is iets misgegaan');
+        setIsLoading(false);
+        return;
+      }
+      
+      // Success - redirect to verify email page
+      router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+    } catch {
+      setError('Er is iets misgegaan. Probeer het opnieuw.');
+      setIsLoading(false);
+    }
   };
 
   const benefits = [
@@ -143,6 +173,12 @@ export default function RegisterPage() {
                     </div>
                   ))}
                 </div>
+
+                {error && (
+                  <div className={styles.error}>
+                    {error}
+                  </div>
+                )}
               </>
             )}
 
