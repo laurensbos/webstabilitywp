@@ -362,333 +362,317 @@ export default function SiteDetailPage({ params }: { params: Promise<{ id: strin
       {/* Tab Content */}
       {activeTab === 'overview' && (
         <div className={styles.overviewContent}>
-          {/* Hero Status Section - Main Uptime Ring */}
-          <div className={styles.heroSection}>
-            <div className={styles.heroMain}>
-              <div className={styles.uptimeRing}>
-                <svg viewBox="0 0 120 120" className={styles.uptimeRingSvg}>
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="54"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.08)"
-                    strokeWidth="8"
-                  />
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="54"
-                    fill="none"
-                    stroke={site.uptime[timeRange === '24h' ? 'day' : timeRange === '7d' ? 'week' : timeRange === '30d' ? 'month' : 'year'] >= 99.5 ? '#22c55e' : site.uptime[timeRange === '24h' ? 'day' : timeRange === '7d' ? 'week' : timeRange === '30d' ? 'month' : 'year'] >= 95 ? '#eab308' : '#ef4444'}
-                    strokeWidth="8"
-                    strokeLinecap="round"
-                    strokeDasharray={`${(site.uptime[timeRange === '24h' ? 'day' : timeRange === '7d' ? 'week' : timeRange === '30d' ? 'month' : 'year'] / 100) * 339.292} 339.292`}
-                    transform="rotate(-90 60 60)"
-                    className={styles.uptimeRingProgress}
-                  />
-                </svg>
-                <div className={styles.uptimeRingCenter}>
-                  <span className={styles.uptimeRingValue}>
-                    {site.uptime[timeRange === '24h' ? 'day' : timeRange === '7d' ? 'week' : timeRange === '30d' ? 'month' : 'year']}%
-                  </span>
-                  <span className={styles.uptimeRingLabel}>Uptime</span>
+          {/* Main Status Card */}
+          <div className={styles.statusCard}>
+            <div className={styles.statusCardMain}>
+              {/* Left: Uptime Ring */}
+              <div className={styles.uptimeSection}>
+                <div className={styles.uptimeRingLarge}>
+                  <svg viewBox="0 0 140 140" className={styles.uptimeRingSvg}>
+                    <defs>
+                      <linearGradient id="uptimeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#22c55e" />
+                        <stop offset="100%" stopColor="#16a34a" />
+                      </linearGradient>
+                    </defs>
+                    <circle
+                      cx="70"
+                      cy="70"
+                      r="62"
+                      fill="none"
+                      stroke="rgba(255,255,255,0.06)"
+                      strokeWidth="10"
+                    />
+                    <circle
+                      cx="70"
+                      cy="70"
+                      r="62"
+                      fill="none"
+                      stroke={site.uptime[timeRange === '24h' ? 'day' : timeRange === '7d' ? 'week' : timeRange === '30d' ? 'month' : 'year'] >= 99 ? 'url(#uptimeGradient)' : site.uptime[timeRange === '24h' ? 'day' : timeRange === '7d' ? 'week' : timeRange === '30d' ? 'month' : 'year'] >= 95 ? '#eab308' : '#ef4444'}
+                      strokeWidth="10"
+                      strokeLinecap="round"
+                      strokeDasharray={`${(site.uptime[timeRange === '24h' ? 'day' : timeRange === '7d' ? 'week' : timeRange === '30d' ? 'month' : 'year'] / 100) * 389.56} 389.56`}
+                      transform="rotate(-90 70 70)"
+                      className={styles.uptimeRingProgress}
+                    />
+                  </svg>
+                  <div className={styles.uptimeRingContent}>
+                    <span className={styles.uptimeValue}>
+                      {site.uptime[timeRange === '24h' ? 'day' : timeRange === '7d' ? 'week' : timeRange === '30d' ? 'month' : 'year'].toFixed(1)}%
+                    </span>
+                    <span className={styles.uptimeLabel}>Uptime</span>
+                  </div>
                 </div>
               </div>
-              <div className={styles.heroInfo}>
-                <div className={styles.uptimeTimeSelect}>
+
+              {/* Right: Timeline & Info */}
+              <div className={styles.statusCardRight}>
+                <div className={styles.timelineHeader}>
+                  <h3>Status Timeline</h3>
                   <select 
                     value={timeRange} 
                     onChange={(e) => setTimeRange(e.target.value as typeof timeRange)}
-                    className={styles.heroTimeSelect}
+                    className={styles.timeSelect}
                   >
-                    <option value="24h">Laatste 24 uur</option>
-                    <option value="7d">Laatste 7 dagen</option>
-                    <option value="30d">Laatste 30 dagen</option>
-                    <option value="90d">Laatste 90 dagen</option>
+                    <option value="24h">24 uur</option>
+                    <option value="7d">7 dagen</option>
+                    <option value="30d">30 dagen</option>
+                    <option value="90d">90 dagen</option>
                   </select>
                 </div>
-                <div className={styles.uptimeHistory}>
-                  {uptimeData.slice(-60).map((point, i) => (
+                
+                <div className={styles.timeline}>
+                  {uptimeData.slice(-48).map((point, i) => (
                     <div 
                       key={i} 
-                      className={`${styles.uptimeHistoryBar} ${styles[point.status]}`}
-                      title={`${new Date(point.timestamp).toLocaleString('nl-NL')} - ${point.status === 'up' ? 'Online' : point.status === 'down' ? 'Offline' : 'Traag'} (${point.responseTime}ms)`}
+                      className={`${styles.timelineBar} ${styles[point.status]}`}
+                      title={`${new Date(point.timestamp).toLocaleString('nl-NL')} - ${point.responseTime}ms`}
                     />
                   ))}
                 </div>
-                <div className={styles.uptimeLegend}>
-                  <span><span className={`${styles.legendDot} ${styles.up}`}></span>Online</span>
-                  <span><span className={`${styles.legendDot} ${styles.degraded}`}></span>Traag</span>
-                  <span><span className={`${styles.legendDot} ${styles.down}`}></span>Offline</span>
+                
+                <div className={styles.timelineLegend}>
+                  <span><span className={`${styles.dot} ${styles.up}`} />Online</span>
+                  <span><span className={`${styles.dot} ${styles.degraded}`} />Traag</span>
+                  <span><span className={`${styles.dot} ${styles.down}`} />Offline</span>
                 </div>
               </div>
             </div>
 
-            {/* Quick Stats Row */}
-            <div className={styles.quickStats}>
-              <div className={styles.quickStat}>
-                <span className={styles.quickStatLabel}>Response</span>
-                <span className={`${styles.quickStatValue} ${site.responseTime.current < 200 ? styles.good : site.responseTime.current < 500 ? styles.warning : styles.bad}`}>
-                  {site.responseTime.current}ms
-                </span>
+            {/* Stats Strip */}
+            <div className={styles.statsStrip}>
+              <div className={styles.statItem}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <div className={styles.statInfo}>
+                  <span className={styles.statValue}>{site.responseTime.current}ms</span>
+                  <span className={styles.statLabel}>Response</span>
+                </div>
               </div>
-              <div className={styles.quickStatDivider} />
-              <div className={styles.quickStat}>
-                <span className={styles.quickStatLabel}>Gem. Response</span>
-                <span className={styles.quickStatValue}>{site.responseTime.average}ms</span>
+              <div className={styles.statDivider} />
+              <div className={styles.statItem}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                <div className={styles.statInfo}>
+                  <span className={styles.statValue}>{site.responseTime.average}ms</span>
+                  <span className={styles.statLabel}>Gemiddeld</span>
+                </div>
               </div>
-              <div className={styles.quickStatDivider} />
-              <div className={styles.quickStat}>
-                <span className={styles.quickStatLabel}>Laatste Check</span>
-                <span className={styles.quickStatValue}>{site.lastChecked}</span>
+              <div className={styles.statDivider} />
+              <div className={styles.statItem}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                </svg>
+                <div className={styles.statInfo}>
+                  <span className={styles.statValue}>{site.lastChecked}</span>
+                  <span className={styles.statLabel}>Laatste check</span>
+                </div>
               </div>
-              <div className={styles.quickStatDivider} />
-              <div className={styles.quickStat}>
-                <span className={styles.quickStatLabel}>Interval</span>
-                <span className={styles.quickStatValue}>
-                  {site.checkInterval < 60 ? `${site.checkInterval}s` : `${Math.round(site.checkInterval / 60)}m`}
-                </span>
+              <div className={styles.statDivider} />
+              <div className={styles.statItem}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M23 4v6h-6M1 20v-6h6" />
+                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                </svg>
+                <div className={styles.statInfo}>
+                  <span className={styles.statValue}>{site.checkInterval < 60 ? `${site.checkInterval}s` : `${Math.round(site.checkInterval / 60)}m`}</span>
+                  <span className={styles.statLabel}>Interval</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Info Cards Grid */}
-          <div className={styles.infoGrid}>
+          {/* Two Column Grid */}
+          <div className={styles.detailsGrid}>
             {/* Response Time Card */}
-            <div className={styles.infoCard}>
-              <div className={styles.infoCardHeader}>
-                <div className={styles.infoCardIcon} style={{ background: 'rgba(59, 130, 246, 0.15)' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2">
+            <div className={styles.detailCard}>
+              <div className={styles.detailCardHeader}>
+                <div className={styles.detailCardIcon} data-color="blue">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="12" cy="12" r="10" />
                     <polyline points="12 6 12 12 16 14" />
                   </svg>
                 </div>
-                <h3>Response Tijd</h3>
+                <div>
+                  <h3>Response Tijd</h3>
+                  <p>Laatste 24 checks</p>
+                </div>
               </div>
-              <div className={styles.responseTimeGrid}>
-                <div className={styles.responseMetric}>
-                  <span className={styles.responseMetricLabel}>Huidig</span>
-                  <span className={`${styles.responseMetricValue} ${site.responseTime.current < 200 ? styles.good : site.responseTime.current < 500 ? styles.warning : styles.bad}`}>
+              
+              <div className={styles.responseStats}>
+                <div className={styles.responseStat}>
+                  <span className={styles.responseStatLabel}>Huidig</span>
+                  <span className={`${styles.responseStatValue} ${site.responseTime.current < 200 ? styles.good : site.responseTime.current < 500 ? styles.warning : styles.bad}`}>
                     {site.responseTime.current}<small>ms</small>
                   </span>
                 </div>
-                <div className={styles.responseMetric}>
-                  <span className={styles.responseMetricLabel}>Gemiddeld</span>
-                  <span className={styles.responseMetricValue}>{site.responseTime.average}<small>ms</small></span>
+                <div className={styles.responseStat}>
+                  <span className={styles.responseStatLabel}>Gemiddeld</span>
+                  <span className={styles.responseStatValue}>{site.responseTime.average}<small>ms</small></span>
                 </div>
-                <div className={styles.responseMetric}>
-                  <span className={styles.responseMetricLabel}>Minimum</span>
-                  <span className={styles.responseMetricValue}>{site.responseTime.min}<small>ms</small></span>
+                <div className={styles.responseStat}>
+                  <span className={styles.responseStatLabel}>Min</span>
+                  <span className={styles.responseStatValue}>{site.responseTime.min}<small>ms</small></span>
                 </div>
-                <div className={styles.responseMetric}>
-                  <span className={styles.responseMetricLabel}>Maximum</span>
-                  <span className={styles.responseMetricValue}>{site.responseTime.max}<small>ms</small></span>
+                <div className={styles.responseStat}>
+                  <span className={styles.responseStatLabel}>Max</span>
+                  <span className={styles.responseStatValue}>{site.responseTime.max}<small>ms</small></span>
                 </div>
               </div>
-              {/* Mini sparkline */}
-              <div className={styles.miniSparkline}>
-                {uptimeData.slice(-30).map((point, i) => (
+
+              {/* Response Sparkline */}
+              <div className={styles.responseSparkline}>
+                {uptimeData.slice(-24).map((point, i) => (
                   <div 
                     key={i}
-                    className={`${styles.sparklineBar} ${styles[point.status]}`}
-                    style={{ height: `${Math.min(100, Math.max(10, (point.responseTime / (site.responseTime.max || 500)) * 100))}%` }}
+                    className={`${styles.sparkBar} ${styles[point.status]}`}
+                    style={{ 
+                      height: `${Math.min(100, Math.max(15, (point.responseTime / (site.responseTime.max || 500)) * 100))}%` 
+                    }}
+                    title={`${point.responseTime}ms`}
                   />
                 ))}
               </div>
             </div>
 
             {/* SSL Certificate Card */}
-            <div className={`${styles.infoCard} ${styles.sslCard}`}>
-              <div className={styles.infoCardHeader}>
-                <div className={styles.infoCardIcon} style={{ 
-                  background: site.ssl.status === 'valid' ? 'rgba(34, 197, 94, 0.15)' : 
-                              site.ssl.status === 'expiring' ? 'rgba(234, 179, 8, 0.15)' : 
-                              'rgba(239, 68, 68, 0.15)' 
-                }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" 
-                    stroke={site.ssl.status === 'valid' ? '#22c55e' : site.ssl.status === 'expiring' ? '#eab308' : '#ef4444'} 
-                    strokeWidth="2">
+            <div className={styles.detailCard}>
+              <div className={styles.detailCardHeader}>
+                <div className={styles.detailCardIcon} data-color={site.ssl.status === 'valid' ? 'green' : site.ssl.status === 'expiring' ? 'yellow' : 'red'}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                 </div>
-                <h3>SSL Certificaat</h3>
+                <div>
+                  <h3>SSL Certificaat</h3>
+                  <p>{site.ssl.issuer || 'Geen certificaat'}</p>
+                </div>
                 <button 
-                  className={styles.refreshButton}
+                  className={styles.iconButton}
                   onClick={handleRefreshSSL}
                   disabled={refreshingSSL}
-                  title="SSL status vernieuwen"
+                  title="Vernieuwen"
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={refreshingSSL ? styles.spinning : ''}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={refreshingSSL ? styles.spinning : ''}>
                     <path d="M23 4v6h-6" />
                     <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
                   </svg>
                 </button>
               </div>
-              
+
               {site.ssl.status ? (
-                <div className={styles.sslContent}>
-                  <div className={`${styles.sslStatusBadge} ${styles[site.ssl.status]}`}>
-                    {site.ssl.status === 'valid' && (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <polyline points="22 4 12 14.01 9 11.01" />
-                      </svg>
-                    )}
-                    {site.ssl.status === 'expiring' && (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                      </svg>
-                    )}
-                    {site.ssl.status === 'expired' && (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="15" y1="9" x2="9" y2="15" />
-                        <line x1="9" y1="9" x2="15" y2="15" />
-                      </svg>
-                    )}
-                    <span>
-                      {site.ssl.status === 'valid' ? 'Geldig certificaat' : 
-                       site.ssl.status === 'expiring' ? 'Verloopt binnenkort' : 'Verlopen'}
-                    </span>
+                <div className={styles.sslDetails}>
+                  <div className={`${styles.sslBadge} ${styles[site.ssl.status]}`}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      {site.ssl.status === 'valid' ? (
+                        <polyline points="20 6 9 17 4 12" />
+                      ) : site.ssl.status === 'expiring' ? (
+                        <>
+                          <circle cx="12" cy="12" r="10" />
+                          <line x1="12" y1="8" x2="12" y2="12" />
+                          <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </>
+                      ) : (
+                        <>
+                          <circle cx="12" cy="12" r="10" />
+                          <line x1="15" y1="9" x2="9" y2="15" />
+                          <line x1="9" y1="9" x2="15" y2="15" />
+                        </>
+                      )}
+                    </svg>
+                    {site.ssl.status === 'valid' ? 'Geldig certificaat' : site.ssl.status === 'expiring' ? 'Verloopt binnenkort' : 'Verlopen'}
                   </div>
                   
-                  <div className={styles.sslGrid}>
-                    <div className={styles.sslGridItem}>
-                      <span className={styles.sslLabel}>Uitgever</span>
-                      <span className={styles.sslValue}>{site.ssl.issuer || 'Onbekend'}</span>
+                  <div className={styles.sslInfo}>
+                    <div className={styles.sslRow}>
+                      <span>Uitgever</span>
+                      <span>{site.ssl.issuer || '-'}</span>
                     </div>
-                    <div className={styles.sslGridItem}>
-                      <span className={styles.sslLabel}>Verloopt op</span>
-                      <span className={styles.sslValue}>{site.ssl.expiryDate ? formatDate(site.ssl.expiryDate) : '-'}</span>
+                    <div className={styles.sslRow}>
+                      <span>Verloopt op</span>
+                      <span>{site.ssl.expiryDate ? formatDate(site.ssl.expiryDate) : '-'}</span>
                     </div>
-                    <div className={styles.sslGridItem}>
-                      <span className={styles.sslLabel}>Dagen resterend</span>
-                      <span className={`${styles.sslValue} ${site.ssl.daysUntilExpiry && site.ssl.daysUntilExpiry < 30 ? styles.warning : ''}`}>
-                        {site.ssl.daysUntilExpiry !== null ? `${site.ssl.daysUntilExpiry} dagen` : '-'}
+                    <div className={styles.sslRow}>
+                      <span>Dagen resterend</span>
+                      <span className={site.ssl.daysUntilExpiry && site.ssl.daysUntilExpiry < 30 ? styles.warning : ''}>
+                        {site.ssl.daysUntilExpiry ?? '-'} dagen
                       </span>
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className={styles.sslEmpty}>
-                  <div className={styles.sslEmptyIcon}>
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 9.9-1" />
-                    </svg>
-                  </div>
-                  <p>Geen SSL data beschikbaar</p>
-                  <button 
-                    className={styles.sslCheckButton}
-                    onClick={handleRefreshSSL}
-                    disabled={refreshingSSL}
-                  >
-                    {refreshingSSL ? 'Controleren...' : 'SSL Controleren'}
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  <p>Geen SSL certificaat gevonden</p>
+                  <button onClick={handleRefreshSSL} disabled={refreshingSSL}>
+                    {refreshingSSL ? 'Controleren...' : 'Controleer SSL'}
                   </button>
                 </div>
               )}
             </div>
-
-            {/* Monitoring Info Card */}
-            <div className={styles.infoCard}>
-              <div className={styles.infoCardHeader}>
-                <div className={styles.infoCardIcon} style={{ background: 'rgba(139, 92, 246, 0.15)' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2">
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                  </svg>
-                </div>
-                <h3>Monitoring Details</h3>
-              </div>
-              <div className={styles.monitoringGrid}>
-                <div className={styles.monitoringItem}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                  </svg>
-                  <div>
-                    <span className={styles.monitoringLabel}>Check Interval</span>
-                    <span className={styles.monitoringValue}>
-                      Elke {site.checkInterval < 60 ? `${site.checkInterval} seconden` : `${Math.round(site.checkInterval / 60)} ${site.checkInterval === 60 ? 'minuut' : 'minuten'}`}
-                    </span>
-                  </div>
-                </div>
-                <div className={styles.monitoringItem}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  </svg>
-                  <div>
-                    <span className={styles.monitoringLabel}>Laatste Check</span>
-                    <span className={styles.monitoringValue}>{site.lastChecked}</span>
-                  </div>
-                </div>
-                <div className={styles.monitoringItem}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                  </svg>
-                  <div>
-                    <span className={styles.monitoringLabel}>Toegevoegd</span>
-                    <span className={styles.monitoringValue}>{formatDate(site.createdAt)}</span>
-                  </div>
-                </div>
-                <div className={styles.monitoringItem}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                  </svg>
-                  <div>
-                    <span className={styles.monitoringLabel}>Meldingen</span>
-                    <span className={styles.monitoringValue}>{siteAlerts.length} actief</span>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
-          {/* Response Time Chart */}
+          {/* Response Chart */}
           <div className={styles.chartCard}>
             <div className={styles.chartHeader}>
               <h3>Response Tijd (laatste 24 checks)</h3>
               <div className={styles.chartLegend}>
-                <span className={styles.legendItem}>
-                  <span className={`${styles.legendDot} ${styles.up}`} />
-                  Online
-                </span>
-                <span className={styles.legendItem}>
-                  <span className={`${styles.legendDot} ${styles.degraded}`} />
-                  Traag
-                </span>
-                <span className={styles.legendItem}>
-                  <span className={`${styles.legendDot} ${styles.down}`} />
-                  Offline
-                </span>
+                <span><span className={`${styles.dot} ${styles.up}`} />Online</span>
+                <span><span className={`${styles.dot} ${styles.degraded}`} />Traag</span>
+                <span><span className={`${styles.dot} ${styles.down}`} />Offline</span>
               </div>
             </div>
             <div className={styles.chart}>
               <div className={styles.chartBars}>
                 {uptimeData.slice(-24).map((point, i) => (
-                  <div 
-                    key={i} 
-                    className={styles.chartBarWrapper}
-                    title={`${new Date(point.timestamp).toLocaleString('nl-NL')} - ${point.responseTime}ms`}
-                  >
+                  <div key={i} className={styles.chartBarWrapper}>
                     <div 
                       className={`${styles.chartBar} ${styles[point.status]}`}
-                      style={{ height: `${Math.min(100, (point.responseTime / (site.responseTime.max || 500)) * 100)}%` }}
+                      style={{ 
+                        height: `${Math.min(100, Math.max(8, (point.responseTime / (site.responseTime.max || 500)) * 100))}%` 
+                      }}
                     />
-                    <span className={styles.chartBarLabel}>{point.responseTime}ms</span>
                   </div>
                 ))}
               </div>
-              <div className={styles.chartXAxis}>
+              <div className={styles.chartAxis}>
                 <span>Oudste</span>
                 <span>Nieuwste</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Monitoring Details */}
+          <div className={styles.monitoringCard}>
+            <div className={styles.monitoringHeader}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              <h3>Monitoring Details</h3>
+            </div>
+            <div className={styles.monitoringGrid}>
+              <div className={styles.monitoringItem}>
+                <span className={styles.monitoringLabel}>Check Interval</span>
+                <span className={styles.monitoringValue}>Elke {site.checkInterval < 60 ? `${site.checkInterval} seconden` : `${Math.round(site.checkInterval / 60)} minuten`}</span>
+              </div>
+              <div className={styles.monitoringItem}>
+                <span className={styles.monitoringLabel}>Laatste Check</span>
+                <span className={styles.monitoringValue}>{site.lastChecked}</span>
+              </div>
+              <div className={styles.monitoringItem}>
+                <span className={styles.monitoringLabel}>Toegevoegd</span>
+                <span className={styles.monitoringValue}>{formatDate(site.createdAt)}</span>
+              </div>
+              <div className={styles.monitoringItem}>
+                <span className={styles.monitoringLabel}>Meldingen</span>
+                <span className={styles.monitoringValue}>{siteAlerts.length} actief</span>
               </div>
             </div>
           </div>
