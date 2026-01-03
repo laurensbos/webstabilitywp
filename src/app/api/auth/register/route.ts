@@ -2,9 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db, users } from '@/lib/db';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
-import { sendWelcomeEmail, sendVerificationEmail } from '@/lib/email';
-import { createCustomer } from '@/lib/mollie';
-import { createVerificationToken } from '@/lib/auth/tokens';
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,14 +30,17 @@ export async function POST(request: NextRequest) {
     // Hash password
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // Create Mollie customer (optional, can be created later at checkout)
+    // Create Mollie customer (optional, skip if not configured)
     let mollieCustomerId: string | undefined;
-    try {
-      const customer = await createCustomer(email, name);
-      mollieCustomerId = customer.id;
-    } catch (error) {
-      console.error('Failed to create Mollie customer:', error);
-      // Not critical - we'll create it at checkout
+    if (process.env.MOLLIE_API_KEY) {
+      try {
+        const { createCustomer } = await import('@/lib/mollie');
+        const customer = await createCustomer(email, name);
+        mollieCustomerId = customer.id;
+      } catch (error) {
+        console.error('Failed to create Mollie customer:', error);
+        // Not critical - we'll create it at checkout
+      }
     }
 
     // Create user
@@ -50,25 +50,26 @@ export async function POST(request: NextRequest) {
         email: email.toLowerCase(),
         name: name || null,
         passwordHash,
-        stripeCustomerId: mollieCustomerId, // Reuse field for Mollie
+        stripeCustomerId: mollieCustomerId || null,
         plan: 'free',
       })
       .returning();
 
-    // Send welcome email
-    try {
-      await sendWelcomeEmail(email, name || 'daar');
-    } catch (error) {
-      console.error('Failed to send welcome email:', error);
-    }
-
-    // Create verification token and send verification email
-    try {
-      const { token, code } = createVerificationToken(user.id, email);
-      const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${token}`;
-      await sendVerificationEmail(email, name || 'Gebruiker', verifyUrl, code);
-    } catch (error) {
-      console.error('Failed to send verification email:', error);
+    // Send welcome email (non-blocking)
+    if (process.env.SMTP_PASS) {
+      try {
+        const { sendWelcomeEmail, sendVerificationEmail } = await import('@/lib/email');
+        const { createVerificationToken } = await import('@/lib/auth/tokens');
+        
+        await sendWelcomeEmail(email, name || 'daar');
+        
+        const { token, code } = createVerificationToken(user.id, email);
+        const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${token}`;
+        await sendVerificationEmail(email, name || 'Gebruiker', verifyUrl, code);
+      } catch (error) {
+        console.error('Failed to send emails:', error);
+        // Continue - registration was successful
+      }
     }
 
     return NextResponse.json({
