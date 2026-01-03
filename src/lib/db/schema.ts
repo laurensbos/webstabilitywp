@@ -9,7 +9,7 @@ export const users = pgTable('users', {
   passwordHash: text('password_hash'),
   stripeCustomerId: text('stripe_customer_id'),
   stripeSubscriptionId: text('stripe_subscription_id'),
-  plan: text('plan').default('free'), // free, starter, pro, agency
+  plan: text('plan').default('free'), // free, pro, business
   alertEmail: text('alert_email'),
   alertPhone: text('alert_phone'),
   emailVerified: boolean('email_verified').default(false),

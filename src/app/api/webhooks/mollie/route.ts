@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     
     if (payment.status === 'paid') {
       const metadata = payment.metadata as { plan?: string; customerId?: string };
-      const plan = metadata?.plan || 'starter';
+      const plan = metadata?.plan || 'pro';
       const customerId = metadata?.customerId;
 
       if (customerId) {
