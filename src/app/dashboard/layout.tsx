@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { 
   LayoutDashboard, 
@@ -14,11 +14,13 @@ import {
   X,
   Plus,
   ChevronRight,
-  Zap,
   Webhook,
   Share2,
   Mail,
-  Loader2
+  Loader2,
+  Crown,
+  Check,
+  Sparkles
 } from 'lucide-react';
 import styles from './layout.module.css';
 
@@ -36,11 +38,13 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const { data: session } = useSession();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sitesCount, setSitesCount] = useState(0);
   const [alertsCount, setAlertsCount] = useState(0);
   const [showVerifyBanner, setShowVerifyBanner] = useState(false);
   const [resendingEmail, setResendingEmail] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const pathname = usePathname();
 
   // Fetch sites count and unread alerts
@@ -143,8 +147,7 @@ export default function DashboardLayout({
           <Menu size={24} />
         </button>
         <Link href="/dashboard" className={styles.mobileLogo}>
-          <Zap size={20} />
-          <span>webstability</span>
+          <span className={styles.logoTextMobile}>webstability</span>
         </Link>
         <Link href="/dashboard/sites/new" className={styles.mobileAddBtn}>
           <Plus size={20} />
@@ -161,9 +164,6 @@ export default function DashboardLayout({
       <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
         <div className={styles.sidebarHeader}>
           <Link href="/dashboard" className={styles.logo}>
-            <div className={styles.logoIcon}>
-              <Zap size={20} />
-            </div>
             <span className={styles.logoText}>webstability</span>
           </Link>
           <button 
@@ -198,8 +198,11 @@ export default function DashboardLayout({
           ))}
         </nav>
 
-        {/* Plan Usage */}
-        <div className={styles.planUsage}>
+        {/* Plan Usage - Clickable */}
+        <button 
+          className={styles.planUsage}
+          onClick={() => setShowUpgradeModal(true)}
+        >
           <div className={styles.planHeader}>
             <span className={styles.planName}>
               {(session?.user?.plan || 'free').charAt(0).toUpperCase() + (session?.user?.plan || 'free').slice(1)} Plan
@@ -214,13 +217,12 @@ export default function DashboardLayout({
               style={{ width: `${(sitesCount / planLimits[session?.user?.plan || 'free']) * 100}%` }}
             />
           </div>
-          {sitesCount >= planLimits[session?.user?.plan || 'free'] * 0.8 && (
-            <Link href="/dashboard/settings?tab=billing" className={styles.upgradeLink}>
-              Upgrade plan
-              <ChevronRight size={14} />
-            </Link>
-          )}
-        </div>
+          <div className={styles.upgradeLink}>
+            <Crown size={14} />
+            Upgrade plan
+            <ChevronRight size={14} />
+          </div>
+        </button>
 
         {/* User Section */}
         <div className={styles.userSection}>
@@ -296,6 +298,80 @@ export default function DashboardLayout({
           </Link>
         ))}
       </nav>
+
+      {/* Upgrade Modal */}
+      {showUpgradeModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowUpgradeModal(false)}>
+          <div className={styles.upgradeModal} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.modalClose} onClick={() => setShowUpgradeModal(false)}>
+              <X size={20} />
+            </button>
+            
+            <div className={styles.modalHeader}>
+              <Sparkles className={styles.modalIcon} size={32} />
+              <h2>Upgrade je plan</h2>
+              <p>Krijg meer sites, snellere checks en premium features</p>
+            </div>
+
+            <div className={styles.plansGrid}>
+              {/* Pro Plan */}
+              <div className={`${styles.planCard} ${session?.user?.plan === 'pro' ? styles.planCardCurrent : ''}`}>
+                <div className={styles.planCardHeader}>
+                  <h3>Pro</h3>
+                  <div className={styles.planPrice}>
+                    <span className={styles.planPriceAmount}>€9</span>
+                    <span className={styles.planPricePeriod}>/maand</span>
+                  </div>
+                </div>
+                <ul className={styles.planFeatures}>
+                  <li><Check size={16} /> 20 websites</li>
+                  <li><Check size={16} /> 1 minuut checks</li>
+                  <li><Check size={16} /> Email & SMS alerts</li>
+                  <li><Check size={16} /> SSL monitoring</li>
+                </ul>
+                <button 
+                  className={styles.planBtn}
+                  onClick={() => router.push('/pricing')}
+                  disabled={session?.user?.plan === 'pro'}
+                >
+                  {session?.user?.plan === 'pro' ? 'Huidig plan' : 'Kies Pro'}
+                </button>
+              </div>
+
+              {/* Business Plan */}
+              <div className={`${styles.planCard} ${styles.planCardPopular} ${session?.user?.plan === 'business' ? styles.planCardCurrent : ''}`}>
+                <div className={styles.planCardBadge}>Populair</div>
+                <div className={styles.planCardHeader}>
+                  <h3>Business</h3>
+                  <div className={styles.planPrice}>
+                    <span className={styles.planPriceAmount}>€29</span>
+                    <span className={styles.planPricePeriod}>/maand</span>
+                  </div>
+                </div>
+                <ul className={styles.planFeatures}>
+                  <li><Check size={16} /> 100 websites</li>
+                  <li><Check size={16} /> 30 seconden checks</li>
+                  <li><Check size={16} /> Alle Pro features</li>
+                  <li><Check size={16} /> Priority support</li>
+                  <li><Check size={16} /> Custom webhooks</li>
+                </ul>
+                <button 
+                  className={`${styles.planBtn} ${styles.planBtnPrimary}`}
+                  onClick={() => router.push('/pricing')}
+                  disabled={session?.user?.plan === 'business'}
+                >
+                  {session?.user?.plan === 'business' ? 'Huidig plan' : 'Kies Business'}
+                </button>
+              </div>
+            </div>
+
+            <Link href="/pricing" className={styles.viewAllPlans}>
+              Bekijk alle plannen
+              <ChevronRight size={16} />
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
