@@ -13,13 +13,17 @@ import {
   Zap,
   Share2,
   Webhook,
-  Users
+  Users,
+  Wrench,
+  AlertTriangle
 } from 'lucide-react';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Sites', href: '/dashboard/sites', icon: Globe },
   { name: 'Alerts', href: '/dashboard/alerts', icon: Bell },
+  { name: 'Incidents', href: '/dashboard/incidents', icon: AlertTriangle },
+  { name: 'Onderhoud', href: '/dashboard/maintenance', icon: Wrench },
   { name: 'Webhooks', href: '/dashboard/webhooks', icon: Webhook },
   { name: 'Status Pagina', href: '/dashboard/status-page', icon: Share2 },
   { name: 'Team', href: '/dashboard/team', icon: Users },
