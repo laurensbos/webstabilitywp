@@ -39,7 +39,13 @@ export interface SiteWithDetails extends Site {
     validTo: string | null;
     daysUntilExpiry: number | null;
     isValid: boolean;
-  };
+  } | null;
+  performance?: {
+    score: number | null;
+    accessibility: number | null;
+    bestPractices: number | null;
+    seo: number | null;
+  } | null;
   recentChecks?: Array<{
     id: string;
     status: number;
@@ -341,6 +347,43 @@ export function useDashboardStats() {
       : 0,
     activeAlerts: alerts.filter(a => !a.isRead).length,
     criticalAlerts: alerts.filter(a => a.severity === 'critical' && !a.isRead).length,
+  };
+
+  return {
+    stats,
+    sites,
+    alerts,
+    loading: sitesLoading || alertsLoading,
+  };
+}
+
+// Sites with full details (SSL, performance) for dashboard
+export function useSitesWithDetails() {
+  const { data, loading, error, refetch } = useApi<{ sites: SiteWithDetails[] }>('/api/sites/with-details');
+  return { sites: data?.sites ?? [], loading, error, refetch };
+}
+
+// Dashboard stats with full details
+export function useDashboardStatsWithDetails() {
+  const { sites, loading: sitesLoading } = useSitesWithDetails();
+  const { alerts, loading: alertsLoading } = useAlerts();
+
+  const stats = {
+    totalSites: sites.length,
+    sitesUp: sites.filter(s => s.currentStatus === 'up').length,
+    sitesDown: sites.filter(s => s.currentStatus === 'down').length,
+    avgUptime: sites.length > 0 
+      ? sites.reduce((acc, s) => acc + parseFloat(s.uptimePercentage || '0'), 0) / sites.length 
+      : 0,
+    avgResponseTime: sites.length > 0 
+      ? Math.round(sites.reduce((acc, s) => acc + (s.avgResponseTime || 0), 0) / sites.filter(s => s.avgResponseTime).length) || 0
+      : 0,
+    activeAlerts: alerts.filter(a => !a.isRead).length,
+    criticalAlerts: alerts.filter(a => a.severity === 'critical' && !a.isRead).length,
+    sslIssues: sites.filter(s => s.ssl && (!s.ssl.isValid || (s.ssl.daysUntilExpiry !== null && s.ssl.daysUntilExpiry < 30))).length,
+    avgPerformance: sites.length > 0 && sites.some(s => s.performance?.score)
+      ? Math.round(sites.filter(s => s.performance?.score).reduce((acc, s) => acc + (s.performance?.score || 0), 0) / sites.filter(s => s.performance?.score).length)
+      : null,
   };
 
   return {

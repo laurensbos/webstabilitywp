@@ -17,9 +17,14 @@ import {
   ExternalLink,
   Loader2,
   Zap,
-  Activity
+  Activity,
+  Shield,
+  ShieldCheck,
+  ShieldAlert,
+  ShieldX,
+  Gauge
 } from 'lucide-react';
-import { useDashboardStats } from '@/hooks';
+import { useDashboardStatsWithDetails } from '@/hooks';
 import { OnboardingTour, EmptyState, StatsSkeleton, SitesSkeleton, UsageIndicator, UpgradePrompt } from '@/components/dashboard';
 import { useSession } from 'next-auth/react';
 import styles from './page.module.css';
@@ -39,7 +44,7 @@ function formatTimeAgo(date: Date): string {
 export default function DashboardPage() {
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('7d');
   const [showOnboarding, setShowOnboarding] = useState(true);
-  const { stats, sites: apiSites, alerts: apiAlerts, loading } = useDashboardStats();
+  const { stats, sites: apiSites, alerts: apiAlerts, loading } = useDashboardStatsWithDetails();
   const { data: session } = useSession();
 
   // Get plan info
@@ -79,19 +84,42 @@ export default function DashboardPage() {
     },
   ];
 
+  // Helper functions for SSL status
+  const getSslStatus = (ssl: typeof apiSites[0]['ssl']) => {
+    if (!ssl) return { status: 'unknown', label: 'Geen SSL', days: null };
+    if (!ssl.isValid) return { status: 'error', label: 'Ongeldig', days: null };
+    if (ssl.daysUntilExpiry !== null && ssl.daysUntilExpiry < 14) return { status: 'critical', label: `${ssl.daysUntilExpiry}d`, days: ssl.daysUntilExpiry };
+    if (ssl.daysUntilExpiry !== null && ssl.daysUntilExpiry < 30) return { status: 'warning', label: `${ssl.daysUntilExpiry}d`, days: ssl.daysUntilExpiry };
+    return { status: 'valid', label: ssl.daysUntilExpiry ? `${ssl.daysUntilExpiry}d` : 'Geldig', days: ssl.daysUntilExpiry };
+  };
+
+  const getPerformanceStatus = (score: number | null | undefined) => {
+    if (score === null || score === undefined) return { status: 'unknown', label: '—' };
+    if (score >= 90) return { status: 'good', label: `${score}` };
+    if (score >= 50) return { status: 'average', label: `${score}` };
+    return { status: 'poor', label: `${score}` };
+  };
+
   // Transform sites for display with more details
-  const sites = apiSites.slice(0, 5).map(site => ({
-    id: site.id,
-    name: site.name,
-    url: site.url,
-    status: site.currentStatus === 'up' ? 'up' : site.currentStatus === 'down' ? 'down' : 'warning',
-    uptime: `${parseFloat(site.uptimePercentage || '0').toFixed(2)}%`,
-    responseTime: site.avgResponseTime || 0,
-    checkInterval: site.checkInterval,
-    lastChecked: site.lastCheckedAt 
-      ? formatTimeAgo(new Date(site.lastCheckedAt))
-      : 'Nog niet gecheckt',
-  }));
+  const sites = apiSites.slice(0, 5).map(site => {
+    const sslInfo = getSslStatus(site.ssl);
+    const perfInfo = getPerformanceStatus(site.performance?.score);
+    
+    return {
+      id: site.id,
+      name: site.name,
+      url: site.url,
+      status: site.currentStatus === 'up' ? 'up' : site.currentStatus === 'down' ? 'down' : 'warning',
+      uptime: `${parseFloat(site.uptimePercentage || '0').toFixed(1)}%`,
+      responseTime: site.avgResponseTime || 0,
+      checkInterval: site.checkInterval,
+      ssl: sslInfo,
+      performance: perfInfo,
+      lastChecked: site.lastCheckedAt 
+        ? formatTimeAgo(new Date(site.lastCheckedAt))
+        : 'Nog niet gecheckt',
+    };
+  });
 
   // Transform alerts for display
   const recentAlerts = apiAlerts.filter(a => !a.isRead).slice(0, 5).map(alert => ({
@@ -232,20 +260,36 @@ export default function DashboardPage() {
                     <span className={styles.siteName}>{site.name}</span>
                     <span className={styles.siteUrl}>{site.url}</span>
                   </div>
-                  <div className={styles.siteStats}>
-                    <div className={styles.siteStat}>
-                      <span className={styles.siteStatValue}>{site.uptime}</span>
-                      <span className={styles.siteStatLabel}>Uptime</span>
+                  <div className={styles.siteMetrics}>
+                    <div className={styles.metricItem}>
+                      <TrendingUp size={14} />
+                      <span className={styles.metricValue}>{site.uptime}</span>
+                      <span className={styles.metricLabel}>Uptime</span>
                     </div>
-                    <div className={styles.siteStat}>
-                      <span className={`${styles.siteStatValue} ${site.responseTime > 500 ? styles.slow : ''}`}>
+                    <div className={styles.metricItem}>
+                      <Clock size={14} />
+                      <span className={`${styles.metricValue} ${site.responseTime > 500 ? styles.slow : ''}`}>
                         {site.responseTime > 0 ? `${site.responseTime}ms` : '—'}
                       </span>
-                      <span className={styles.siteStatLabel}>Response</span>
+                      <span className={styles.metricLabel}>Response</span>
                     </div>
-                    <div className={styles.siteStat}>
-                      <span className={styles.siteStatValue}>{site.checkInterval}m</span>
-                      <span className={styles.siteStatLabel}>Interval</span>
+                    <div className={styles.metricItem}>
+                      {site.ssl.status === 'valid' && <ShieldCheck size={14} className={styles.sslValid} />}
+                      {site.ssl.status === 'warning' && <ShieldAlert size={14} className={styles.sslWarning} />}
+                      {site.ssl.status === 'critical' && <ShieldX size={14} className={styles.sslCritical} />}
+                      {site.ssl.status === 'error' && <ShieldX size={14} className={styles.sslError} />}
+                      {site.ssl.status === 'unknown' && <Shield size={14} className={styles.sslUnknown} />}
+                      <span className={`${styles.metricValue} ${styles[`ssl${site.ssl.status.charAt(0).toUpperCase() + site.ssl.status.slice(1)}`]}`}>
+                        {site.ssl.label}
+                      </span>
+                      <span className={styles.metricLabel}>SSL</span>
+                    </div>
+                    <div className={styles.metricItem}>
+                      <Gauge size={14} />
+                      <span className={`${styles.metricValue} ${styles[`perf${site.performance.status.charAt(0).toUpperCase() + site.performance.status.slice(1)}`]}`}>
+                        {site.performance.label}
+                      </span>
+                      <span className={styles.metricLabel}>Perf</span>
                     </div>
                   </div>
                   <span className={styles.siteLastChecked}>{site.lastChecked}</span>
