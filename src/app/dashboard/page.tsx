@@ -79,7 +79,7 @@ export default function DashboardPage() {
     },
   ];
 
-  // Transform sites for display
+  // Transform sites for display with more details
   const sites = apiSites.slice(0, 5).map(site => ({
     id: site.id,
     name: site.name,
@@ -87,6 +87,7 @@ export default function DashboardPage() {
     status: site.currentStatus === 'up' ? 'up' : site.currentStatus === 'down' ? 'down' : 'warning',
     uptime: `${parseFloat(site.uptimePercentage || '0').toFixed(2)}%`,
     responseTime: site.avgResponseTime || 0,
+    checkInterval: site.checkInterval,
     lastChecked: site.lastCheckedAt 
       ? formatTimeAgo(new Date(site.lastCheckedAt))
       : 'Nog niet gecheckt',
@@ -242,7 +243,12 @@ export default function DashboardPage() {
                       </span>
                       <span className={styles.siteStatLabel}>Response</span>
                     </div>
+                    <div className={styles.siteStat}>
+                      <span className={styles.siteStatValue}>{site.checkInterval}m</span>
+                      <span className={styles.siteStatLabel}>Interval</span>
+                    </div>
                   </div>
+                  <span className={styles.siteLastChecked}>{site.lastChecked}</span>
                   <ChevronRight size={18} className={styles.siteArrow} />
                 </Link>
               ))}

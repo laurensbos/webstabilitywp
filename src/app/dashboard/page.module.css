@@ -338,6 +338,14 @@
   color: #64748b;
 }
 
+.siteLastChecked {
+  font-size: 0.75rem;
+  color: #64748b;
+  white-space: nowrap;
+  min-width: 70px;
+  text-align: right;
+}
+
 .siteArrow {
   color: #64748b;
   flex-shrink: 0;
