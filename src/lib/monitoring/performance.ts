@@ -109,7 +109,7 @@ export async function getPerformanceHistory(siteId: string, limit: number = 30) 
 }
 
 export function getScoreColor(score: number): string {
-  if (score >= 90) return '#10b981'; // green
+  if (score >= 90) return '#6366f1'; // green
   if (score >= 50) return '#f59e0b'; // yellow
   return '#ef4444'; // red
 }

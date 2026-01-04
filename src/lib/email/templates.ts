@@ -40,7 +40,7 @@ function emailWrapper(content: string, preheader: string = ''): string {
             <td align="center" style="padding-bottom: 32px;">
               <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td style="background: linear-gradient(135deg, #22c55e, #16a34a); width: 44px; height: 44px; border-radius: 12px; text-align: center; vertical-align: middle;">
+                  <td style="background: linear-gradient(135deg, #6366f1, #4f46e5); width: 44px; height: 44px; border-radius: 12px; text-align: center; vertical-align: middle;">
                     <span style="color: #000; font-size: 24px; font-weight: bold;">⚡</span>
                   </td>
                   <td style="padding-left: 12px;">
@@ -101,7 +101,7 @@ function emailWrapper(content: string, preheader: string = ''): string {
 // Reusable button component
 function emailButton(text: string, url: string, variant: 'primary' | 'secondary' = 'primary'): string {
   const styles = variant === 'primary'
-    ? 'background: linear-gradient(135deg, #22c55e, #16a34a); color: #000000;'
+    ? 'background: linear-gradient(135deg, #6366f1, #4f46e5); color: #000000;'
     : 'background: rgba(255, 255, 255, 0.1); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.2);';
   
   return `
@@ -118,7 +118,7 @@ function emailButton(text: string, url: string, variant: 'primary' | 'secondary'
 // Status badge component
 function statusBadge(status: 'up' | 'down' | 'warning' | 'info'): string {
   const config = {
-    up: { bg: 'rgba(34, 197, 94, 0.15)', border: 'rgba(34, 197, 94, 0.3)', color: '#22c55e', icon: '✓', text: 'Online' },
+    up: { bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)', color: '#6366f1', icon: '✓', text: 'Online' },
     down: { bg: 'rgba(239, 68, 68, 0.15)', border: 'rgba(239, 68, 68, 0.3)', color: '#ef4444', icon: '✗', text: 'Offline' },
     warning: { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)', color: '#f59e0b', icon: '⚠', text: 'Waarschuwing' },
     info: { bg: 'rgba(59, 130, 246, 0.15)', border: 'rgba(59, 130, 246, 0.3)', color: '#3b82f6', icon: 'ℹ', text: 'Info' },
@@ -140,7 +140,7 @@ export function welcomeEmail(data: { userName: string; loginUrl: string }): { su
   const content = `
     <!-- Welcome Icon -->
     <div style="text-align: center; margin-bottom: 24px;">
-      <div style="display: inline-block; width: 72px; height: 72px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1)); border-radius: 50%; line-height: 72px; font-size: 32px;">
+      <div style="display: inline-block; width: 72px; height: 72px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.1)); border-radius: 50%; line-height: 72px; font-size: 32px;">
         🎉
       </div>
     </div>
@@ -162,7 +162,7 @@ export function welcomeEmail(data: { userName: string; loginUrl: string }): { su
           <td style="padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
             <table role="presentation" cellpadding="0" cellspacing="0">
               <tr>
-                <td style="width: 32px; height: 32px; background: rgba(34, 197, 94, 0.2); border-radius: 50%; text-align: center; vertical-align: middle; color: #22c55e; font-weight: 600;">1</td>
+                <td style="width: 32px; height: 32px; background: rgba(99, 102, 241, 0.2); border-radius: 50%; text-align: center; vertical-align: middle; color: #6366f1; font-weight: 600;">1</td>
                 <td style="padding-left: 16px; color: rgba(255, 255, 255, 0.8); font-size: 15px;">Voeg je eerste website toe</td>
               </tr>
             </table>
@@ -172,7 +172,7 @@ export function welcomeEmail(data: { userName: string; loginUrl: string }): { su
           <td style="padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
             <table role="presentation" cellpadding="0" cellspacing="0">
               <tr>
-                <td style="width: 32px; height: 32px; background: rgba(34, 197, 94, 0.2); border-radius: 50%; text-align: center; vertical-align: middle; color: #22c55e; font-weight: 600;">2</td>
+                <td style="width: 32px; height: 32px; background: rgba(99, 102, 241, 0.2); border-radius: 50%; text-align: center; vertical-align: middle; color: #6366f1; font-weight: 600;">2</td>
                 <td style="padding-left: 16px; color: rgba(255, 255, 255, 0.8); font-size: 15px;">Configureer je notificaties</td>
               </tr>
             </table>
@@ -182,7 +182,7 @@ export function welcomeEmail(data: { userName: string; loginUrl: string }): { su
           <td style="padding: 12px 0;">
             <table role="presentation" cellpadding="0" cellspacing="0">
               <tr>
-                <td style="width: 32px; height: 32px; background: rgba(34, 197, 94, 0.2); border-radius: 50%; text-align: center; vertical-align: middle; color: #22c55e; font-weight: 600;">3</td>
+                <td style="width: 32px; height: 32px; background: rgba(99, 102, 241, 0.2); border-radius: 50%; text-align: center; vertical-align: middle; color: #6366f1; font-weight: 600;">3</td>
                 <td style="padding-left: 16px; color: rgba(255, 255, 255, 0.8); font-size: 15px;">Ontspan - wij monitoren 24/7</td>
               </tr>
             </table>
@@ -229,7 +229,7 @@ export function verificationEmail(data: { userName: string; verifyUrl: string; c
     ${data.code ? `
     <div style="background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 20px; margin: 24px 0; text-align: center;">
       <p style="color: rgba(255, 255, 255, 0.5); font-size: 13px; margin: 0 0 8px 0;">Of gebruik deze code:</p>
-      <p style="color: #22c55e; font-size: 32px; font-weight: 700; letter-spacing: 8px; margin: 0; font-family: monospace;">${data.code}</p>
+      <p style="color: #6366f1; font-size: 32px; font-weight: 700; letter-spacing: 8px; margin: 0; font-family: monospace;">${data.code}</p>
     </div>
     ` : ''}
     
@@ -272,7 +272,7 @@ export function passwordResetEmail(data: { userName: string; resetUrl: string })
     
     <p style="color: rgba(255, 255, 255, 0.4); font-size: 13px; text-align: center; margin: 0;">
       Als de knop niet werkt, kopieer dan deze link:<br>
-      <a href="${data.resetUrl}" style="color: #22c55e; word-break: break-all;">${data.resetUrl}</a>
+      <a href="${data.resetUrl}" style="color: #6366f1; word-break: break-all;">${data.resetUrl}</a>
     </p>
   `;
   
@@ -316,7 +316,7 @@ export function downtimeAlertEmail(data: {
         <tr>
           <td style="padding: 8px 0; border-top: 1px solid rgba(255, 255, 255, 0.05);">
             <span style="color: rgba(255, 255, 255, 0.5); font-size: 13px;">URL</span><br>
-            <a href="${data.siteUrl}" style="color: #22c55e; font-size: 15px; text-decoration: none;">${data.siteUrl}</a>
+            <a href="${data.siteUrl}" style="color: #6366f1; font-size: 15px; text-decoration: none;">${data.siteUrl}</a>
           </td>
         </tr>
         <tr>
@@ -368,12 +368,12 @@ export function recoveryAlertEmail(data: {
 }): { subject: string; html: string } {
   const content = `
     <div style="text-align: center; margin-bottom: 24px;">
-      <div style="display: inline-block; width: 72px; height: 72px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1)); border-radius: 50%; line-height: 72px; font-size: 32px;">
+      <div style="display: inline-block; width: 72px; height: 72px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.1)); border-radius: 50%; line-height: 72px; font-size: 32px;">
         ✅
       </div>
     </div>
     
-    <h1 style="color: #22c55e; font-size: 28px; font-weight: 700; text-align: center; margin: 0 0 8px 0;">
+    <h1 style="color: #6366f1; font-size: 28px; font-weight: 700; text-align: center; margin: 0 0 8px 0;">
       Site Weer Online!
     </h1>
     <p style="color: rgba(255, 255, 255, 0.6); font-size: 16px; text-align: center; margin: 0 0 32px 0;">
@@ -391,7 +391,7 @@ export function recoveryAlertEmail(data: {
         <tr>
           <td style="padding: 8px 0; border-top: 1px solid rgba(255, 255, 255, 0.05);">
             <span style="color: rgba(255, 255, 255, 0.5); font-size: 13px;">URL</span><br>
-            <a href="${data.siteUrl}" style="color: #22c55e; font-size: 15px; text-decoration: none;">${data.siteUrl}</a>
+            <a href="${data.siteUrl}" style="color: #6366f1; font-size: 15px; text-decoration: none;">${data.siteUrl}</a>
           </td>
         </tr>
         <tr>
@@ -468,7 +468,7 @@ export function sslWarningEmail(data: {
         <tr>
           <td style="padding: 8px 0; border-top: 1px solid rgba(255, 255, 255, 0.05);">
             <span style="color: rgba(255, 255, 255, 0.5); font-size: 13px;">Domein</span><br>
-            <span style="color: #22c55e; font-size: 15px;">${data.siteUrl}</span>
+            <span style="color: #6366f1; font-size: 15px;">${data.siteUrl}</span>
           </td>
         </tr>
         <tr>
@@ -507,7 +507,7 @@ export function upgradeConfirmationEmail(data: {
 }): { subject: string; html: string } {
   const content = `
     <div style="text-align: center; margin-bottom: 24px;">
-      <div style="display: inline-block; width: 72px; height: 72px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1)); border-radius: 50%; line-height: 72px; font-size: 32px;">
+      <div style="display: inline-block; width: 72px; height: 72px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.1)); border-radius: 50%; line-height: 72px; font-size: 32px;">
         🚀
       </div>
     </div>
@@ -519,12 +519,12 @@ export function upgradeConfirmationEmail(data: {
       Je upgrade is bevestigd. Bedankt voor je vertrouwen!
     </p>
     
-    <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05)); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+    <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.05)); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 16px; padding: 24px; margin-bottom: 24px;">
       <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
         <tr>
           <td style="padding: 8px 0;">
             <span style="color: rgba(255, 255, 255, 0.5); font-size: 13px;">Plan</span><br>
-            <span style="color: #22c55e; font-size: 20px; font-weight: 700;">${data.planName}</span>
+            <span style="color: #6366f1; font-size: 20px; font-weight: 700;">${data.planName}</span>
           </td>
         </tr>
         <tr>
@@ -549,22 +549,22 @@ export function upgradeConfirmationEmail(data: {
       <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
         <tr>
           <td style="padding: 8px 0; color: rgba(255, 255, 255, 0.8); font-size: 14px;">
-            <span style="color: #22c55e; margin-right: 8px;">✓</span> Meer websites monitoren
+            <span style="color: #6366f1; margin-right: 8px;">✓</span> Meer websites monitoren
           </td>
         </tr>
         <tr>
           <td style="padding: 8px 0; color: rgba(255, 255, 255, 0.8); font-size: 14px;">
-            <span style="color: #22c55e; margin-right: 8px;">✓</span> Snellere check intervals
+            <span style="color: #6366f1; margin-right: 8px;">✓</span> Snellere check intervals
           </td>
         </tr>
         <tr>
           <td style="padding: 8px 0; color: rgba(255, 255, 255, 0.8); font-size: 14px;">
-            <span style="color: #22c55e; margin-right: 8px;">✓</span> Uitgebreide rapportages
+            <span style="color: #6366f1; margin-right: 8px;">✓</span> Uitgebreide rapportages
           </td>
         </tr>
         <tr>
           <td style="padding: 8px 0; color: rgba(255, 255, 255, 0.8); font-size: 14px;">
-            <span style="color: #22c55e; margin-right: 8px;">✓</span> Priority support
+            <span style="color: #6366f1; margin-right: 8px;">✓</span> Priority support
           </td>
         </tr>
       </table>
@@ -612,7 +612,7 @@ export function weeklyReportEmail(data: {
       <tr>
         <td width="33%" style="padding: 8px;">
           <div style="background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 20px; text-align: center;">
-            <p style="color: #22c55e; font-size: 32px; font-weight: 700; margin: 0;">${data.avgUptime.toFixed(2)}%</p>
+            <p style="color: #6366f1; font-size: 32px; font-weight: 700; margin: 0;">${data.avgUptime.toFixed(2)}%</p>
             <p style="color: rgba(255, 255, 255, 0.5); font-size: 12px; margin: 8px 0 0 0;">Gem. Uptime</p>
           </div>
         </td>
@@ -624,7 +624,7 @@ export function weeklyReportEmail(data: {
         </td>
         <td width="33%" style="padding: 8px;">
           <div style="background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 20px; text-align: center;">
-            <p style="color: ${data.totalIncidents > 0 ? '#f59e0b' : '#22c55e'}; font-size: 32px; font-weight: 700; margin: 0;">${data.totalIncidents}</p>
+            <p style="color: ${data.totalIncidents > 0 ? '#f59e0b' : '#6366f1'}; font-size: 32px; font-weight: 700; margin: 0;">${data.totalIncidents}</p>
             <p style="color: rgba(255, 255, 255, 0.5); font-size: 12px; margin: 8px 0 0 0;">Incidenten</p>
           </div>
         </td>
@@ -642,7 +642,7 @@ export function weeklyReportEmail(data: {
                   <span style="color: #ffffff; font-size: 15px; font-weight: 600;">${data.topPerformer.name}</span>
                 </td>
                 <td style="text-align: right;">
-                  <span style="color: #22c55e; font-size: 16px; font-weight: 700;">${data.topPerformer.uptime}%</span>
+                  <span style="color: #6366f1; font-size: 16px; font-weight: 700;">${data.topPerformer.uptime}%</span>
                 </td>
               </tr>
             </table>

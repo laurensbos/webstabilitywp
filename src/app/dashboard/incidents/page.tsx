@@ -56,7 +56,7 @@ function getStatusColor(status: string): string {
   switch (status) {
     case 'ongoing': return '#ef4444';
     case 'investigating': return '#f59e0b';
-    case 'resolved': return '#22c55e';
+    case 'resolved': return '#6366f1';
     default: return '#64748b';
   }
 }
@@ -148,7 +148,7 @@ export default function IncidentsPage() {
           </div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e' }}>
+          <div className={styles.statIcon} style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#6366f1' }}>
             <Clock size={20} />
           </div>
           <div className={styles.statContent}>

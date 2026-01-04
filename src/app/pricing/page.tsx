@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { Check, Zap, Building2, Rocket, ArrowRight, Sparkles } from 'lucide-react';
+import { Check, Zap, Building2, Rocket, ArrowRight, Sparkles, Crown, X } from 'lucide-react';
 import { Header, Footer, Background } from '@/components/layout';
 import styles from './page.module.css';
 
@@ -12,64 +12,92 @@ const plans = [
   {
     id: 'free',
     name: 'Free',
-    price: 0,
+    monthlyPrice: 0,
+    yearlyPrice: 0,
     description: 'Perfect om te starten',
-    icon: Zap,
+    icon: Rocket,
     features: [
-      '3 websites',
-      '5 minuten checks',
-      'Email alerts',
-      'SSL monitoring',
-      '7 dagen historie',
-      'Status pagina',
+      '2 websites monitoren',
+      '5 minuten check interval',
+      'Email notificaties',
+      '24 uur historie',
+      'Basis uptime dashboard',
     ],
     limitations: [
-      'Geen SMS alerts',
+      'Geen SSL monitoring',
       'Geen webhooks',
-      'Geen priority support',
+      'Geen team members',
     ],
     cta: 'Huidige plan',
     popular: false,
   },
   {
-    id: 'pro',
-    name: 'Pro',
-    price: 9,
-    description: 'Voor professionals',
-    icon: Rocket,
+    id: 'starter',
+    name: 'Starter',
+    monthlyPrice: 9,
+    yearlyPrice: 7,
+    description: 'Voor freelancers',
+    icon: Zap,
+    badge: 'Nieuw',
     features: [
-      '20 websites',
-      '1 minuut checks',
-      'Email & SMS alerts',
+      '10 websites monitoren',
+      '3 minuten check interval',
+      'Email & Slack alerts',
+      '30 dagen historie',
       'SSL monitoring',
-      '90 dagen historie',
-      'Status pagina',
-      'Webhooks',
-      'API toegang',
+      'Response time alerts',
+      'Publieke status pagina',
     ],
     limitations: [],
-    cta: 'Upgrade naar Pro',
+    cta: 'Start 14 dagen gratis',
     popular: false,
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    monthlyPrice: 29,
+    yearlyPrice: 24,
+    description: 'Voor agencies',
+    icon: Crown,
+    features: [
+      '50 websites monitoren',
+      '1 minuut check interval',
+      'Alle alert kanalen',
+      '12 maanden historie',
+      'SSL & Performance monitoring',
+      'Onderhoudsmodus',
+      'API toegang',
+      'Webhooks (Slack, Discord)',
+      '5 team members',
+      'Priority support',
+    ],
+    limitations: [],
+    cta: 'Start 14 dagen gratis',
+    popular: true,
   },
   {
     id: 'business',
     name: 'Business',
-    price: 29,
-    description: 'Voor teams en agencies',
+    monthlyPrice: 79,
+    yearlyPrice: 65,
+    description: 'Voor grote teams',
     icon: Building2,
     features: [
-      '100 websites',
-      '30 seconden checks',
-      'Alle Pro features',
-      'Priority support',
-      '1 jaar historie',
-      'Custom webhooks',
-      'White-label status pagina',
-      'Team members (binnenkort)',
+      'Onbeperkt websites',
+      '30 seconden check interval',
+      'Alle alert kanalen + SMS',
+      'Onbeperkte historie',
+      'White-label status pages',
+      'Custom domein status page',
+      'Multi-region monitoring',
+      'Geavanceerde rapporten',
+      'Onbeperkt team members',
+      '99.9% SLA garantie',
+      'Dedicated account manager',
     ],
     limitations: [],
-    cta: 'Upgrade naar Business',
-    popular: true,
+    cta: 'Neem contact op',
+    popular: false,
   },
 ];
 
@@ -115,11 +143,11 @@ export default function PricingPage() {
     }
   };
 
-  const getPrice = (price: number) => {
+  const getPrice = (plan: typeof plans[0]) => {
     if (billingPeriod === 'yearly') {
-      return Math.round(price * 10); // 2 months free
+      return plan.yearlyPrice;
     }
-    return price;
+    return plan.monthlyPrice;
   };
 
   return (
@@ -131,7 +159,7 @@ export default function PricingPage() {
         <div className={styles.hero}>
           <div className={styles.badge}>
             <Sparkles size={14} />
-            <span>20% korting met code 2026</span>
+            <span>14 dagen gratis proberen</span>
           </div>
           <h1 className={styles.title}>
             Simpele, transparante prijzen
@@ -172,6 +200,9 @@ export default function PricingPage() {
                 {plan.popular && (
                   <div className={styles.popularBadge}>Meest gekozen</div>
                 )}
+                {'badge' in plan && plan.badge && (
+                  <div className={styles.newBadge}>{plan.badge}</div>
+                )}
 
                 <div className={styles.planHeader}>
                   <div className={styles.planIcon}>
@@ -182,10 +213,13 @@ export default function PricingPage() {
                 </div>
 
                 <div className={styles.planPricing}>
-                  <span className={styles.planPrice}>€{getPrice(plan.price)}</span>
+                  <span className={styles.planPrice}>€{getPrice(plan)}</span>
                   <span className={styles.planPeriod}>
-                    /{billingPeriod === 'yearly' ? 'jaar' : 'maand'}
+                    /{billingPeriod === 'yearly' ? 'maand' : 'maand'}
                   </span>
+                  {billingPeriod === 'yearly' && plan.monthlyPrice > 0 && (
+                    <span className={styles.yearlyNote}>gefactureerd per jaar</span>
+                  )}
                 </div>
 
                 <ul className={styles.planFeatures}>
@@ -197,7 +231,7 @@ export default function PricingPage() {
                   ))}
                   {plan.limitations.map((limitation, i) => (
                     <li key={i} className={styles.planLimitation}>
-                      <span className={styles.xIcon}>×</span>
+                      <X size={14} className={styles.xIcon} />
                       <span>{limitation}</span>
                     </li>
                   ))}
@@ -250,7 +284,7 @@ export default function PricingPage() {
         {/* CTA */}
         <div className={styles.ctaSection}>
           <h2>Klaar om te starten?</h2>
-          <p>Begin gratis met 3 websites. Geen creditcard nodig.</p>
+          <p>Begin gratis met 2 websites. Geen creditcard nodig.</p>
           <Link href="/register" className={styles.ctaButton}>
             Gratis account aanmaken
             <ArrowRight size={18} />

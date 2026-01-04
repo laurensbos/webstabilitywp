@@ -27,9 +27,9 @@
 }
 
 /* Colors */
-.green .line { stroke: #22c55e; }
-.green .dot { fill: #22c55e; }
-.green .gradientStart { stop-color: #22c55e; }
+.green .line { stroke: #6366f1; }
+.green .dot { fill: #6366f1; }
+.green .gradientStart { stop-color: #6366f1; }
 .green .gradientEnd { stop-color: transparent; }
 
 .blue .line { stroke: #3b82f6; }
@@ -70,7 +70,7 @@
 }
 
 .uptimeBar.up {
-  background: #22c55e;
+  background: #6366f1;
 }
 
 .uptimeBar.down {

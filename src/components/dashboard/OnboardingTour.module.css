@@ -61,14 +61,14 @@
 }
 
 .dotActive {
-  background: #10b981;
+  background: #6366f1;
   width: 24px;
   border-radius: 4px;
   box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
 }
 
 .dotCompleted {
-  background: #10b981;
+  background: #6366f1;
 }
 
 .closeBtn {
@@ -120,7 +120,7 @@
 }
 
 .icon {
-  color: #10b981;
+  color: #6366f1;
   position: relative;
   z-index: 1;
   animation: float 3s ease-in-out infinite;
@@ -179,7 +179,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   border: none;
   color: #fff;
   padding: 0.875rem 1.75rem;

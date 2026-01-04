@@ -34,9 +34,9 @@
 }
 
 .toastSuccess {
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #6366f1;
 }
 
 .toastError {
@@ -91,8 +91,8 @@
 }
 
 .statusIndicator.up {
-  background: rgba(34, 197, 94, 0.1);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
 }
 
 .statusIndicator.down {
@@ -180,13 +180,13 @@
 }
 
 .actionButton.resume {
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  color: #6366f1;
 }
 
 .actionButton.resume:hover {
-  background: rgba(34, 197, 94, 0.15);
+  background: rgba(99, 102, 241, 0.15);
 }
 
 .actionButton.check {
@@ -288,8 +288,8 @@
 }
 
 .statCard.status {
-  background: rgba(34, 197, 94, 0.08);
-  border-color: rgba(34, 197, 94, 0.15);
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.15);
 }
 
 .statCard.statusDown {
@@ -313,8 +313,8 @@
 }
 
 .statCard.status .statIcon {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
 }
 
 .statCard.uptime .statIcon {
@@ -328,8 +328,8 @@
 }
 
 .statCard.ssl .statIcon {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
 }
 
 .statCard.performance .statIcon {
@@ -403,7 +403,7 @@
 }
 
 .responseValue.fast {
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .responseValue.medium {
@@ -460,8 +460,8 @@
 }
 
 .sslBadge.valid {
-  background: rgba(34, 197, 94, 0.1);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
 }
 
 .sslBadge.expiring {
@@ -758,7 +758,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #22c55e;
+  background: #6366f1;
   border-radius: 50%;
   color: #fff;
 }
@@ -1277,10 +1277,10 @@
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.3);
   border-radius: 10px;
-  color: #22c55e;
+  color: #6366f1;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -1288,8 +1288,8 @@
 }
 
 .runCheckButton:hover:not(:disabled) {
-  background: rgba(34, 197, 94, 0.2);
-  border-color: rgba(34, 197, 94, 0.5);
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.5);
 }
 
 .runCheckButton:disabled {
@@ -1404,7 +1404,7 @@
 }
 
 .vitalGood {
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .vitalWarning {
@@ -1597,7 +1597,7 @@
 
 .heroTimeSelect:focus {
   outline: none;
-  border-color: #22c55e;
+  border-color: #6366f1;
 }
 
 /* Uptime History Bar */
@@ -1620,7 +1620,7 @@
 }
 
 .uptimeHistoryBar.up {
-  background: #22c55e;
+  background: #6366f1;
 }
 
 .uptimeHistoryBar.down {
@@ -1676,7 +1676,7 @@
 }
 
 .quickStatValue.good {
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .quickStatValue.warning {
@@ -1770,7 +1770,7 @@
 }
 
 .responseMetricValue.good {
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .responseMetricValue.warning {
@@ -1799,7 +1799,7 @@
 }
 
 .sparklineBar.up {
-  background: linear-gradient(to top, rgba(34, 197, 94, 0.3), #22c55e);
+  background: linear-gradient(to top, rgba(99, 102, 241, 0.3), #6366f1);
 }
 
 .sparklineBar.degraded {
@@ -1863,8 +1863,8 @@
 }
 
 .sslStatusBadge.valid {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
 }
 
 .sslStatusBadge.expiring {
@@ -2142,8 +2142,8 @@
 
 /* Status-specific quick stat cards */
 .quickStatCard.up {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(25, 30, 35, 0.8) 100%);
-  border-color: rgba(34, 197, 94, 0.25);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(25, 30, 35, 0.8) 100%);
+  border-color: rgba(99, 102, 241, 0.25);
 }
 
 .quickStatCard.down {
@@ -2173,8 +2173,8 @@
 
 /* Icon colors - more subtle */
 .quickStatCard.up .quickStatIcon {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
 }
 
 .quickStatCard.down .quickStatIcon {
@@ -2218,7 +2218,7 @@
 }
 
 .quickStatIcon[data-color="green"] {
-  background: rgba(34, 197, 94, 0.15);
+  background: rgba(99, 102, 241, 0.15);
   color: #4ade80;
 }
 

@@ -62,7 +62,7 @@ const webhookTypes = [
     id: 'generic', 
     name: 'Generic Webhook', 
     icon: Globe, 
-    color: '#22c55e',
+    color: '#6366f1',
     description: 'Stuur JSON data naar elke URL',
     helpUrl: null
   },
@@ -248,7 +248,7 @@ export default function WebhooksPage() {
 
   const getTypeColor = (type: string) => {
     const typeConfig = webhookTypes.find(t => t.id === type);
-    return typeConfig?.color || '#22c55e';
+    return typeConfig?.color || '#6366f1';
   };
 
   const formatDate = (dateString: string | null) => {

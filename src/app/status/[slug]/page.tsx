@@ -118,7 +118,7 @@ export default function PublicStatusPage({ params }: { params: Promise<{ slug: s
     switch (status) {
       case 'up':
       case 'operational':
-        return '#22c55e';
+        return '#6366f1';
       case 'degraded':
         return '#f59e0b';
       case 'down':

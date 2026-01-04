@@ -91,7 +91,7 @@ const generateUptimeDataFromChecks = (
 
 // Helper to get color based on score
 function getScoreColor(score: number): string {
-  if (score >= 90) return '#22c55e'; // Green
+  if (score >= 90) return '#6366f1'; // Green
   if (score >= 50) return '#f59e0b'; // Orange
   return '#ef4444'; // Red
 }

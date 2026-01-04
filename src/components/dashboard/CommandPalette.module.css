@@ -115,7 +115,7 @@
 
 .command:hover,
 .selected {
-  background: rgba(34, 197, 94, 0.1);
+  background: rgba(99, 102, 241, 0.1);
 }
 
 .commandIcon {
@@ -131,8 +131,8 @@
 }
 
 .selected .commandIcon {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
 }
 
 .commandLabel {

@@ -253,7 +253,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
 
           {incident.resolvedAt ? (
             <div className={styles.timelineItem}>
-              <div className={styles.timelineDot} style={{ background: '#22c55e' }} />
+              <div className={styles.timelineDot} style={{ background: '#6366f1' }} />
               <div className={styles.timelineContent}>
                 <h4>Opgelost</h4>
                 <p>{formatDate(incident.resolvedAt)}</p>

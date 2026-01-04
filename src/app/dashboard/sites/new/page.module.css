@@ -18,7 +18,7 @@
 }
 
 .backLink:hover {
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .content {
@@ -36,13 +36,13 @@
 .iconWrapper {
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.1));
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .title {
@@ -80,7 +80,7 @@
 }
 
 .upgradeLink {
-  color: #22c55e;
+  color: #6366f1;
   text-decoration: none;
   font-weight: 500;
   font-size: 14px;
@@ -98,13 +98,13 @@
 .successIcon {
   width: 80px;
   height: 80px;
-  background: rgba(34, 197, 94, 0.2);
+  background: rgba(99, 102, 241, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 24px;
-  color: #22c55e;
+  color: #6366f1;
   animation: pulse 2s infinite;
 }
 
@@ -154,8 +154,8 @@
 }
 
 .inputWrapper:focus-within {
-  border-color: #22c55e;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .inputPrefix {
@@ -191,8 +191,8 @@
 
 .input:focus {
   outline: none;
-  border-color: #22c55e;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .input::placeholder {
@@ -219,8 +219,8 @@
 }
 
 .infoCard {
-  background: rgba(34, 197, 94, 0.05);
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.2);
   border-radius: 12px;
   padding: 20px;
 }
@@ -228,7 +228,7 @@
 .infoCard h3 {
   font-size: 14px;
   font-weight: 600;
-  color: #22c55e;
+  color: #6366f1;
   margin: 0 0 16px;
 }
 
@@ -250,7 +250,7 @@
 }
 
 .infoCard li svg {
-  color: #22c55e;
+  color: #6366f1;
   flex-shrink: 0;
 }
 
@@ -299,7 +299,7 @@
   justify-content: center;
   gap: 8px;
   padding: 14px 24px;
-  background: linear-gradient(135deg, #22c55e, #16a34a);
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
   border: none;
   border-radius: 12px;
   color: #fff;
@@ -311,7 +311,7 @@
 
 .submitButton:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
 }
 
 .submitButton:disabled {
@@ -358,7 +358,7 @@
 
 .usageFill {
   height: 100%;
-  background: linear-gradient(90deg, #22c55e, #16a34a);
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
   border-radius: 3px;
   transition: width 0.3s ease;
 }
@@ -370,7 +370,7 @@
 }
 
 .usageWarning a {
-  color: #22c55e;
+  color: #6366f1;
   text-decoration: none;
 }
 

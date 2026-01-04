@@ -218,8 +218,8 @@
 }
 
 .badgeActive {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
 }
 
 .badgePending {
@@ -318,7 +318,7 @@
   content: '✓';
   position: absolute;
   left: 0;
-  color: #22c55e;
+  color: #6366f1;
   font-size: 0.75rem;
 }
 

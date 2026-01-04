@@ -15,7 +15,7 @@ interface WebhookPayload {
 // Slack webhook
 export async function sendSlackWebhook(webhookUrl: string, payload: WebhookPayload): Promise<boolean> {
   try {
-    const color = payload.status === 'up' ? '#22c55e' : 
+    const color = payload.status === 'up' ? '#6366f1' : 
                   payload.status === 'down' ? '#ef4444' : 
                   payload.status === 'degraded' ? '#f59e0b' : '#3b82f6';
     

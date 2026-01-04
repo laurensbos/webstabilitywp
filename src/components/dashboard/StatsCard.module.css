@@ -50,7 +50,7 @@
 }
 
 .green .icon {
-  color: #10b981;
+  color: #6366f1;
 }
 
 .blue .iconWrapper {
@@ -120,7 +120,7 @@
 
 .positive {
   background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
+  color: #6366f1;
 }
 
 .negative {

@@ -92,8 +92,8 @@ export async function GET(request: NextRequest) {
           <title>Email Preview</title>
           <style>
             body { font-family: system-ui; padding: 40px; background: #0a0c0b; color: #fff; }
-            h1 { color: #22c55e; }
-            a { color: #22c55e; display: block; padding: 10px 0; font-size: 18px; }
+            h1 { color: #6366f1; }
+            a { color: #6366f1; display: block; padding: 10px 0; font-size: 18px; }
           </style>
         </head>
         <body>
@@ -128,7 +128,7 @@ export async function GET(request: NextRequest) {
             z-index: 1000;
             border-bottom: 1px solid #333;
           }
-          .preview-bar a { color: #22c55e; text-decoration: none; }
+          .preview-bar a { color: #6366f1; text-decoration: none; }
           .preview-bar span { color: #fff; }
           .preview-bar .subject { color: #888; font-size: 14px; }
           .email-frame { padding-top: 60px; }

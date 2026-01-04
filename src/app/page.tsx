@@ -79,7 +79,7 @@ export default function HomePage() {
             </div>
             <div className={styles.trustItem}>
               <Check size={16} />
-              <span>5 sites gratis</span>
+              <span>2 sites gratis</span>
             </div>
             <div className={styles.trustItem}>
               <Check size={16} />
@@ -210,7 +210,7 @@ export default function HomePage() {
                         <polyline 
                           points="0,30 40,30 50,10 60,50 70,20 80,40 90,30 200,30" 
                           fill="none" 
-                          stroke="#22c55e" 
+                          stroke="#6366f1" 
                           strokeWidth="2.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -225,7 +225,7 @@ export default function HomePage() {
                           <path d="M6,32 A24,24 0 0,1 48,14" fill="none" stroke="url(#speedGrad)" strokeWidth="5" strokeLinecap="round"/>
                           <defs>
                             <linearGradient id="speedGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                              <stop offset="0%" stopColor="#22c55e"/>
+                              <stop offset="0%" stopColor="#6366f1"/>
                               <stop offset="100%" stopColor="#06b6d4"/>
                             </linearGradient>
                           </defs>
@@ -237,8 +237,8 @@ export default function HomePage() {
                     {index === 2 && (
                       <div className={styles.shieldVisual}>
                         <svg className={styles.shieldSvg} viewBox="0 0 40 48">
-                          <rect x="4" y="20" width="32" height="24" rx="4" fill="#22c55e"/>
-                          <path d="M10,20 L10,14 A10,10 0 0,1 30,14 L30,20" fill="none" stroke="#22c55e" strokeWidth="4" strokeLinecap="round"/>
+                          <rect x="4" y="20" width="32" height="24" rx="4" fill="#6366f1"/>
+                          <path d="M10,20 L10,14 A10,10 0 0,1 30,14 L30,20" fill="none" stroke="#6366f1" strokeWidth="4" strokeLinecap="round"/>
                           <circle cx="20" cy="32" r="4" fill="#0a0a0a"/>
                           <line x1="20" y1="34" x2="20" y2="38" stroke="#0a0a0a" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
@@ -267,7 +267,7 @@ export default function HomePage() {
                           <rect x="10" y="30" width="20" height="50" rx="4" fill="rgba(34,197,94,0.3)"/>
                           <rect x="40" y="15" width="20" height="65" rx="4" fill="rgba(34,197,94,0.5)"/>
                           <rect x="70" y="40" width="20" height="40" rx="4" fill="rgba(34,197,94,0.3)"/>
-                          <rect x="100" y="10" width="20" height="70" rx="4" fill="#22c55e"/>
+                          <rect x="100" y="10" width="20" height="70" rx="4" fill="#6366f1"/>
                           <rect x="130" y="25" width="20" height="55" rx="4" fill="rgba(34,197,94,0.5)"/>
                           <rect x="160" y="20" width="20" height="60" rx="4" fill="rgba(34,197,94,0.4)"/>
                         </svg>
@@ -335,9 +335,9 @@ export default function HomePage() {
                 <path d="M0 10 H100" stroke="url(#stepGradient)" strokeWidth="2" strokeDasharray="6 4" />
                 <defs>
                   <linearGradient id="stepGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#22c55e" stopOpacity="0.3" />
-                    <stop offset="50%" stopColor="#22c55e" stopOpacity="0.6" />
-                    <stop offset="100%" stopColor="#22c55e" stopOpacity="0.3" />
+                    <stop offset="0%" stopColor="#6366f1" stopOpacity="0.3" />
+                    <stop offset="50%" stopColor="#6366f1" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="#6366f1" stopOpacity="0.3" />
                   </linearGradient>
                 </defs>
               </svg>
@@ -350,7 +350,7 @@ export default function HomePage() {
                     <div className={styles.notifLines}><span></span><span></span></div>
                   </div>
                   <div className={styles.notification} style={{ transform: 'rotate(2deg) translateY(-8px)' }}>
-                    <div className={styles.notifIcon} style={{ background: 'linear-gradient(135deg, #22c55e, #16a34a)' }}></div>
+                    <div className={styles.notifIcon} style={{ background: 'linear-gradient(135deg, #6366f1, #4f46e5)' }}></div>
                     <div className={styles.notifLines}><span></span><span></span></div>
                   </div>
                   <div className={styles.notification} style={{ transform: 'rotate(-1deg) translateY(-16px)' }}>
@@ -367,9 +367,9 @@ export default function HomePage() {
                 <path d="M0 10 H100" stroke="url(#stepGradient2)" strokeWidth="2" strokeDasharray="6 4" />
                 <defs>
                   <linearGradient id="stepGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#22c55e" stopOpacity="0.3" />
-                    <stop offset="50%" stopColor="#22c55e" stopOpacity="0.6" />
-                    <stop offset="100%" stopColor="#22c55e" stopOpacity="0.3" />
+                    <stop offset="0%" stopColor="#6366f1" stopOpacity="0.3" />
+                    <stop offset="50%" stopColor="#6366f1" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="#6366f1" stopOpacity="0.3" />
                   </linearGradient>
                 </defs>
               </svg>
@@ -456,7 +456,7 @@ export default function HomePage() {
                   </div>
                   <div className={styles.integrationCard} data-brand="email">
                     <div className={styles.integrationLogo}>
-                      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#6366f1" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="2" y="4" width="20" height="16" rx="2"/>
                         <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                       </svg>
@@ -511,7 +511,7 @@ export default function HomePage() {
                   </div>
                   <div className={styles.integrationCard} data-brand="email">
                     <div className={styles.integrationLogo}>
-                      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#6366f1" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="2" y="4" width="20" height="16" rx="2"/>
                         <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                       </svg>

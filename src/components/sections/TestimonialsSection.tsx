@@ -27,7 +27,7 @@ export function TestimonialsSection({
             <div key={idx} className={styles.card}>
               <div className={styles.stars}>
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} size={16} fill="#22c55e" color="#22c55e" />
+                  <Star key={i} size={16} fill="#6366f1" color="#6366f1" />
                 ))}
               </div>
               <p className={styles.content}>"{testimonial.content}"</p>

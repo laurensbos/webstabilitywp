@@ -90,7 +90,7 @@
   left: 20%;
   right: 20%;
   height: 2px;
-  background: #22c55e;
+  background: #6366f1;
   border-radius: 2px;
 }
 
@@ -171,7 +171,7 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -238,8 +238,8 @@
 
 .input:focus {
   outline: none;
-  border-color: #22c55e;
-  background: rgba(34, 197, 94, 0.05);
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.05);
 }
 
 .input::placeholder {
@@ -267,9 +267,9 @@
 }
 
 .saveMessage.success {
-  background: rgba(34, 197, 94, 0.15);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #6366f1;
 }
 
 .saveMessage.error {
@@ -286,7 +286,7 @@
 
 .saveButton {
   padding: 12px 24px;
-  background: #22c55e;
+  background: #6366f1;
   border: none;
   border-radius: 10px;
   color: #000;
@@ -297,7 +297,7 @@
 }
 
 .saveButton:hover:not(:disabled) {
-  background: #16a34a;
+  background: #4f46e5;
 }
 
 .saveButton:disabled {
@@ -417,7 +417,7 @@
 }
 
 .toggle input:checked + .toggleSlider {
-  background: #22c55e;
+  background: #6366f1;
 }
 
 .toggle input:checked + .toggleSlider::after {
@@ -427,8 +427,8 @@
 /* Current Plan */
 .currentPlan {
   padding: 24px;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
   border-radius: 16px;
 }
 
@@ -442,15 +442,15 @@
 .planName {
   font-size: 24px;
   font-weight: 700;
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .billingCycle {
   padding: 4px 12px;
-  background: rgba(34, 197, 94, 0.15);
+  background: rgba(99, 102, 241, 0.15);
   border-radius: 20px;
   font-size: 12px;
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .planStats {
@@ -500,7 +500,7 @@
 
 .usageProgress {
   height: 100%;
-  background: #22c55e;
+  background: #6366f1;
   border-radius: 3px;
   transition: width 0.3s ease;
 }
@@ -527,12 +527,12 @@
 }
 
 .planCard.current {
-  border-color: rgba(34, 197, 94, 0.3);
-  background: rgba(34, 197, 94, 0.05);
+  border-color: rgba(99, 102, 241, 0.3);
+  background: rgba(99, 102, 241, 0.05);
 }
 
 .planCard.popular {
-  border-color: rgba(34, 197, 94, 0.4);
+  border-color: rgba(99, 102, 241, 0.4);
 }
 
 .popularBadge,
@@ -547,13 +547,13 @@
 }
 
 .popularBadge {
-  background: #22c55e;
+  background: #6366f1;
   color: #000;
 }
 
 .currentBadge {
-  background: rgba(34, 197, 94, 0.2);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.2);
+  color: #6366f1;
 }
 
 .planCardName {
@@ -600,14 +600,14 @@
 }
 
 .planFeatures li svg {
-  color: #22c55e;
+  color: #6366f1;
   flex-shrink: 0;
 }
 
 .planButton {
   width: 100%;
   padding: 12px 20px;
-  background: #22c55e;
+  background: #6366f1;
   border: none;
   border-radius: 10px;
   color: #000;
@@ -618,7 +618,7 @@
 }
 
 .planButton:hover:not(:disabled) {
-  background: #16a34a;
+  background: #4f46e5;
 }
 
 .planButton:disabled {
@@ -774,10 +774,10 @@
 
 .paid {
   padding: 4px 10px;
-  background: rgba(34, 197, 94, 0.15);
+  background: rgba(99, 102, 241, 0.15);
   border-radius: 6px;
   font-size: 12px;
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .downloadButton {
@@ -889,7 +889,7 @@
 .confirmButton {
   flex: 1;
   padding: 12px 20px;
-  background: #22c55e;
+  background: #6366f1;
   border: none;
   border-radius: 10px;
   color: #000;
@@ -900,7 +900,7 @@
 }
 
 .confirmButton:hover {
-  background: #16a34a;
+  background: #4f46e5;
 }
 
 /* Responsive */

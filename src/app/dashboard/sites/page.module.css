@@ -120,7 +120,7 @@
 }
 
 .upgradeLink {
-  color: #22c55e;
+  color: #6366f1;
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
@@ -165,8 +165,8 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: #22c55e;
-  background: rgba(34, 197, 94, 0.05);
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.05);
 }
 
 .searchInput::placeholder {
@@ -213,9 +213,9 @@
 }
 
 .statusTab.active.up {
-  background: rgba(34, 197, 94, 0.15);
-  border-color: rgba(34, 197, 94, 0.4);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: #6366f1;
 }
 
 .statusTab.active.down {
@@ -272,7 +272,7 @@
 
 .sortSelect:focus {
   outline: none;
-  border-color: #22c55e;
+  border-color: #6366f1;
 }
 
 .viewToggle {
@@ -301,8 +301,8 @@
 }
 
 .viewButton.active {
-  color: #22c55e;
-  background: rgba(34, 197, 94, 0.1);
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
 }
 
 /* Sites Container */
@@ -332,8 +332,8 @@
 }
 
 .siteCard:hover {
-  border-color: rgba(34, 197, 94, 0.3);
-  background: rgba(34, 197, 94, 0.05);
+  border-color: rgba(99, 102, 241, 0.3);
+  background: rgba(99, 102, 241, 0.05);
   transform: translateY(-2px);
 }
 
@@ -372,8 +372,8 @@
 }
 
 .statusDot.up {
-  background: #22c55e;
-  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+  background: #6366f1;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
 }
 
 .statusDot.down {
@@ -419,8 +419,8 @@
 }
 
 .statusBadge.up {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
 }
 
 .statusBadge.down {
@@ -482,7 +482,7 @@
 }
 
 .statValue.excellent {
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .statValue.good {
@@ -498,7 +498,7 @@
 }
 
 .statValue.valid {
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .statValue.expiring {
@@ -686,8 +686,8 @@
 .input:focus,
 .select:focus {
   outline: none;
-  border-color: #22c55e;
-  background: rgba(34, 197, 94, 0.05);
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.05);
 }
 
 .input::placeholder {
@@ -740,8 +740,8 @@
 }
 
 .checkbox input:checked + .checkmark {
-  background: #22c55e;
-  border-color: #22c55e;
+  background: #6366f1;
+  border-color: #6366f1;
 }
 
 .checkbox input:checked + .checkmark::after {
@@ -789,7 +789,7 @@
   justify-content: center;
   gap: 8px;
   padding: 14px 20px;
-  background: #22c55e;
+  background: #6366f1;
   border: none;
   border-radius: 12px;
   color: #000;
@@ -800,7 +800,7 @@
 }
 
 .submitButton:hover:not(:disabled) {
-  background: #16a34a;
+  background: #4f46e5;
 }
 
 .submitButton:disabled {

@@ -79,7 +79,7 @@
 }
 
 .success .iconWrapper {
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .error .iconWrapper {
@@ -162,7 +162,7 @@
 }
 
 .success .progress {
-  background: linear-gradient(90deg, #22c55e, #10b981);
+  background: linear-gradient(90deg, #6366f1, #6366f1);
 }
 
 .error .progress {
@@ -188,7 +188,7 @@
 
 /* Toast type specific borders */
 .success {
-  border-left: 3px solid #22c55e;
+  border-left: 3px solid #6366f1;
 }
 
 .error {

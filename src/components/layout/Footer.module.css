@@ -63,8 +63,8 @@
 
 .socialLink:hover,
 .socialLink:active {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
 }
 
 .footerLinks {
@@ -97,7 +97,7 @@
 
 .footerColumn a:hover,
 .footerColumn a:active {
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .footerBottom {
@@ -269,11 +269,11 @@
 }
 
 .mobileNavItemActive {
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .mobileNavItemActive svg {
-  color: #22c55e;
+  color: #6366f1;
 }
 
 .mobileNavItemCenter {
@@ -286,10 +286,10 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   border-radius: 14px;
   color: white;
-  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.35);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
   margin-top: -12px;
   transition: all 0.2s;
 }
@@ -297,11 +297,11 @@
 .mobileNavItemCenter:hover .mobileNavCenterIcon,
 .mobileNavItemCenter:active .mobileNavCenterIcon {
   transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.45);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
 }
 
 .mobileNavItemCenter span {
-  color: #22c55e;
+  color: #6366f1;
   font-weight: 600;
 }
 

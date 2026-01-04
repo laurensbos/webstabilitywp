@@ -97,7 +97,7 @@
 }
 
 .stepActive .stepNumber {
-  background: #22c55e;
+  background: #6366f1;
   color: #fff;
   animation: stepPulse 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -174,7 +174,7 @@
 
 .inputWrapper input:focus {
   outline: none;
-  border-color: #22c55e;
+  border-color: #6366f1;
   background: rgba(0, 0, 0, 0.4);
 }
 
@@ -202,8 +202,8 @@
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
-  background: rgba(34, 197, 94, 0.08);
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
   border-radius: 12px;
 }
 
@@ -216,7 +216,7 @@
 }
 
 .benefitIcon {
-  color: #22c55e;
+  color: #6366f1;
   flex-shrink: 0;
 }
 
@@ -237,7 +237,7 @@
   gap: 0.5rem;
   width: 100%;
   padding: 0.875rem 1.5rem;
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   color: #fff;
   font-size: 0.9375rem;
   font-weight: 600;
@@ -251,7 +251,7 @@
 
 .submitBtn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
 }
 
 .submitBtn:disabled {
@@ -351,14 +351,14 @@
 }
 
 .authFooter a {
-  color: #22c55e;
+  color: #6366f1;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s;
 }
 
 .authFooter a:hover {
-  color: #16a34a;
+  color: #4f46e5;
 }
 
 .terms {
