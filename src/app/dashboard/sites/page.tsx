@@ -386,19 +386,26 @@ export default function SitesPage() {
 
               <div className={styles.siteStats}>
                 <div className={styles.statItem}>
-                  <span className={styles.statLabel}>Uptime</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                  </svg>
                   <span className={`${styles.statValue} ${site.uptime >= 99.9 ? styles.excellent : site.uptime >= 99 ? styles.good : styles.poor}`}>
                     {site.uptime}%
                   </span>
                 </div>
                 <div className={styles.statItem}>
-                  <span className={styles.statLabel}>Response</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
                   <span className={`${styles.statValue} ${site.responseTime === 0 ? styles.offline : site.responseTime < 200 ? styles.excellent : site.responseTime < 500 ? styles.good : styles.poor}`}>
-                    {site.responseTime === 0 ? '-' : `${site.responseTime}ms`}
+                    {site.responseTime === 0 ? '—' : `${site.responseTime}ms`}
                   </span>
                 </div>
                 <div className={styles.statItem}>
-                  <span className={styles.statLabel}>SSL</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
                   <span className={`${styles.statValue} ${styles[site.sslStatus || 'none']}`}>
                     {getSslLabel(site.sslStatus)}
                   </span>

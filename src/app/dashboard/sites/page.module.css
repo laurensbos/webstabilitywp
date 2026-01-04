@@ -414,6 +414,19 @@
 
 .sitesContainer.list {
   grid-template-columns: 1fr;
+  gap: 0;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.sitesContainer.list > div {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.sitesContainer.list > div:last-child {
+  border-bottom: none;
 }
 
 /* Site Card */
@@ -431,14 +444,22 @@
 .siteCard:hover {
   border-color: rgba(99, 102, 241, 0.3);
   background: rgba(99, 102, 241, 0.05);
-  transform: translateY(-2px);
+}
+
+.sitesContainer.list .siteCard:hover {
+  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  transform: none;
 }
 
 .sitesContainer.list .siteCard {
   flex-direction: row;
   align-items: center;
-  gap: 24px;
-  padding: 16px 20px;
+  gap: 16px;
+  padding: 12px 16px;
+  background: transparent;
+  border-color: transparent;
+  border-radius: 0;
 }
 
 .siteHeader {
@@ -451,7 +472,8 @@
 
 .sitesContainer.list .siteHeader {
   margin-bottom: 0;
-  flex: 1;
+  flex: 0 1 280px;
+  min-width: 200px;
 }
 
 .siteInfo {
@@ -460,12 +482,23 @@
   gap: 12px;
 }
 
+.sitesContainer.list .siteInfo {
+  align-items: center;
+  gap: 10px;
+}
+
 .statusDot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
   margin-top: 6px;
   flex-shrink: 0;
+}
+
+.sitesContainer.list .statusDot {
+  width: 8px;
+  height: 8px;
+  margin-top: 0;
 }
 
 .statusDot.up {
@@ -500,11 +533,20 @@
   margin: 0 0 4px 0;
 }
 
+.sitesContainer.list .siteName {
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
 .siteUrl {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.4);
   margin: 0;
   word-break: break-all;
+}
+
+.sitesContainer.list .siteUrl {
+  font-size: 12px;
 }
 
 .statusBadge {
@@ -535,6 +577,10 @@
   color: #6b7280;
 }
 
+.sitesContainer.list .statusBadge {
+  display: none;
+}
+
 /* Site Stats */
 .siteStats {
   display: grid;
@@ -550,7 +596,9 @@
   border: none;
   margin-bottom: 0;
   padding: 0;
-  gap: 32px;
+  gap: 8px;
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 .statItem {
@@ -562,7 +610,17 @@
 .sitesContainer.list .statItem {
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.sitesContainer.list .statItem svg {
+  color: rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
 }
 
 .statLabel {
@@ -572,10 +630,19 @@
   letter-spacing: 0.5px;
 }
 
+.sitesContainer.list .statLabel {
+  display: none;
+}
+
 .statValue {
   font-size: 15px;
   font-weight: 600;
   color: #fff;
+}
+
+.sitesContainer.list .statValue {
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .statValue.excellent {
@@ -619,8 +686,18 @@
 }
 
 .sitesContainer.list .siteFooter {
-  min-width: 180px;
+  min-width: 100px;
   justify-content: flex-end;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.sitesContainer.list .lastChecked {
+  font-size: 11px;
+}
+
+.sitesContainer.list .lastChecked svg {
+  display: none;
 }
 
 .lastChecked {
