@@ -15,14 +15,13 @@ import {
   ChevronRight,
   Plus,
   ExternalLink,
-  Loader2,
-  Zap,
-  Activity,
   Shield,
   ShieldCheck,
   ShieldAlert,
   ShieldX,
-  Gauge
+  Gauge,
+  Activity,
+  Zap
 } from 'lucide-react';
 import { useDashboardStatsWithDetails } from '@/hooks';
 import { OnboardingTour, EmptyState, StatsSkeleton, SitesSkeleton, UsageIndicator, UpgradePrompt } from '@/components/dashboard';
@@ -52,35 +51,38 @@ export default function DashboardPage() {
   const userPlan = session?.user?.plan || 'free';
   const maxSites = planLimits[userPlan] || 3;
 
-  // Prepare stats data
-  const statsData = [
+  // Prepare stats data - Hero stat first, then secondary stats
+  const heroStat = {
+    label: 'Gemiddelde Uptime',
+    value: loading ? '—' : `${stats.avgUptime.toFixed(2)}%`,
+    subtitle: loading ? '' : stats.sitesDown > 0 ? `${stats.sitesDown} site${stats.sitesDown > 1 ? 's' : ''} offline` : 'Alle sites online',
+    status: stats.sitesDown > 0 ? 'warning' : 'good',
+  };
+
+  const secondaryStats = [
     {
-      label: 'Gemiddelde Uptime',
-      value: loading ? '...' : `${stats.avgUptime.toFixed(2)}%`,
-      change: '+0.12%',
-      trend: 'up' as const,
-      icon: TrendingUp,
-    },
-    {
-      label: 'Gem. Response Time',
-      value: loading ? '...' : `${stats.avgResponseTime}ms`,
-      change: '-23ms',
-      trend: 'up' as const,
+      label: 'Response',
+      value: loading ? '—' : `${stats.avgResponseTime}ms`,
       icon: Clock,
+      color: stats.avgResponseTime > 500 ? 'warning' : 'default',
     },
     {
-      label: 'Actieve Sites',
-      value: loading ? '...' : String(stats.totalSites),
-      change: stats.sitesDown > 0 ? `-${stats.sitesDown} offline` : 'Alles online',
-      trend: stats.sitesDown > 0 ? 'down' as const : 'up' as const,
+      label: 'Sites',
+      value: loading ? '—' : String(stats.totalSites),
       icon: Globe,
+      color: 'default',
     },
     {
-      label: 'Alerts (7 dagen)',
-      value: loading ? '...' : String(stats.activeAlerts),
-      change: stats.criticalAlerts > 0 ? `${stats.criticalAlerts} kritiek` : 'Geen kritiek',
-      trend: stats.criticalAlerts > 0 ? 'down' as const : 'up' as const,
+      label: 'Alerts',
+      value: loading ? '—' : String(stats.activeAlerts),
       icon: Bell,
+      color: stats.criticalAlerts > 0 ? 'critical' : 'default',
+    },
+    {
+      label: 'SSL Issues',
+      value: loading ? '—' : String(stats.sslIssues || 0),
+      icon: Shield,
+      color: (stats.sslIssues || 0) > 0 ? 'warning' : 'default',
     },
   ];
 
@@ -131,27 +133,27 @@ export default function DashboardPage() {
     severity: alert.severity,
   }));
 
-  const getStatusIcon = (status: string) => {
+  const getStatusClass = (status: string) => {
     switch (status) {
       case 'up':
-        return <CheckCircle size={16} className={styles.statusUp} />;
+        return styles.statusUp;
       case 'warning':
-        return <AlertTriangle size={16} className={styles.statusWarning} />;
+        return styles.statusWarning;
       case 'down':
-        return <XCircle size={16} className={styles.statusDown} />;
+        return styles.statusDown;
       default:
-        return null;
+        return '';
     }
   };
 
   const getAlertIcon = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return <XCircle size={18} className={styles.alertCritical} />;
+        return <XCircle size={16} className={styles.alertCritical} />;
       case 'warning':
-        return <AlertTriangle size={18} className={styles.alertWarning} />;
+        return <AlertTriangle size={16} className={styles.alertWarning} />;
       default:
-        return <Bell size={18} />;
+        return <Bell size={16} />;
     }
   };
 
@@ -187,46 +189,55 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Section */}
       {loading ? (
         <StatsSkeleton />
       ) : (
         <>
-          {/* Usage Indicator */}
-          <UsageIndicator 
-            current={stats.totalSites} 
-            max={maxSites} 
-            label="Sites gebruikt" 
-            planName={userPlan}
-          />
-          
-          {/* Contextual upgrade prompt for free users */}
-          {userPlan === 'free' && stats.totalSites >= 2 && (
-            <UpgradePrompt 
-              type="contextual"
-              message="Upgrade naar Pro voor 1-minuut checks en snellere detectie van problemen"
-            />
-          )}
-
-          <div className={styles.statsGrid}>
-          {statsData.map((stat, index) => (
-          <div key={index} className={styles.statCard}>
-            <div className={styles.statIcon}>
-              <stat.icon size={20} />
-            </div>
-            <div className={styles.statContent}>
-              <span className={styles.statLabel}>{stat.label}</span>
-              <div className={styles.statValue}>
-                <span>{stat.value}</span>
-                <span className={`${styles.statChange} ${stat.trend === 'up' ? styles.statChangeUp : styles.statChangeDown}`}>
-                  {stat.trend === 'up' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-                  {stat.change}
+          {/* Hero Stat + Secondary Stats Row */}
+          <div className={styles.statsRow}>
+            {/* Hero Uptime Card */}
+            <div className={`${styles.heroCard} ${heroStat.status === 'warning' ? styles.heroWarning : ''}`}>
+              <div className={styles.heroIcon}>
+                <Activity size={24} />
+              </div>
+              <div className={styles.heroContent}>
+                <span className={styles.heroValue}>{heroStat.value}</span>
+                <span className={styles.heroLabel}>{heroStat.label}</span>
+                <span className={`${styles.heroSubtitle} ${heroStat.status === 'warning' ? styles.heroSubtitleWarning : ''}`}>
+                  {heroStat.status === 'good' ? <CheckCircle size={12} /> : <AlertTriangle size={12} />}
+                  {heroStat.subtitle}
                 </span>
               </div>
             </div>
+
+            {/* Secondary Stats */}
+            <div className={styles.secondaryStats}>
+              {secondaryStats.map((stat, index) => (
+                <div key={index} className={`${styles.secondaryStat} ${stat.color !== 'default' ? styles[`stat${stat.color.charAt(0).toUpperCase() + stat.color.slice(1)}`] : ''}`}>
+                  <stat.icon size={16} className={styles.secondaryIcon} />
+                  <span className={styles.secondaryValue}>{stat.value}</span>
+                  <span className={styles.secondaryLabel}>{stat.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-        </div>
+
+          {/* Usage + Upgrade Row */}
+          <div className={styles.usageRow}>
+            <UsageIndicator 
+              current={stats.totalSites} 
+              max={maxSites} 
+              label="Sites gebruikt" 
+              planName={userPlan}
+            />
+            {userPlan === 'free' && stats.totalSites >= 2 && (
+              <UpgradePrompt 
+                type="contextual"
+                message="Upgrade naar Pro voor 1-minuut checks"
+              />
+            )}
+          </div>
         </>
       )}
 
@@ -253,9 +264,7 @@ export default function DashboardPage() {
                   href={`/dashboard/sites/${site.id}`}
                   className={styles.siteCard}
                 >
-                  <div className={styles.siteStatus}>
-                    {getStatusIcon(site.status)}
-                  </div>
+                  <div className={`${styles.siteStatus} ${getStatusClass(site.status)}`} />
                   <div className={styles.siteInfo}>
                     <span className={styles.siteName}>{site.name}</span>
                     <span className={styles.siteUrl}>{site.url}</span>
@@ -264,14 +273,12 @@ export default function DashboardPage() {
                     <div className={styles.metricItem}>
                       <TrendingUp size={14} />
                       <span className={styles.metricValue}>{site.uptime}</span>
-                      <span className={styles.metricLabel}>Uptime</span>
                     </div>
                     <div className={styles.metricItem}>
                       <Clock size={14} />
                       <span className={`${styles.metricValue} ${site.responseTime > 500 ? styles.slow : ''}`}>
                         {site.responseTime > 0 ? `${site.responseTime}ms` : '—'}
                       </span>
-                      <span className={styles.metricLabel}>Response</span>
                     </div>
                     <div className={styles.metricItem}>
                       {site.ssl.status === 'valid' && <ShieldCheck size={14} className={styles.sslValid} />}
@@ -282,18 +289,16 @@ export default function DashboardPage() {
                       <span className={`${styles.metricValue} ${styles[`ssl${site.ssl.status.charAt(0).toUpperCase() + site.ssl.status.slice(1)}`]}`}>
                         {site.ssl.label}
                       </span>
-                      <span className={styles.metricLabel}>SSL</span>
                     </div>
                     <div className={styles.metricItem}>
-                      <Gauge size={14} />
+                      <Gauge size={14} className={styles[`perf${site.performance.status.charAt(0).toUpperCase() + site.performance.status.slice(1)}`]} />
                       <span className={`${styles.metricValue} ${styles[`perf${site.performance.status.charAt(0).toUpperCase() + site.performance.status.slice(1)}`]}`}>
                         {site.performance.label}
                       </span>
-                      <span className={styles.metricLabel}>Perf</span>
                     </div>
                   </div>
                   <span className={styles.siteLastChecked}>{site.lastChecked}</span>
-                  <ChevronRight size={18} className={styles.siteArrow} />
+                  <ChevronRight size={16} className={styles.siteArrow} />
                 </Link>
               ))}
             </div>
