@@ -2,7 +2,9 @@
 
 import { useState, use, useCallback } from 'react';
 import Link from 'next/link';
+import { RefreshCw, Pause, Play, Trash2, ExternalLink } from 'lucide-react';
 import { useSite, useDeleteSite, useUpdateSite, useForceCheck, useSiteAlerts, useSitePerformance, useRunPerformanceCheck } from '@/hooks';
+import { PageHeader, ActionButton } from '@/components/dashboard';
 import styles from './page.module.css';
 
 // Helper to refresh SSL
@@ -246,89 +248,48 @@ export default function SiteDetailPage({ params }: { params: Promise<{ id: strin
         </div>
       )}
 
-      {/* Breadcrumb */}
-      <nav className={styles.breadcrumb}>
-        <Link href="/dashboard/sites" className={styles.breadcrumbLink}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-          Terug naar sites
-        </Link>
-      </nav>
-
-      {/* Site Header */}
-      <div className={styles.siteHeader}>
-        <div className={styles.siteInfo}>
-          <div className={`${styles.statusIndicator} ${styles[site.status]}`}>
-            <span className={styles.statusDot} />
-            {getStatusLabel(site.status)}
-          </div>
-          <h1 className={styles.siteName}>{site.name}</h1>
-          <a href={site.url} target="_blank" rel="noopener noreferrer" className={styles.siteUrl}>
+      {/* Modern Page Header */}
+      <PageHeader
+        title={site.name}
+        subtitle={
+          <a href={site.url} target="_blank" rel="noopener noreferrer" className={styles.siteUrlLink}>
             {site.url}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15 3 21 3 21 9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
+            <ExternalLink size={14} />
           </a>
-        </div>
-        <div className={styles.siteActions}>
-          <button 
-            className={`${styles.actionButton} ${styles.check}`}
-            onClick={handleForceCheck}
-            disabled={checking}
-          >
-            {checking ? (
-              <>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={styles.spinner}>
-                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                </svg>
-                Checken...
-              </>
-            ) : (
-              <>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M23 4v6h-6" />
-                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
-                </svg>
-                Check nu
-              </>
-            )}
-          </button>
-          <button 
-            className={`${styles.actionButton} ${isPaused ? styles.resume : styles.pause}`}
-            onClick={() => setIsPaused(!isPaused)}
-          >
-            {isPaused ? (
-              <>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-                Hervatten
-              </>
-            ) : (
-              <>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="6" y="4" width="4" height="16" />
-                  <rect x="14" y="4" width="4" height="16" />
-                </svg>
-                Pauzeren
-              </>
-            )}
-          </button>
-          <button 
-            className={`${styles.actionButton} ${styles.delete}`}
-            onClick={() => setShowDeleteModal(true)}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-            </svg>
-            <span className={styles.deleteText}>Verwijderen</span>
-          </button>
-        </div>
-      </div>
+        }
+        backHref="/dashboard/sites"
+        backLabel="Terug naar sites"
+        status={{
+          type: site.status,
+          label: getStatusLabel(site.status)
+        }}
+        actions={
+          <>
+            <ActionButton
+              variant="primary"
+              icon={<RefreshCw size={16} />}
+              onClick={handleForceCheck}
+              loading={checking}
+            >
+              {checking ? 'Checken...' : 'Check nu'}
+            </ActionButton>
+            <ActionButton
+              variant={isPaused ? 'success' : 'warning'}
+              icon={isPaused ? <Play size={16} /> : <Pause size={16} />}
+              onClick={() => setIsPaused(!isPaused)}
+            >
+              {isPaused ? 'Hervatten' : 'Pauzeren'}
+            </ActionButton>
+            <ActionButton
+              variant="danger"
+              icon={<Trash2 size={16} />}
+              onClick={() => setShowDeleteModal(true)}
+            >
+              <span className={styles.deleteText}>Verwijderen</span>
+            </ActionButton>
+          </>
+        }
+      />
 
       {/* Tabs */}
       <div className={styles.tabs}>

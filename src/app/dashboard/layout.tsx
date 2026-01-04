@@ -267,6 +267,43 @@ export default function DashboardLayout({
 
       {/* Main Content */}
       <main className={styles.mainContent}>
+        {/* Desktop Top Header */}
+        <header className={styles.topHeader}>
+          <div className={styles.topHeaderLeft}>
+            <button className={styles.searchButton} onClick={() => {
+              // Trigger command palette with keyboard shortcut
+              window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }));
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <span>Zoeken...</span>
+              <kbd>
+                <Command size={12} />K
+              </kbd>
+            </button>
+          </div>
+          <div className={styles.topHeaderRight}>
+            <Link href="/dashboard/alerts" className={styles.headerIconBtn}>
+              <Bell size={20} />
+              {alertsCount > 0 && <span className={styles.headerBadge}>{alertsCount}</span>}
+            </Link>
+            <ThemeToggle />
+            <div className={styles.headerDivider} />
+            <button 
+              className={styles.headerUserBtn}
+              onClick={() => router.push('/dashboard/settings')}
+            >
+              <div className={styles.headerAvatar}>
+                {session?.user?.name?.charAt(0) || 'U'}
+              </div>
+              <span className={styles.headerUserName}>{session?.user?.name || 'Account'}</span>
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </header>
+
         {/* Email Verification Banner */}
         {showVerifyBanner && (
           <div className={styles.verifyBanner}>

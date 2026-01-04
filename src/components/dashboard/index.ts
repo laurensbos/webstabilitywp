@@ -13,3 +13,5 @@ export { Sparkline, UptimeBars } from './Sparkline';
 export { CommandPalette } from './CommandPalette';
 export { ThemeToggle } from './ThemeToggle';
 export { UpgradeModal } from './UpgradeModal';
+export { PageHeader } from './PageHeader';
+export { ActionButton } from './ActionButton';
