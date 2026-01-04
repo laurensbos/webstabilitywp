@@ -141,6 +141,11 @@ export default function DashboardLayout({
 
   return (
     <div className={styles.dashboardLayout}>
+      {/* Skip to main content for keyboard users */}
+      <a href="#main-content" className={styles.skipLink}>
+        Ga naar hoofdinhoud
+      </a>
+
       {/* Command Palette (⌘K) */}
       <CommandPalette />
 
@@ -191,17 +196,18 @@ export default function DashboardLayout({
         </Link>
 
         {/* Navigation */}
-        <nav className={styles.nav}>
+        <nav className={styles.nav} aria-label="Dashboard navigatie">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={`${styles.navItem} ${isActive(item.href) ? styles.navItemActive : ''}`}
+              aria-current={isActive(item.href) ? 'page' : undefined}
             >
-              <item.icon size={20} />
+              <item.icon size={20} aria-hidden="true" />
               <span>{item.label}</span>
               {item.badge && (
-                <span className={styles.navBadge}>{item.badge}</span>
+                <span className={styles.navBadge} aria-label={`${item.badge} ongelezen`}>{item.badge}</span>
               )}
             </Link>
           ))}
@@ -255,9 +261,9 @@ export default function DashboardLayout({
       />
 
       {/* Main Content */}
-      <main className={styles.mainContent}>
+      <main id="main-content" className={styles.mainContent} role="main">
         {/* Desktop Top Header */}
-        <header className={styles.topHeader}>
+        <header className={styles.topHeader} role="banner">
           <div className={styles.topHeaderLeft}>
             <button className={styles.searchButton} onClick={() => {
               // Trigger command palette with keyboard shortcut
@@ -274,14 +280,19 @@ export default function DashboardLayout({
             </button>
           </div>
           <div className={styles.topHeaderRight}>
-            <Link href="/dashboard/alerts" className={styles.headerIconBtn}>
+            <Link 
+              href="/dashboard/alerts" 
+              className={styles.headerIconBtn}
+              aria-label={`Alerts${alertsCount > 0 ? ` (${alertsCount} ongelezen)` : ''}`}
+            >
               <Bell size={20} />
-              {alertsCount > 0 && <span className={styles.headerBadge}>{alertsCount}</span>}
+              {alertsCount > 0 && <span className={styles.headerBadge} aria-hidden="true">{alertsCount}</span>}
             </Link>
-            <div className={styles.headerDivider} />
+            <div className={styles.headerDivider} aria-hidden="true" />
             <button 
               className={styles.headerUserBtn}
               onClick={() => router.push('/dashboard/settings')}
+              aria-label="Account instellingen"
             >
               <div className={styles.headerAvatar}>
                 {session?.user?.name?.charAt(0) || 'U'}

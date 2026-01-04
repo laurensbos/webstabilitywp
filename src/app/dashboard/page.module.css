@@ -61,10 +61,16 @@
   cursor: pointer;
   border-radius: 6px;
   transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .timeBtn:hover {
   color: #94a3b8;
+}
+
+.timeBtn:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
 }
 
 .timeBtnActive {
@@ -84,11 +90,22 @@
   text-decoration: none;
   border-radius: 8px;
   transition: all 0.15s ease;
+  border: none;
+  cursor: pointer;
 }
 
 .addBtn:hover {
   background: #4f46e5;
   transform: translateY(-1px);
+}
+
+.addBtn:active {
+  transform: translateY(0);
+}
+
+.addBtn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 /* Stats Row - Hero + Secondary */
@@ -871,5 +888,28 @@
   
   .sectionHeader h2::before {
     display: none;
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .dashboard {
+    animation: none;
+  }
+  
+  .heroCard::after {
+    animation: none;
+  }
+  
+  .secondaryStat:hover {
+    transform: none;
+  }
+  
+  .addBtn:hover {
+    transform: none;
+  }
+  
+  .siteCard:hover {
+    transform: none;
   }
 }

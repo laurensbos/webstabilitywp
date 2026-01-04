@@ -359,12 +359,12 @@
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 9999;
   padding: 2rem 1rem;
   overflow-y: auto;
 }
@@ -372,10 +372,12 @@
 .modal {
   width: 100%;
   max-width: 520px;
+  max-height: calc(100vh - 4rem);
   background: rgba(20, 24, 28, 0.98);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
-  margin: auto;
+  overflow-y: auto;
+  position: relative;
 }
 
 .modalHeader {

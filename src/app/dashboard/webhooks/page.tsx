@@ -293,13 +293,8 @@ export default function WebhooksPage() {
   }
 
   return (
-    <motion.div 
-      className={styles.container}
-      initial="initial"
-      animate="enter"
-      variants={pageVariants}
-    >
-      {/* Toast */}
+    <>
+      {/* Toast - buiten motion container voor correcte z-index */}
       {toastMessage && (
         <div className={`${styles.toast} ${styles[toastMessage.type]}`}>
           {toastMessage.type === 'success' ? <Check size={18} /> : <X size={18} />}
@@ -307,7 +302,13 @@ export default function WebhooksPage() {
         </div>
       )}
 
-      <motion.div className={styles.header} variants={staggerItem}>
+      <motion.div 
+        className={styles.container}
+        initial="initial"
+        animate="enter"
+        variants={pageVariants}
+      >
+        <motion.div className={styles.header} variants={staggerItem}>
         <div className={styles.headerLeft}>
           <div className={styles.headerIcon}>
             <Webhook size={24} />
@@ -421,6 +422,7 @@ export default function WebhooksPage() {
           })}
         </motion.div>
       )}
+    </motion.div>
 
       {/* Add Webhook Modal */}
       {showAddModal && (
@@ -542,6 +544,6 @@ export default function WebhooksPage() {
           </div>
         </div>
       )}
-    </motion.div>
+    </>
   );
 }

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useSites, useCreateSite, useDeleteSite } from '@/hooks';
+import { useSitesWithDetails, useCreateSite, useDeleteSite } from '@/hooks';
 import { useSession } from 'next-auth/react';
 import styles from './page.module.css';
 
@@ -17,7 +17,9 @@ interface Site {
   lastChecked: string;
   sslExpiry: string | null;
   sslStatus: 'valid' | 'expiring' | 'expired' | null;
+  sslDaysUntilExpiry: number | null;
   checkInterval: number;
+  performanceScore: number | null;
 }
 
 // Helper function to format time ago
@@ -47,7 +49,7 @@ const planLimits: Record<string, number> = {
 
 export default function SitesPage() {
   const { data: session } = useSession();
-  const { sites: apiSites, loading, error, refetch } = useSites();
+  const { sites: apiSites, loading, error, refetch } = useSitesWithDetails();
   const { createSite, loading: isAdding } = useCreateSite();
   const { deleteSite } = useDeleteSite();
   
@@ -60,21 +62,36 @@ export default function SitesPage() {
   // Add site form state
   const [newSiteUrl, setNewSiteUrl] = useState('');
   const [newSiteName, setNewSiteName] = useState('');
-  const [newSiteInterval, setNewSiteInterval] = useState('60');
 
   // Transform API data to component format
-  const sites: Site[] = (apiSites || []).map((site) => ({
-    id: site.id,
-    name: site.name,
-    url: site.url,
-    status: site.currentStatus === 'unknown' ? 'paused' : site.currentStatus,
-    uptime: parseFloat(site.uptimePercentage) || 0,
-    responseTime: site.avgResponseTime || 0,
-    lastChecked: formatTimeAgo(site.lastCheckedAt),
-    sslExpiry: null, // Would need SSL check data
-    sslStatus: null,
-    checkInterval: site.checkInterval
-  }));
+  const sites: Site[] = (apiSites || []).map((site) => {
+    // Determine SSL status from API data
+    let sslStatus: 'valid' | 'expiring' | 'expired' | null = null;
+    if (site.ssl) {
+      if (!site.ssl.isValid) {
+        sslStatus = 'expired';
+      } else if (site.ssl.daysUntilExpiry !== null && site.ssl.daysUntilExpiry < 30) {
+        sslStatus = 'expiring';
+      } else {
+        sslStatus = 'valid';
+      }
+    }
+
+    return {
+      id: site.id,
+      name: site.name,
+      url: site.url,
+      status: site.currentStatus === 'unknown' ? 'paused' : site.currentStatus,
+      uptime: parseFloat(site.uptimePercentage) || 0,
+      responseTime: site.avgResponseTime || 0,
+      lastChecked: formatTimeAgo(site.lastCheckedAt),
+      sslExpiry: site.ssl?.validTo || null,
+      sslStatus,
+      sslDaysUntilExpiry: site.ssl?.daysUntilExpiry ?? null,
+      checkInterval: site.checkInterval,
+      performanceScore: site.performance?.score ?? null,
+    };
+  });
 
   // User plan info  
   const userPlan = {
@@ -126,7 +143,6 @@ export default function SitesPage() {
       setShowAddModal(false);
       setNewSiteUrl('');
       setNewSiteName('');
-      setNewSiteInterval('60');
       refetch();
     }
   };
@@ -143,9 +159,9 @@ export default function SitesPage() {
   const getSslLabel = (status: Site['sslStatus']) => {
     switch (status) {
       case 'valid': return 'Geldig';
-      case 'expiring': return 'Verloopt binnenkort';
+      case 'expiring': return 'Verloopt';
       case 'expired': return 'Verlopen';
-      default: return 'Geen SSL';
+      default: return '—';
     }
   };
 
@@ -404,6 +420,15 @@ export default function SitesPage() {
                 </div>
                 <div className={styles.statItem}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M9 9l3 3 6-6" />
+                  </svg>
+                  <span className={`${styles.statValue} ${site.performanceScore === null ? styles.none : site.performanceScore >= 90 ? styles.excellent : site.performanceScore >= 50 ? styles.good : styles.poor}`}>
+                    {site.performanceScore !== null ? site.performanceScore : '—'}
+                  </span>
+                </div>
+                <div className={styles.statItem}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                   <span className={`${styles.statValue} ${styles[site.sslStatus || 'none']}`}>
@@ -421,7 +446,7 @@ export default function SitesPage() {
                   {site.lastChecked}
                 </span>
                 <span className={styles.interval}>
-                  Elke {site.checkInterval < 60 ? `${site.checkInterval}s` : `${site.checkInterval / 60}min`}
+                  Elke {site.checkInterval >= 1 ? `${site.checkInterval} min` : `${Math.round(site.checkInterval * 60)}s`}
                 </span>
               </div>
             </Link>
@@ -485,18 +510,23 @@ export default function SitesPage() {
 
               <div className={styles.formGroup}>
                 <label htmlFor="interval">Check interval</label>
-                <select
-                  id="interval"
-                  value={newSiteInterval}
-                  onChange={(e) => setNewSiteInterval(e.target.value)}
-                  className={styles.select}
-                >
-                  <option value="30">Elke 30 seconden</option>
-                  <option value="60">Elke minuut</option>
-                  <option value="300">Elke 5 minuten</option>
-                </select>
+                <div className={styles.planInterval}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  <span>
+                    {userPlan.name.toLowerCase() === 'free' && 'Elke 5 minuten'}
+                    {userPlan.name.toLowerCase() === 'starter' && 'Elke 3 minuten'}
+                    {userPlan.name.toLowerCase() === 'pro' && 'Elke minuut'}
+                    {userPlan.name.toLowerCase() === 'business' && 'Elke 30 seconden'}
+                    {!['free', 'starter', 'pro', 'business'].includes(userPlan.name.toLowerCase()) && 'Elke 5 minuten'}
+                  </span>
+                  <span className={styles.planBadge}>{userPlan.name} plan</span>
+                </div>
                 <p className={styles.inputHint}>
-                  {userPlan.name === 'Free' && 'Met je huidige plan kun je alleen 5 minuten checks gebruiken.'}
+                  {userPlan.name.toLowerCase() === 'free' && 'Upgrade naar Pro voor snellere checks.'}
+                  {userPlan.name.toLowerCase() === 'starter' && 'Upgrade naar Pro voor 1 minuut checks.'}
                 </p>
               </div>
 

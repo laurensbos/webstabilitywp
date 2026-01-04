@@ -91,6 +91,22 @@ a {
   text-decoration: none;
 }
 
+/* Global focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Remove default focus outline, use focus-visible instead */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Better tap highlight for mobile */
+button, a, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
 ::selection {
   background: rgba(99, 102, 241, 0.3);
   color: white;

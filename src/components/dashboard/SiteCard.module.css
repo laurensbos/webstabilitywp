@@ -3,6 +3,11 @@
   display: block;
 }
 
+.link:focus-visible .card {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
 .card {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
@@ -157,4 +162,29 @@
   display: block;
   font-size: 0.75rem;
   color: #64748b;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  
+  .card:hover {
+    transform: none;
+  }
+  
+  .status {
+    animation: none;
+  }
+  
+  .card:hover .stat {
+    transform: none;
+  }
+  
+  .card:hover .externalIcon {
+    transform: none;
+  }
 }
