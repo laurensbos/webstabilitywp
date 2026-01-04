@@ -150,3 +150,92 @@ export const hoverLift = {
 export const tapScale = {
   scale: 0.98,
 };
+
+// FadeInView - Component that fades in when scrolled into view
+interface FadeInViewProps {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+  direction?: 'up' | 'down' | 'left' | 'right' | 'none';
+}
+
+export function FadeInView({ 
+  children, 
+  className, 
+  delay = 0,
+  direction = 'up' 
+}: FadeInViewProps) {
+  const getInitial = () => {
+    switch (direction) {
+      case 'up': return { opacity: 0, y: 30 };
+      case 'down': return { opacity: 0, y: -30 };
+      case 'left': return { opacity: 0, x: -30 };
+      case 'right': return { opacity: 0, x: 30 };
+      case 'none': return { opacity: 0 };
+    }
+  };
+
+  const getAnimate = () => {
+    switch (direction) {
+      case 'up':
+      case 'down': return { opacity: 1, y: 0 };
+      case 'left':
+      case 'right': return { opacity: 1, x: 0 };
+      case 'none': return { opacity: 1 };
+    }
+  };
+
+  return (
+    <motion.div
+      initial={getInitial()}
+      whileInView={getAnimate()}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ 
+        duration: 0.6, 
+        delay,
+        ease: [0.22, 1, 0.36, 1] 
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// Animated counter for stats
+interface AnimatedCounterProps {
+  value: number;
+  suffix?: string;
+  prefix?: string;
+  duration?: number;
+}
+
+export function AnimatedCounter({ 
+  value, 
+  suffix = '', 
+  prefix = '',
+  duration = 2 
+}: AnimatedCounterProps) {
+  return (
+    <motion.span
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+    >
+      <motion.span
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        {prefix}
+        <motion.span
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          {value}
+        </motion.span>
+        {suffix}
+      </motion.span>
+    </motion.span>
+  );
+}

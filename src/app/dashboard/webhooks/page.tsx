@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import { 
   Webhook, 
   Plus, 
@@ -20,6 +21,7 @@ import {
   AlertCircle,
   ExternalLink
 } from 'lucide-react';
+import { pageVariants, staggerContainer, staggerItem } from '@/components/ui/PageTransition';
 import styles from './page.module.css';
 
 interface WebhookItem {
@@ -272,7 +274,12 @@ export default function WebhooksPage() {
   }
 
   return (
-    <div className={styles.container}>
+    <motion.div 
+      className={styles.container}
+      initial="initial"
+      animate="enter"
+      variants={pageVariants}
+    >
       {/* Toast */}
       {toastMessage && (
         <div className={`${styles.toast} ${styles[toastMessage.type]}`}>
@@ -281,19 +288,24 @@ export default function WebhooksPage() {
         </div>
       )}
 
-      <div className={styles.header}>
-        <div className={styles.headerText}>
-          <h1><Webhook size={28} /> Webhooks</h1>
-          <p>Ontvang real-time meldingen in Slack, Discord of Teams</p>
+      <motion.div className={styles.header} variants={staggerItem}>
+        <div className={styles.headerLeft}>
+          <div className={styles.headerIcon}>
+            <Webhook size={24} />
+          </div>
+          <div className={styles.headerText}>
+            <h1>Webhooks</h1>
+            <p>Ontvang real-time meldingen in Slack, Discord of Teams</p>
+          </div>
         </div>
         <button className={styles.addButton} onClick={() => setShowAddModal(true)}>
           <Plus size={20} />
           Webhook toevoegen
         </button>
-      </div>
+      </motion.div>
 
       {webhooksList.length === 0 ? (
-        <div className={styles.empty}>
+        <motion.div className={styles.empty} variants={staggerItem}>
           <div className={styles.emptyIcon}>
             <Webhook size={48} />
           </div>
@@ -303,17 +315,23 @@ export default function WebhooksPage() {
             <Plus size={20} />
             Eerste webhook toevoegen
           </button>
-        </div>
+        </motion.div>
       ) : (
-        <div className={styles.webhooksList}>
+        <motion.div 
+          className={styles.webhooksList}
+          variants={staggerContainer}
+          initial="initial"
+          animate="enter"
+        >
           {webhooksList.map(webhook => {
             const TypeIcon = getTypeIcon(webhook.type);
             const typeColor = getTypeColor(webhook.type);
             
             return (
-              <div 
+              <motion.div 
                 key={webhook.id} 
                 className={`${styles.webhookCard} ${!webhook.isActive ? styles.inactive : ''}`}
+                variants={staggerItem}
               >
                 <div className={styles.webhookHeader}>
                   <div className={styles.webhookIcon} style={{ backgroundColor: `${typeColor}20`, color: typeColor }}>
@@ -379,10 +397,10 @@ export default function WebhooksPage() {
                     Verwijderen
                   </button>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       )}
 
       {/* Add Webhook Modal */}
@@ -505,6 +523,6 @@ export default function WebhooksPage() {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
