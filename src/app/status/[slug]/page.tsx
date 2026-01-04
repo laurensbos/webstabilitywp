@@ -148,7 +148,7 @@ export default function PublicStatusPage({ params }: { params: Promise<{ slug: s
     switch (status) {
       case 'up':
       case 'operational':
-        return '#6366f1';
+        return '#22c55e';
       case 'degraded':
         return '#f59e0b';
       case 'down':
@@ -446,8 +446,8 @@ export default function PublicStatusPage({ params }: { params: Promise<{ slug: s
                           key={day.date}
                           className={styles.uptimeBar}
                           style={{ 
-                            backgroundColor: dayUptime >= 99.9 ? 'rgba(99, 102, 241, 0.8)' : 
-                                            dayUptime >= 99 ? 'rgba(99, 102, 241, 0.5)' :
+                            backgroundColor: dayUptime >= 99.9 ? 'rgba(34, 197, 94, 0.8)' : 
+                                            dayUptime >= 99 ? 'rgba(34, 197, 94, 0.5)' :
                                             dayUptime >= 95 ? 'rgba(245, 158, 11, 0.7)' : 'rgba(239, 68, 68, 0.7)'
                           }}
                           onMouseEnter={(e) => {

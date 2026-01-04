@@ -10,6 +10,8 @@ export { UsageIndicator } from './UsageIndicator';
 export { BottomNav } from './BottomNav';
 export { UpgradePrompt, LockedFeature } from './UpgradePrompt';
 export { Sparkline, UptimeBars } from './Sparkline';
+export { UptimeSparkline } from './UptimeSparkline';
+export { ResponseTimeChart } from './ResponseTimeChart';
 export { CommandPalette } from './CommandPalette';
 export { UpgradeModal } from './UpgradeModal';
 export { PageHeader } from './PageHeader';

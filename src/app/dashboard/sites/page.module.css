@@ -502,8 +502,8 @@
 }
 
 .statusDot.up {
-  background: #6366f1;
-  box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
 }
 
 .statusDot.down {
@@ -558,8 +558,8 @@
 }
 
 .statusBadge.up {
-  background: rgba(99, 102, 241, 0.15);
-  color: #6366f1;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
 }
 
 .statusBadge.down {

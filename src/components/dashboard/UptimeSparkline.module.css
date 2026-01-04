@@ -1,0 +1,52 @@
+.sparkline {
+  --sparkline-good: #22c55e;
+  --sparkline-warning: #f59e0b;
+  --sparkline-critical: #ef4444;
+  --sparkline-unknown: #64748b;
+  
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 16px;
+}
+
+.sparklineMd {
+  height: 24px;
+  gap: 2px;
+}
+
+.bar {
+  flex: 1;
+  min-width: 2px;
+  max-width: 4px;
+  height: 100%;
+  border-radius: 1px;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.sparklineMd .bar {
+  min-width: 3px;
+  max-width: 6px;
+  border-radius: 2px;
+}
+
+.bar:hover {
+  transform: scaleY(1.2);
+  opacity: 1 !important;
+}
+
+.barGood {
+  background: var(--sparkline-good);
+}
+
+.barWarning {
+  background: var(--sparkline-warning);
+}
+
+.barCritical {
+  background: var(--sparkline-critical);
+}
+
+.barUnknown {
+  background: var(--sparkline-unknown);
+}

@@ -12,7 +12,7 @@ interface SiteCardProps {
 
 export function SiteCard({ site }: SiteCardProps) {
   const statusColor = {
-    up: '#6366f1',
+    up: '#22c55e',
     down: '#ef4444',
     unknown: '#94a3b8',
   }[site.currentStatus || 'unknown'];

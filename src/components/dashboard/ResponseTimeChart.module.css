@@ -1,0 +1,75 @@
+.chartContainer {
+  position: relative;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.chart {
+  width: 100%;
+  height: calc(100% - 24px);
+}
+
+.line {
+  transition: stroke-width 0.2s ease;
+}
+
+.chartContainer:hover .line {
+  stroke-width: 2.5;
+}
+
+.area {
+  transition: opacity 0.2s ease;
+}
+
+.chartContainer:hover .area {
+  opacity: 0.8;
+}
+
+.axis {
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
+  bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 0.625rem;
+  color: #64748b;
+  pointer-events: none;
+}
+
+.legend {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legendValue {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.legendLabel {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.emptyChart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #64748b;
+  font-size: 0.8125rem;
+}
