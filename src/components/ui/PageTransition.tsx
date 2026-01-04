@@ -8,7 +8,7 @@ interface PageTransitionProps {
   className?: string;
 }
 
-const pageVariants = {
+export const pageVariants = {
   initial: {
     opacity: 0,
     y: 20,

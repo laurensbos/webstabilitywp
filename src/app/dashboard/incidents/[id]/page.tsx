@@ -2,6 +2,7 @@
 
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { 
   ArrowLeft,
   Clock, 
@@ -14,6 +15,7 @@ import {
   Loader2,
   RefreshCw
 } from 'lucide-react';
+import { pageVariants, staggerContainer, staggerItem } from '@/components/ui/PageTransition';
 import styles from './page.module.css';
 
 interface Incident {
@@ -156,9 +158,14 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
     : 0;
 
   return (
-    <div className={styles.container}>
+    <motion.div 
+      className={styles.container}
+      initial="initial"
+      animate="enter"
+      variants={pageVariants}
+    >
       {/* Header */}
-      <div className={styles.header}>
+      <motion.div className={styles.header} variants={staggerItem}>
         <Link href="/dashboard/incidents" className={styles.backButton}>
           <ArrowLeft size={18} />
           <span>Terug</span>
@@ -218,10 +225,10 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
             </button>
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Timeline */}
-      <div className={styles.timeline}>
+      <motion.div className={styles.timeline} variants={staggerItem}>
         <h2>Tijdlijn</h2>
         <div className={styles.timelineItems}>
           <div className={styles.timelineItem}>
@@ -273,10 +280,10 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Root Cause */}
-      <div className={styles.causeSection}>
+      <motion.div className={styles.causeSection} variants={staggerItem}>
         <h2>
           <MessageSquare size={18} />
           Oorzaak analyse
@@ -303,17 +310,17 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           )}
           Opslaan
         </button>
-      </div>
+      </motion.div>
 
       {/* Screenshot */}
       {incident.screenshotUrl && (
-        <div className={styles.screenshotSection}>
+        <motion.div className={styles.screenshotSection} variants={staggerItem}>
           <h2>Screenshot bij incident</h2>
           <div className={styles.screenshotWrapper}>
             <img src={incident.screenshotUrl} alt="Screenshot van website tijdens incident" />
           </div>
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }

@@ -13,9 +13,12 @@ import {
   X,
   ChevronRight,
   Pause,
-  Play
+  Play,
+  Loader2,
+  Trash2
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { pageVariants, staggerContainer, staggerItem } from '@/components/ui/PageTransition';
 import styles from './page.module.css';
 
 interface MaintenanceWindow {
@@ -171,16 +174,14 @@ export default function MaintenancePage() {
   return (
     <motion.div 
       className={styles.container}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
+      initial="initial"
+      animate="enter"
+      variants={pageVariants}
     >
       {/* Header */}
       <motion.div 
         className={styles.header}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.1 }}
+        variants={staggerItem}
       >
         <div className={styles.headerLeft}>
           <div className={styles.headerIcon}>
@@ -206,8 +207,7 @@ export default function MaintenancePage() {
       <motion.div 
         className={styles.filters}
         initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.2 }}
+        variants={staggerItem}
       >
         {(['all', 'active', 'upcoming', 'past'] as const).map((tab) => (
           <button
@@ -226,13 +226,14 @@ export default function MaintenancePage() {
 
       {/* Windows List */}
       {loading ? (
-        <div className={styles.loading}>Laden...</div>
+        <div className={styles.loading}>
+          <Loader2 className={styles.spinner} size={24} />
+          <span>Laden...</span>
+        </div>
       ) : filteredWindows.length === 0 ? (
         <motion.div 
           className={styles.emptyState}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
+          variants={staggerItem}
         >
           <div className={styles.emptyIcon}>
             <Wrench size={48} />
@@ -248,16 +249,19 @@ export default function MaintenancePage() {
           </button>
         </motion.div>
       ) : (
-        <div className={styles.windowsList}>
+        <motion.div 
+          className={styles.windowsList}
+          variants={staggerContainer}
+          initial="initial"
+          animate="enter"
+        >
           {filteredWindows.map((window, index) => {
             const status = getMaintenanceStatus(window);
             return (
               <motion.div
                 key={window.id}
                 className={`${styles.windowCard} ${styles[status]}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.3 + index * 0.05 }}
+                variants={staggerItem}
               >
                 <div className={styles.windowHeader}>
                   <div className={styles.windowInfo}>
@@ -304,7 +308,7 @@ export default function MaintenancePage() {
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       )}
 
       {/* Create Modal */}

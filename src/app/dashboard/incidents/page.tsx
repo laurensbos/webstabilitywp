@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { 
   AlertTriangle, 
   CheckCircle, 
@@ -12,8 +13,11 @@ import {
   XCircle,
   Loader2,
   AlertCircle,
-  ArrowUpRight
+  ArrowUpRight,
+  CheckCheck,
+  Eye
 } from 'lucide-react';
+import { pageVariants, staggerContainer, staggerItem } from '@/components/ui/PageTransition';
 import styles from './page.module.css';
 
 interface Incident {
@@ -118,18 +122,31 @@ export default function IncidentsPage() {
   }
 
   return (
-    <div className={styles.container}>
+    <motion.div 
+      className={styles.container}
+      initial="initial"
+      animate="enter"
+      variants={pageVariants}
+    >
       {/* Header */}
-      <div className={styles.header}>
+      <motion.div className={styles.header} variants={staggerItem}>
+        <div className={styles.headerIcon}>
+          <AlertTriangle size={24} />
+        </div>
         <div className={styles.headerText}>
           <h1 className={styles.title}>Incidenten</h1>
           <p className={styles.subtitle}>Overzicht van alle downtimes en incidenten</p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Stats */}
-      <div className={styles.statsGrid}>
-        <div className={styles.statCard}>
+      <motion.div 
+        className={styles.statsGrid}
+        variants={staggerContainer}
+        initial="initial"
+        animate="enter"
+      >
+        <motion.div className={styles.statCard} variants={staggerItem}>
           <div className={styles.statIcon} style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' }}>
             <AlertTriangle size={20} />
           </div>
@@ -137,8 +154,8 @@ export default function IncidentsPage() {
             <span className={styles.statValue}>{totalIncidents}</span>
             <span className={styles.statLabel}>Totaal incidenten</span>
           </div>
-        </div>
-        <div className={styles.statCard}>
+        </motion.div>
+        <motion.div className={styles.statCard} variants={staggerItem}>
           <div className={styles.statIcon} style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
             <AlertCircle size={20} />
           </div>
@@ -146,20 +163,20 @@ export default function IncidentsPage() {
             <span className={styles.statValue}>{ongoingIncidents}</span>
             <span className={styles.statLabel}>Actieve incidenten</span>
           </div>
-        </div>
-        <div className={styles.statCard}>
-          <div className={styles.statIcon} style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#6366f1' }}>
+        </motion.div>
+        <motion.div className={styles.statCard} variants={staggerItem}>
+          <div className={styles.statIcon} style={{ background: 'rgba(99, 102, 241, 0.1)', color: '#6366f1' }}>
             <Clock size={20} />
           </div>
           <div className={styles.statContent}>
             <span className={styles.statValue}>{formatDuration(Math.round(avgDuration))}</span>
             <span className={styles.statLabel}>Gem. downtime</span>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Filters */}
-      <div className={styles.filters}>
+      <motion.div className={styles.filters} variants={staggerItem}>
         <div className={styles.searchBox}>
           <Search size={18} />
           <input
@@ -191,11 +208,11 @@ export default function IncidentsPage() {
             Opgelost
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Incidents List */}
       {filteredIncidents.length === 0 ? (
-        <div className={styles.emptyState}>
+        <motion.div className={styles.emptyState} variants={staggerItem}>
           <div className={styles.emptyIconWrapper}>
             <AlertTriangle size={32} strokeWidth={1.5} />
           </div>
@@ -205,15 +222,20 @@ export default function IncidentsPage() {
               ? 'Er zijn nog geen incidenten geregistreerd. Dat is goed nieuws!' 
               : `Geen ${filter === 'ongoing' ? 'actieve' : 'opgeloste'} incidenten gevonden.`}
           </p>
-        </div>
+        </motion.div>
       ) : (
-        <div className={styles.incidentsList}>
-          {filteredIncidents.map((incident) => (
-            <Link 
-              key={incident.id}
-              href={`/dashboard/incidents/${incident.id}`}
-              className={styles.incidentCard}
-            >
+        <motion.div 
+          className={styles.incidentsList}
+          variants={staggerContainer}
+          initial="initial"
+          animate="enter"
+        >
+          {filteredIncidents.map((incident, index) => (
+            <motion.div key={incident.id} variants={staggerItem}>
+              <Link 
+                href={`/dashboard/incidents/${incident.id}`}
+                className={styles.incidentCard}
+              >
               <div className={styles.incidentStatus}>
                 <div 
                   className={styles.statusDot} 
@@ -260,9 +282,10 @@ export default function IncidentsPage() {
               
               <ChevronRight size={20} className={styles.incidentArrow} />
             </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }
