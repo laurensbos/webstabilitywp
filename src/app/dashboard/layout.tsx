@@ -24,7 +24,7 @@ import {
   AlertTriangle,
   Command
 } from 'lucide-react';
-import { CommandPalette, ThemeToggle, UpgradeModal } from '@/components/dashboard';
+import { CommandPalette, UpgradeModal } from '@/components/dashboard';
 import styles from './layout.module.css';
 
 // Plan limits
@@ -157,7 +157,6 @@ export default function DashboardLayout({
           <span className={styles.logoTextMobile}>webstability</span>
         </Link>
         <div className={styles.mobileHeaderActions}>
-          <ThemeToggle />
           <Link href="/dashboard/sites/new" className={styles.mobileAddBtn}>
             <Plus size={20} />
           </Link>
@@ -279,7 +278,6 @@ export default function DashboardLayout({
               <Bell size={20} />
               {alertsCount > 0 && <span className={styles.headerBadge}>{alertsCount}</span>}
             </Link>
-            <ThemeToggle />
             <div className={styles.headerDivider} />
             <button 
               className={styles.headerUserBtn}

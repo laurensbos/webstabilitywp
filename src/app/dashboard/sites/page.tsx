@@ -151,6 +151,15 @@ export default function SitesPage() {
 
   const canAddMoreSites = userPlan.sitesUsed < userPlan.sitesLimit;
 
+  // Calculate overall stats
+  const overallUptime = sites.length > 0 
+    ? (sites.reduce((sum, s) => sum + s.uptime, 0) / sites.length).toFixed(2) 
+    : '0.00';
+  
+  const avgResponseTime = sites.length > 0
+    ? Math.round(sites.filter(s => s.responseTime > 0).reduce((sum, s) => sum + s.responseTime, 0) / Math.max(1, sites.filter(s => s.responseTime > 0).length))
+    : 0;
+
   return (
     <motion.div 
       className={styles.container}
@@ -158,6 +167,65 @@ export default function SitesPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
+      {/* Stats Overview */}
+      <motion.div 
+        className={styles.statsOverview}
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <div className={`${styles.statCard} ${styles.statCardOnline}`}>
+          <div className={styles.statCardIcon}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+          </div>
+          <div className={styles.statCardContent}>
+            <span className={styles.statCardValue}>{statusCounts.up}</span>
+            <span className={styles.statCardLabel}>Online</span>
+          </div>
+        </div>
+
+        <div className={`${styles.statCard} ${styles.statCardOffline}`}>
+          <div className={styles.statCardIcon}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+          </div>
+          <div className={styles.statCardContent}>
+            <span className={styles.statCardValue}>{statusCounts.down}</span>
+            <span className={styles.statCardLabel}>Offline</span>
+          </div>
+        </div>
+
+        <div className={`${styles.statCard} ${styles.statCardUptime}`}>
+          <div className={styles.statCardIcon}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
+          </div>
+          <div className={styles.statCardContent}>
+            <span className={styles.statCardValue}>{overallUptime}%</span>
+            <span className={styles.statCardLabel}>Gem. Uptime</span>
+          </div>
+        </div>
+
+        <div className={`${styles.statCard} ${styles.statCardResponse}`}>
+          <div className={styles.statCardIcon}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </div>
+          <div className={styles.statCardContent}>
+            <span className={styles.statCardValue}>{avgResponseTime}ms</span>
+            <span className={styles.statCardLabel}>Gem. Response</span>
+          </div>
+        </div>
+      </motion.div>
       {/* Header */}
       <motion.div 
         className={styles.header}
