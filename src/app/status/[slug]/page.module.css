@@ -1,7 +1,7 @@
 /* ===== BASE ===== */
 .container {
   min-height: 100vh;
-  background: #0a0c0b;
+  background: #050506;
   color: #fff;
   position: relative;
   overflow-x: hidden;
@@ -18,38 +18,38 @@
 
 .gradientOrb1 {
   position: absolute;
-  top: -20%;
-  right: -10%;
-  width: 60%;
-  height: 60%;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
-  filter: blur(80px);
-  animation: float 20s ease-in-out infinite;
+  top: -30%;
+  right: -15%;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 60%);
+  filter: blur(100px);
+  animation: float 25s ease-in-out infinite;
 }
 
 .gradientOrb2 {
   position: absolute;
-  bottom: -20%;
-  left: -10%;
-  width: 50%;
-  height: 50%;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
-  filter: blur(80px);
-  animation: float 25s ease-in-out infinite reverse;
+  bottom: -30%;
+  left: -15%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 60%);
+  filter: blur(100px);
+  animation: float 30s ease-in-out infinite reverse;
 }
 
 @keyframes float {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(30px, -30px) scale(1.05); }
+  50% { transform: translate(40px, -40px) scale(1.1); }
 }
 
 .gridOverlay {
   position: absolute;
   inset: 0;
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 80px 80px;
   mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
 }
 
@@ -133,14 +133,15 @@
 .header {
   position: relative;
   z-index: 10;
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(5, 5, 6, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
 .headerInner {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -150,54 +151,57 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.875rem;
 }
 
 .logo {
-  height: 36px;
+  height: 32px;
 }
 
 .brandName {
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   font-weight: 700;
   margin: 0;
-  background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.8) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #fff;
+  letter-spacing: -0.02em;
 }
 
 .statusBadge {
-  padding: 0.375rem 0.75rem;
-  background: rgba(99, 102, 241, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  border-radius: 100px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #818cf8;
+  padding: 0.3rem 0.625rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 6px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #a5b4fc;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }
 
 .poweredBy {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.8125rem;
+  font-weight: 500;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: all 0.2s;
 }
 
 .poweredBy:hover {
-  color: rgba(255, 255, 255, 0.7);
+  color: #818cf8;
+}
+
+.poweredBy svg {
+  opacity: 0.7;
 }
 
 /* ===== HERO SECTION ===== */
 .heroSection {
   position: relative;
   z-index: 1;
-  padding: 4rem 2rem;
+  padding: 5rem 2rem 4rem;
 }
 
 .heroInner {
@@ -210,47 +214,73 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 3rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  padding: 4rem 3rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 32px;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  position: relative;
+  overflow: hidden;
+}
+
+.overallStatusCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
 }
 
 .statusIconWrapper {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.statusIconWrapper::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 28px;
+  background: inherit;
+  opacity: 0.3;
+  filter: blur(15px);
 }
 
 .statusInfo h2 {
-  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
   font-weight: 700;
-  margin: 0 0 0.5rem;
-  letter-spacing: -0.02em;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.03em;
 }
 
 .statusDescription {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 1.0625rem;
   margin: 0;
-  max-width: 400px;
+  max-width: 420px;
+  line-height: 1.6;
 }
 
 .lastUpdated {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 100px;
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.4);
 }
 
@@ -258,7 +288,7 @@
 .servicesSection {
   position: relative;
   z-index: 1;
-  padding: 0 2rem 4rem;
+  padding: 0 2rem 5rem;
 }
 
 .servicesInner {
@@ -267,88 +297,94 @@
 }
 
 .sectionHeader {
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
 }
 
 .sectionTitle {
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: #818cf8;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.375rem;
 }
 
 .sectionSubtitle {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.4);
   margin: 0;
 }
 
 .servicesList {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.875rem;
 }
 
 .serviceCard {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
   padding: 1.5rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .serviceCard:hover {
-  border-color: rgba(99, 102, 241, 0.3);
-  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
 }
 
 .serviceTop {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .serviceMain {
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.875rem;
 }
 
 .serviceDot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  margin-top: 0.25rem;
   flex-shrink: 0;
-  box-shadow: 0 0 10px currentColor;
+  box-shadow: 0 0 12px currentColor;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 .serviceDetails {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.125rem;
 }
 
 .serviceName {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   margin: 0;
   color: #fff;
 }
 
 .serviceUrl {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.35);
 }
 
 .serviceStats {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
 .serviceStat {
@@ -380,46 +416,46 @@
 
 /* ===== UPTIME BARS ===== */
 .uptimeSection {
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .uptimeBars {
   display: flex;
   gap: 2px;
-  height: 28px;
-  margin-bottom: 0.5rem;
+  height: 32px;
+  margin-bottom: 0.625rem;
 }
 
 .uptimeBar {
   flex: 1;
-  border-radius: 3px;
-  transition: all 0.2s;
+  border-radius: 4px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   min-width: 2px;
 }
 
 .uptimeBar:hover {
-  transform: scaleY(1.2);
-  filter: brightness(1.2);
+  transform: scaleY(1.25);
+  filter: brightness(1.3);
 }
 
 .uptimeLabels {
   display: flex;
   justify-content: space-between;
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.25);
 }
 
 /* ===== SUBSCRIBE SECTION ===== */
 .subscribeSection {
   position: relative;
   z-index: 1;
-  padding: 2rem 2rem 4rem;
+  padding: 2rem 2rem 5rem;
 }
 
 .subscribeInner {
-  max-width: 700px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
@@ -428,43 +464,58 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 3rem;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(99, 102, 241, 0.02) 100%);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  border-radius: 24px;
+  padding: 3.5rem 3rem;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.06) 0%, rgba(99, 102, 241, 0.02) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.subscribeCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.4), transparent);
 }
 
 .subscribeIcon {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: rgba(99, 102, 241, 0.15);
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #818cf8;
-  margin-bottom: 1.5rem;
+  color: #a5b4fc;
+  margin-bottom: 1.75rem;
 }
 
 .subscribeContent h2 {
-  font-size: 1.5rem;
+  font-size: 1.625rem;
   font-weight: 700;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.625rem;
   color: #fff;
+  letter-spacing: -0.02em;
 }
 
 .subscribeContent p {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.45);
   margin: 0 0 2rem;
-  max-width: 400px;
+  max-width: 380px;
+  line-height: 1.6;
 }
 
 .subscribeForm {
   display: flex;
   gap: 0.75rem;
   width: 100%;
-  max-width: 450px;
+  max-width: 420px;
 }
 
 .inputWrapper {
@@ -561,12 +612,13 @@
 .footer {
   position: relative;
   z-index: 1;
-  padding: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1.75rem 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(5, 5, 6, 0.6);
 }
 
 .footerInner {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -574,8 +626,8 @@
 }
 
 .footerText {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.35);
   margin: 0;
 }
 
@@ -583,15 +635,19 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.875rem;
-  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.8125rem;
+  font-weight: 600;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: all 0.2s;
 }
 
 .footerBrand:hover {
   color: #818cf8;
+}
+
+.footerBrand svg {
+  opacity: 0.7;
 }
 
 /* ===== RESPONSIVE ===== */
