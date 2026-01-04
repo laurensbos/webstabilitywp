@@ -234,7 +234,7 @@ export default function DashboardLayout({
           </div>
         </button>
 
-        {/* User Section */}
+        {/* User Section - Simplified (actions moved to top header) */}
         <div className={styles.userSection}>
           <div className={styles.userInfo}>
             <div className={styles.userAvatar}>
@@ -244,16 +244,6 @@ export default function DashboardLayout({
               <span className={styles.userName}>{session?.user?.name || 'Gebruiker'}</span>
               <span className={styles.userEmail}>{session?.user?.email || ''}</span>
             </div>
-          </div>
-          <div className={styles.userActions}>
-            <ThemeToggle />
-            <button 
-              className={styles.logoutBtn} 
-              aria-label="Uitloggen"
-              onClick={() => signOut({ callbackUrl: '/' })}
-            >
-              <LogOut size={18} />
-            </button>
           </div>
         </div>
       </aside>
