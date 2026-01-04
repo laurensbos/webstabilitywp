@@ -364,15 +364,15 @@ export default function DashboardLayout({
                 <div className={styles.planCardHeader}>
                   <h3>Pro</h3>
                   <div className={styles.planPrice}>
-                    <span className={styles.planPriceAmount}>€9</span>
+                    <span className={styles.planPriceAmount}>€29</span>
                     <span className={styles.planPricePeriod}>/maand</span>
                   </div>
                 </div>
                 <ul className={styles.planFeatures}>
-                  <li><Check size={16} /> 20 websites</li>
+                  <li><Check size={16} /> 50 websites</li>
                   <li><Check size={16} /> 1 minuut checks</li>
-                  <li><Check size={16} /> Email & SMS alerts</li>
-                  <li><Check size={16} /> SSL monitoring</li>
+                  <li><Check size={16} /> Alle alert kanalen</li>
+                  <li><Check size={16} /> API toegang & Webhooks</li>
                 </ul>
                 <button 
                   className={styles.planBtn}
@@ -389,16 +389,16 @@ export default function DashboardLayout({
                 <div className={styles.planCardHeader}>
                   <h3>Business</h3>
                   <div className={styles.planPrice}>
-                    <span className={styles.planPriceAmount}>€29</span>
+                    <span className={styles.planPriceAmount}>€79</span>
                     <span className={styles.planPricePeriod}>/maand</span>
                   </div>
                 </div>
                 <ul className={styles.planFeatures}>
-                  <li><Check size={16} /> 100 websites</li>
+                  <li><Check size={16} /> 200 websites</li>
                   <li><Check size={16} /> 30 seconden checks</li>
                   <li><Check size={16} /> Alle Pro features</li>
                   <li><Check size={16} /> Priority support</li>
-                  <li><Check size={16} /> Custom webhooks</li>
+                  <li><Check size={16} /> Onbeperkt team members</li>
                 </ul>
                 <button 
                   className={`${styles.planBtn} ${styles.planBtnPrimary}`}
