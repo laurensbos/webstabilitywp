@@ -14,12 +14,25 @@ interface StatusSite {
   lastChecked: string;
 }
 
+interface Incident {
+  id: string;
+  title: string;
+  status: 'investigating' | 'identified' | 'monitoring' | 'resolved';
+  severity: 'minor' | 'major' | 'critical';
+  createdAt: string;
+  updatedAt: string;
+  affectedServices: string[];
+}
+
 interface StatusPageData {
   name: string;
   description: string;
   logo: string | null;
   sites: StatusSite[];
   overallStatus: 'operational' | 'degraded' | 'outage' | 'maintenance';
+  overallUptime: number;
+  avgResponseTime: number;
+  incidents: Incident[];
   uptimeHistory: Array<{
     date: string;
     status: 'up' | 'down' | 'degraded';
@@ -50,6 +63,23 @@ export default function PublicStatusPage({ params }: { params: Promise<{ slug: s
   const [subscribeEmail, setSubscribeEmail] = useState('');
   const [subscribeStatus, setSubscribeStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [subscribeMessage, setSubscribeMessage] = useState('');
+  const [hoveredBar, setHoveredBar] = useState<{ date: string; uptime: number; x: number; y: number } | null>(null);
+
+  // Format relative time for incidents
+  const formatRelativeTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    
+    if (diffMins < 1) return 'Zojuist';
+    if (diffMins < 60) return `${diffMins}m geleden`;
+    if (diffHours < 24) return `${diffHours}u geleden`;
+    if (diffDays < 7) return `${diffDays}d geleden`;
+    return date.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' });
+  };
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -250,6 +280,7 @@ export default function PublicStatusPage({ params }: { params: Promise<{ slug: s
       {/* Hero Status Section */}
       <section className={styles.heroSection}>
         <div className={styles.heroInner}>
+          {/* Main Status Card */}
           <div 
             className={styles.overallStatusCard}
             data-status={data.overallStatus}
@@ -266,9 +297,9 @@ export default function PublicStatusPage({ params }: { params: Promise<{ slug: s
               <h2 style={{ color: getStatusColor(data.overallStatus) }}>
                 {getStatusLabel(data.overallStatus)}
               </h2>
-              {data.description && (
-                <p className={styles.statusDescription}>{data.description}</p>
-              )}
+              <p className={styles.statusDescription}>
+                Systeemstatus voor {data.name}
+              </p>
             </div>
             <div className={styles.lastUpdated}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -276,6 +307,81 @@ export default function PublicStatusPage({ params }: { params: Promise<{ slug: s
                 <polyline points="12 6 12 12 16 14" />
               </svg>
               Bijgewerkt: {new Date().toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}
+            </div>
+          </div>
+
+          {/* Metrics Row */}
+          <div className={styles.metricsRow}>
+            <div className={styles.metricCard}>
+              <div className={styles.metricIcon}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+              </div>
+              <div className={styles.metricContent}>
+                <span className={styles.metricValue}>{(data.overallUptime || 100).toFixed(2)}%</span>
+                <span className={styles.metricLabel}>Overall Uptime</span>
+              </div>
+              <div className={styles.metricTrend}>
+                <span className={styles.metricTrendUp}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="18 15 12 9 6 15" />
+                  </svg>
+                  Stabiel
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.metricCard}>
+              <div className={styles.metricIcon}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <div className={styles.metricContent}>
+                <span className={styles.metricValue}>{data.avgResponseTime || 0}ms</span>
+                <span className={styles.metricLabel}>Gem. Response</span>
+              </div>
+              <div className={styles.metricTrend}>
+                <span className={`${styles.metricTrendUp} ${(data.avgResponseTime || 0) > 500 ? styles.metricTrendWarning : ''}`}>
+                  {(data.avgResponseTime || 0) < 200 ? 'Snel' : (data.avgResponseTime || 0) < 500 ? 'Normaal' : 'Traag'}
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.metricCard}>
+              <div className={styles.metricIcon}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="2" y1="12" x2="22" y2="12" />
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+              </div>
+              <div className={styles.metricContent}>
+                <span className={styles.metricValue}>{data.sites.length}</span>
+                <span className={styles.metricLabel}>Gemonitorde Services</span>
+              </div>
+              <div className={styles.metricTrend}>
+                <span className={styles.metricTrendUp}>
+                  {data.sites.filter(s => s.status === 'up').length} online
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.metricCard}>
+              <div className={styles.metricIcon}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <div className={styles.metricContent}>
+                <span className={styles.metricValue}>90d</span>
+                <span className={styles.metricLabel}>Uptime Historie</span>
+              </div>
+              <div className={styles.metricTrend}>
+                <span className={styles.metricTrendUp}>Beschikbaar</span>
+              </div>
             </div>
           </div>
         </div>
@@ -344,7 +450,11 @@ export default function PublicStatusPage({ params }: { params: Promise<{ slug: s
                                             dayUptime >= 99 ? 'rgba(99, 102, 241, 0.5)' :
                                             dayUptime >= 95 ? 'rgba(245, 158, 11, 0.7)' : 'rgba(239, 68, 68, 0.7)'
                           }}
-                          title={`${day.date}: ${dayUptime.toFixed(2)}% uptime`}
+                          onMouseEnter={(e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            setHoveredBar({ date: day.date, uptime: dayUptime, x: rect.left + rect.width / 2, y: rect.top });
+                          }}
+                          onMouseLeave={() => setHoveredBar(null)}
                         />
                       );
                     })}
@@ -357,6 +467,77 @@ export default function PublicStatusPage({ params }: { params: Promise<{ slug: s
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Tooltip for uptime bars */}
+      {hoveredBar && (
+        <div 
+          className={styles.uptimeTooltip}
+          style={{ 
+            left: hoveredBar.x, 
+            top: hoveredBar.y - 10,
+            transform: 'translate(-50%, -100%)'
+          }}
+        >
+          <span className={styles.tooltipDate}>
+            {new Date(hoveredBar.date).toLocaleDateString('nl-NL', { 
+              day: 'numeric', 
+              month: 'short', 
+              year: 'numeric' 
+            })}
+          </span>
+          <span className={styles.tooltipUptime}>
+            {hoveredBar.uptime.toFixed(2)}% uptime
+          </span>
+        </div>
+      )}
+
+      {/* Recent Incidents Section */}
+      <section className={styles.incidentsSection}>
+        <div className={styles.incidentsInner}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Recente Incidenten</h2>
+            <p className={styles.sectionSubtitle}>Laatste 30 dagen</p>
+          </div>
+          
+          {(!data.incidents || data.incidents.length === 0) ? (
+            <div className={styles.noIncidents}>
+              <div className={styles.noIncidentsIcon}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <p>Geen incidenten in de afgelopen 30 dagen</p>
+              <span>Alle systemen draaien normaal</span>
+            </div>
+          ) : (
+            <div className={styles.incidentsList}>
+              {data.incidents.slice(0, 5).map((incident) => (
+                <div key={incident.id} className={styles.incidentCard}>
+                  <div className={styles.incidentHeader}>
+                    <div className={`${styles.incidentSeverity} ${styles[`severity${incident.severity.charAt(0).toUpperCase() + incident.severity.slice(1)}`]}`}>
+                      {incident.severity === 'critical' ? 'Kritiek' : incident.severity === 'major' ? 'Ernstig' : 'Klein'}
+                    </div>
+                    <span className={styles.incidentTime}>{formatRelativeTime(incident.createdAt)}</span>
+                  </div>
+                  <h3 className={styles.incidentTitle}>{incident.title}</h3>
+                  <div className={styles.incidentMeta}>
+                    <span className={`${styles.incidentStatus} ${styles[`status${incident.status.charAt(0).toUpperCase() + incident.status.slice(1)}`]}`}>
+                      {incident.status === 'investigating' ? 'Onderzoeken' :
+                       incident.status === 'identified' ? 'Geïdentificeerd' :
+                       incident.status === 'monitoring' ? 'Monitoren' : 'Opgelost'}
+                    </span>
+                    {incident.affectedServices.length > 0 && (
+                      <span className={styles.affectedServices}>
+                        {incident.affectedServices.length} service{incident.affectedServices.length > 1 ? 's' : ''} getroffen
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

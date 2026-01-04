@@ -447,6 +447,263 @@
   color: rgba(255, 255, 255, 0.25);
 }
 
+/* ===== METRICS ROW ===== */
+.metricsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.metricCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  transition: all 0.3s;
+}
+
+.metricCard:hover {
+  border-color: rgba(99, 102, 241, 0.2);
+  transform: translateY(-2px);
+}
+
+.metricIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 10px;
+  color: #818cf8;
+}
+
+.metricContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.metricValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.metricLabel {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.metricTrend {
+  margin-top: auto;
+}
+
+.metricTrendUp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #818cf8;
+}
+
+.metricTrendWarning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+/* ===== UPTIME TOOLTIP ===== */
+.uptimeTooltip {
+  position: fixed;
+  z-index: 1000;
+  padding: 0.75rem 1rem;
+  background: rgba(15, 15, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+  animation: tooltipIn 0.15s ease-out;
+}
+
+@keyframes tooltipIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -100%) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%);
+  }
+}
+
+.tooltipDate {
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.25rem;
+}
+
+.tooltipUptime {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* ===== INCIDENTS SECTION ===== */
+.incidentsSection {
+  position: relative;
+  z-index: 1;
+  padding: 0 2rem 4rem;
+}
+
+.incidentsInner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.noIncidents {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 20px;
+}
+
+.noIncidentsIcon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 50%;
+  color: #6366f1;
+  margin-bottom: 1rem;
+}
+
+.noIncidents p {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.375rem;
+}
+
+.noIncidents span {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.incidentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.incidentCard {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  transition: all 0.2s;
+}
+
+.incidentCard:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.incidentHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.incidentSeverity {
+  padding: 0.25rem 0.625rem;
+  border-radius: 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.severityMinor {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+}
+
+.severityMajor {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.severityCritical {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.incidentTime {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.incidentTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.75rem;
+}
+
+.incidentMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.incidentStatus {
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.statusInvestigating {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.statusIdentified {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.statusMonitoring {
+  background: rgba(99, 102, 241, 0.1);
+  color: #818cf8;
+}
+
+.statusResolved {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.affectedServices {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
 /* ===== SUBSCRIBE SECTION ===== */
 .subscribeSection {
   position: relative;
@@ -651,6 +908,12 @@
 }
 
 /* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .metricsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 1rem;
@@ -669,7 +932,21 @@
     padding: 2rem 1.5rem;
   }
 
-  .servicesSection {
+  .metricsRow {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .metricCard {
+    padding: 1.25rem;
+  }
+
+  .metricValue {
+    font-size: 1.375rem;
+  }
+
+  .servicesSection,
+  .incidentsSection {
     padding: 0 1rem 2rem;
   }
 

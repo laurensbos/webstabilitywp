@@ -122,12 +122,24 @@ export async function GET(
       });
     }
 
+    // Calculate overall uptime and avg response time
+    const overallUptime = sitesWithUptime.length > 0
+      ? sitesWithUptime.reduce((sum, s) => sum + s.uptime, 0) / sitesWithUptime.length
+      : 100;
+    
+    const avgResponseTime = sitesWithUptime.length > 0
+      ? Math.round(sitesWithUptime.reduce((sum, s) => sum + s.responseTime, 0) / sitesWithUptime.length)
+      : 0;
+
     return NextResponse.json({
       name: user.name || 'Status Page',
       description: `Systeemstatus voor ${user.name || 'onze diensten'}`,
       logo: null,
       sites: sitesWithUptime,
       overallStatus,
+      overallUptime: Math.round(overallUptime * 100) / 100,
+      avgResponseTime,
+      incidents: [], // TODO: Add real incidents from database when available
       uptimeHistory
     });
   } catch (error) {
