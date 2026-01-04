@@ -357,7 +357,10 @@ export default function DashboardPage() {
           ) : (
             <div className={styles.alertsList}>
               {recentAlerts.map((alert) => (
-                <div key={alert.id} className={styles.alertCard}>
+                <div 
+                  key={alert.id} 
+                  className={`${styles.alertCard} ${alert.severity === 'critical' ? styles.alertCritical : alert.severity === 'warning' ? styles.alertWarning : ''}`}
+                >
                   <div className={styles.alertIcon}>
                     {getAlertIcon(alert.severity)}
                   </div>
