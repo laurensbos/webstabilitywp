@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Header, Footer, Background } from '@/components/layout';
 import { PricingSection, FAQSection } from '@/components/sections';
+import { OrganizationSchema, SoftwareApplicationSchema } from '@/components/seo/StructuredData';
 import { features } from '@/data';
 import styles from './page.module.css';
 
@@ -45,6 +46,10 @@ export default function HomePage() {
 
   return (
     <div className={styles.container}>
+      {/* Structured Data for SEO */}
+      <OrganizationSchema />
+      <SoftwareApplicationSchema />
+      
       <Background />
       <Header />
 
