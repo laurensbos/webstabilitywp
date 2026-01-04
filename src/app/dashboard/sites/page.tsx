@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { useSites, useCreateSite, useDeleteSite } from '@/hooks';
 import { useSession } from 'next-auth/react';
 import styles from './page.module.css';
@@ -151,9 +152,19 @@ export default function SitesPage() {
   const canAddMoreSites = userPlan.sitesUsed < userPlan.sitesLimit;
 
   return (
-    <div className={styles.container}>
+    <motion.div 
+      className={styles.container}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
       {/* Header */}
-      <div className={styles.header}>
+      <motion.div 
+        className={styles.header}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+      >
         <div className={styles.headerLeft}>
           <div className={styles.headerIcon}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -180,7 +191,7 @@ export default function SitesPage() {
           </svg>
           <span>Site toevoegen</span>
         </button>
-      </div>
+      </motion.div>
 
       {/* Plan limit warning */}
       {!canAddMoreSites && (
@@ -277,9 +288,21 @@ export default function SitesPage() {
 
       {/* Sites Grid/List */}
       {filteredSites.length > 0 ? (
-        <div className={`${styles.sitesContainer} ${styles[viewMode]}`}>
-          {filteredSites.map(site => (
-            <Link href={`/dashboard/sites/${site.id}`} key={site.id} className={styles.siteCard}>
+        <motion.div 
+          className={`${styles.sitesContainer} ${styles[viewMode]}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
+          {filteredSites.map((site, index) => (
+            <motion.div
+              key={site.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.3 + index * 0.05 }}
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            >
+              <Link href={`/dashboard/sites/${site.id}`} className={styles.siteCard}>
               <div className={styles.siteHeader}>
                 <div className={styles.siteInfo}>
                   <div className={`${styles.statusDot} ${styles[site.status]}`} />
@@ -327,8 +350,9 @@ export default function SitesPage() {
                 </span>
               </div>
             </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       ) : (
         <div className={styles.emptyState}>
           <div className={styles.emptyIcon}>
@@ -449,6 +473,6 @@ export default function SitesPage() {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { 
   ArrowRight, 
   Check, 
@@ -49,20 +50,45 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className={styles.hero}>
-        <div className={styles.heroContent}>
-          <div className={styles.badge}>
+        <motion.div 
+          className={styles.heroContent}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <motion.div 
+            className={styles.badge}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
             <Sparkles size={14} />
             <span className={styles.badgeTextFull}>Nu met AI-powered anomaly detection</span>
             <span className={styles.badgeTextShort}>Nieuw: AI-detectie</span>
-          </div>
-          <h1 className={styles.heroTitle}>
+          </motion.div>
+          <motion.h1 
+            className={styles.heroTitle}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
             Website monitoring <span className={styles.heroGradient}>die echt werkt</span>
-          </h1>
-          <p className={styles.heroSubtitle}>
+          </motion.h1>
+          <motion.p 
+            className={styles.heroSubtitle}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
             Detecteer downtime binnen 30 seconden. Ontvang instant alerts via 
             Slack, Email of SMS. Trusted by 500+ Nederlandse bedrijven.
-          </p>
-          <div className={styles.heroCtas}>
+          </motion.p>
+          <motion.div 
+            className={styles.heroCtas}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
             <Link href="/register" className={styles.primaryCta}>
               Gratis starten
               <ArrowRight size={18} />
@@ -71,8 +97,13 @@ export default function HomePage() {
               <Play size={16} />
               Bekijk demo
             </Link>
-          </div>
-          <div className={styles.heroTrust}>
+          </motion.div>
+          <motion.div 
+            className={styles.heroTrust}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
             <div className={styles.trustItem}>
               <Check size={16} />
               <span>Geen creditcard nodig</span>
@@ -85,11 +116,16 @@ export default function HomePage() {
               <Check size={16} />
               <span>Setup in 2 minuten</span>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
         
         {/* Hero Dashboard Preview */}
-        <div className={styles.heroPreview}>
+        <motion.div 
+          className={styles.heroPreview}
+          initial={{ opacity: 0, y: 40, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        >
           <div className={styles.dashboardMockup}>
             <div className={styles.mockupHeader}>
               <div className={styles.mockupDots}>
@@ -159,7 +195,7 @@ export default function HomePage() {
               <span className={styles.floatingSubtitle}>Verloopt over 89 dagen</span>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Trusted By Section */}

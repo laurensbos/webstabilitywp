@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { 
   TrendingUp, 
   Clock, 
@@ -158,14 +159,24 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className={styles.dashboard}>
+    <motion.div 
+      className={styles.dashboard}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
       {/* Onboarding Tour */}
       {showOnboarding && apiSites.length === 0 && !loading && (
         <OnboardingTour onComplete={() => setShowOnboarding(false)} />
       )}
 
       {/* Header */}
-      <div className={styles.header}>
+      <motion.div 
+        className={styles.header}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+      >
         <div className={styles.headerContent}>
           <h1>Dashboard</h1>
           <p>Overzicht van al je gemonitorde sites</p>
@@ -187,7 +198,7 @@ export default function DashboardPage() {
             <span>Site toevoegen</span>
           </Link>
         </div>
-      </div>
+      </motion.div>
 
       {/* Stats Section */}
       {loading ? (
@@ -195,9 +206,17 @@ export default function DashboardPage() {
       ) : (
         <>
           {/* Hero Stat + Secondary Stats Row */}
-          <div className={styles.statsRow}>
+          <motion.div 
+            className={styles.statsRow}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
             {/* Hero Uptime Card */}
-            <div className={`${styles.heroCard} ${heroStat.status === 'warning' ? styles.heroWarning : ''}`}>
+            <motion.div 
+              className={`${styles.heroCard} ${heroStat.status === 'warning' ? styles.heroWarning : ''}`}
+              whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+            >
               <div className={styles.heroIcon}>
                 <Activity size={24} />
               </div>
@@ -209,19 +228,26 @@ export default function DashboardPage() {
                   {heroStat.subtitle}
                 </span>
               </div>
-            </div>
+            </motion.div>
 
             {/* Secondary Stats */}
             <div className={styles.secondaryStats}>
               {secondaryStats.map((stat, index) => (
-                <div key={index} className={`${styles.secondaryStat} ${stat.color !== 'default' ? styles[`stat${stat.color.charAt(0).toUpperCase() + stat.color.slice(1)}`] : ''}`}>
+                <motion.div 
+                  key={index} 
+                  className={`${styles.secondaryStat} ${stat.color !== 'default' ? styles[`stat${stat.color.charAt(0).toUpperCase() + stat.color.slice(1)}`] : ''}`}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: 0.3 + index * 0.05 }}
+                  whileHover={{ y: -2, transition: { duration: 0.2 } }}
+                >
                   <stat.icon size={16} className={styles.secondaryIcon} />
                   <span className={styles.secondaryValue}>{stat.value}</span>
                   <span className={styles.secondaryLabel}>{stat.label}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Usage + Upgrade Row */}
           <div className={styles.usageRow}>
@@ -242,7 +268,12 @@ export default function DashboardPage() {
       )}
 
       {/* Main Content Grid */}
-      <div className={styles.contentGrid}>
+      <motion.div 
+        className={styles.contentGrid}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: 0.3 }}
+      >
         {/* Sites List */}
         <div className={styles.sitesSection}>
           <div className={styles.sectionHeader}>
@@ -258,20 +289,26 @@ export default function DashboardPage() {
             <EmptyState type="sites" onAction={() => window.location.href = '/dashboard/sites/new'} />
           ) : (
             <div className={styles.sitesList}>
-              {sites.map((site) => (
-                <Link
+              {sites.map((site, index) => (
+                <motion.div
                   key={site.id}
-                  href={`/dashboard/sites/${site.id}`}
-                  className={styles.siteCard}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.4 + index * 0.05 }}
+                  whileHover={{ x: 4, transition: { duration: 0.2 } }}
                 >
-                  <div className={`${styles.siteStatus} ${getStatusClass(site.status)}`} />
-                  <div className={styles.siteInfo}>
-                    <span className={styles.siteName}>{site.name}</span>
-                    <span className={styles.siteUrl}>{site.url}</span>
-                  </div>
-                  <div className={styles.siteMetrics}>
-                    <div className={styles.metricItem}>
-                      <TrendingUp size={14} />
+                  <Link
+                    href={`/dashboard/sites/${site.id}`}
+                    className={styles.siteCard}
+                  >
+                    <div className={`${styles.siteStatus} ${getStatusClass(site.status)}`} />
+                    <div className={styles.siteInfo}>
+                      <span className={styles.siteName}>{site.name}</span>
+                      <span className={styles.siteUrl}>{site.url}</span>
+                    </div>
+                    <div className={styles.siteMetrics}>
+                      <div className={styles.metricItem}>
+                        <TrendingUp size={14} />
                       <span className={styles.metricValue}>{site.uptime}</span>
                     </div>
                     <div className={styles.metricItem}>
@@ -300,6 +337,7 @@ export default function DashboardPage() {
                   <span className={styles.siteLastChecked}>{site.lastChecked}</span>
                   <ChevronRight size={16} className={styles.siteArrow} />
                 </Link>
+                </motion.div>
               ))}
             </div>
           )}
@@ -333,7 +371,7 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Quick Actions */}
       <div className={styles.quickActions}>
@@ -353,6 +391,6 @@ export default function DashboardPage() {
           </a>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
