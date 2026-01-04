@@ -19,17 +19,34 @@
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  padding: 24px 28px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
   margin-bottom: 24px;
   gap: 16px;
 }
 
 .headerLeft {
-  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.headerIcon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 14px;
+  color: #818cf8;
 }
 
 .title {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
   color: #fff;
   margin: 0 0 4px 0;
@@ -46,36 +63,21 @@
   align-items: center;
   gap: 8px;
   padding: 12px 20px;
-  background: #22c55e;
-  color: #000;
+  background: #6366f1;
+  color: #fff;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
   white-space: nowrap;
-  position: relative;
-  overflow: hidden;
-}
-
-.addButton::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
-  transform: translateX(-100%);
-  transition: transform 0.5s ease;
-}
-
-.addButton:hover::before {
-  transform: translateX(100%);
 }
 
 .addButton:hover:not(:disabled) {
-  background: #16a34a;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3);
+  background: #4f46e5;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
 }
 
 .addButton:active:not(:disabled) {

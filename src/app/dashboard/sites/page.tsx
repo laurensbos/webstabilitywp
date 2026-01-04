@@ -155,10 +155,19 @@ export default function SitesPage() {
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <h1 className={styles.title}>Sites</h1>
-          <p className={styles.subtitle}>
-            {userPlan.sitesUsed} van {userPlan.sitesLimit} sites gebruikt
-          </p>
+          <div className={styles.headerIcon}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+          </div>
+          <div>
+            <h1 className={styles.title}>Sites</h1>
+            <p className={styles.subtitle}>
+              {userPlan.sitesUsed} van {userPlan.sitesLimit} sites gebruikt
+            </p>
+          </div>
         </div>
         <button 
           className={styles.addButton}
