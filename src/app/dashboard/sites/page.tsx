@@ -62,6 +62,7 @@ export default function SitesPage() {
   // Add site form state
   const [newSiteUrl, setNewSiteUrl] = useState('');
   const [newSiteName, setNewSiteName] = useState('');
+  const [newSiteClientEmail, setNewSiteClientEmail] = useState('');
 
   // Transform API data to component format
   const sites: Site[] = (apiSites || []).map((site) => {
@@ -136,13 +137,15 @@ export default function SitesPage() {
     
     const result = await createSite({
       url: newSiteUrl,
-      name: newSiteName || new URL(newSiteUrl).hostname
+      name: newSiteName || new URL(newSiteUrl).hostname,
+      clientEmail: newSiteClientEmail || undefined
     });
     
     if (result) {
       setShowAddModal(false);
       setNewSiteUrl('');
       setNewSiteName('');
+      setNewSiteClientEmail('');
       refetch();
     }
   };
@@ -506,6 +509,19 @@ export default function SitesPage() {
                   className={styles.input}
                 />
                 <p className={styles.inputHint}>Wordt automatisch ingevuld als je dit leeg laat</p>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="clientEmail">Klant e-mail (optioneel)</label>
+                <input
+                  id="clientEmail"
+                  type="email"
+                  placeholder="klant@voorbeeld.nl"
+                  value={newSiteClientEmail}
+                  onChange={(e) => setNewSiteClientEmail(e.target.value)}
+                  className={styles.input}
+                />
+                <p className={styles.inputHint}>E-mailadres van de klant voor het klantportaal</p>
               </div>
 
               <div className={styles.formGroup}>

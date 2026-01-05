@@ -122,7 +122,7 @@ export function useCreateSite() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const createSite = async (data: { url: string; name: string }) => {
+  const createSite = async (data: { url: string; name: string; clientEmail?: string }) => {
     setLoading(true);
     setError(null);
     try {

@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { url, name } = await request.json();
+    const { url, name, clientEmail } = await request.json();
 
     if (!url || !name) {
       return NextResponse.json(
@@ -92,6 +92,7 @@ export async function POST(request: NextRequest) {
         url: validUrl,
         name,
         checkInterval,
+        clientEmail: clientEmail?.toLowerCase() || null,
       })
       .returning();
 
