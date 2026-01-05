@@ -34,10 +34,13 @@ export const sites = pgTable('sites', {
   currentStatus: text('current_status').default('unknown'), // up, down, unknown
   uptimePercentage: decimal('uptime_percentage', { precision: 5, scale: 2 }).default('100.00'),
   avgResponseTime: integer('avg_response_time'), // ms
+  // Client email for bureau customers (optional - links site to a bureau client)
+  clientEmail: text('client_email'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 }, (table) => ({
   userIdIdx: index('sites_user_id_idx').on(table.userId),
+  clientEmailIdx: index('sites_client_email_idx').on(table.clientEmail),
 }));
 
 // Uptime Checks

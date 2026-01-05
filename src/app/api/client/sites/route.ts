@@ -1,61 +1,90 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, sites, uptimeChecks, incidents } from '@/lib/db';
+import { db, sites, incidents } from '@/lib/db';
 import { eq, desc, and, gte } from 'drizzle-orm';
 
 // This endpoint allows bureau clients to fetch their monitoring data
-// Authentication is via a client token (to be implemented with Supabase integration)
+// The client sends their email (from Supabase session) and we return their sites
 
 export async function GET(request: NextRequest) {
   try {
-    // Get authorization header
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
+    // Get client email from query params or header
+    const email = request.nextUrl.searchParams.get('email');
+    
+    if (!email) {
       return NextResponse.json(
-        { error: 'Authorization header required' },
-        { status: 401 }
+        { error: 'Email parameter required' },
+        { status: 400 }
       );
     }
 
-    const token = authHeader.substring(7);
-    
-    // TODO: Validate token against Supabase
-    // For now, we'll use a simple token validation
-    // In production, this should verify against Supabase and get the user's email
-    
-    // For demo purposes, return demo data
-    // In production, you'd query the database for sites linked to this client
-    
-    const demoSites = [
-      {
-        id: 'demo-1',
-        name: 'Mijn Website',
-        url: 'https://mijnwebsite.nl',
-        status: 'up',
-        uptime: 99.98,
-        responseTime: 245,
-        lastCheckedAt: new Date().toISOString(),
-        sslValid: true,
-        sslExpiry: '2026-06-15'
-      },
-      {
-        id: 'demo-2',
-        name: 'Webshop',
-        url: 'https://shop.mijnwebsite.nl',
-        status: 'up',
-        uptime: 99.95,
-        responseTime: 312,
-        lastCheckedAt: new Date().toISOString(),
-        sslValid: true,
-        sslExpiry: '2026-06-15'
-      }
-    ];
+    // Fetch sites linked to this client email
+    const clientSites = await db
+      .select({
+        id: sites.id,
+        name: sites.name,
+        url: sites.url,
+        status: sites.currentStatus,
+        uptime: sites.uptimePercentage,
+        responseTime: sites.avgResponseTime,
+        lastCheckedAt: sites.lastCheckedAt,
+        isActive: sites.isActive,
+      })
+      .from(sites)
+      .where(eq(sites.clientEmail, email.toLowerCase()));
 
-    const demoIncidents: any[] = [];
+    // Format for frontend
+    const formattedSites = clientSites.map(site => ({
+      id: site.id,
+      name: site.name,
+      url: site.url,
+      status: site.status === 'up' ? 'up' : site.status === 'down' ? 'down' : 'unknown',
+      uptime: parseFloat(site.uptime?.toString() || '99.9'),
+      responseTime: site.responseTime || 0,
+      lastCheckedAt: site.lastCheckedAt?.toISOString() || new Date().toISOString(),
+      sslValid: true, // TODO: Add SSL check field to sites
+      sslExpiry: undefined,
+    }));
+
+    // Fetch recent incidents for these sites
+    const siteIds = clientSites.map(s => s.id);
+    let clientIncidents: any[] = [];
+    
+    if (siteIds.length > 0) {
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      const incidentData = await db
+        .select()
+        .from(incidents)
+        .where(
+          and(
+            gte(incidents.startedAt, thirtyDaysAgo)
+          )
+        )
+        .orderBy(desc(incidents.startedAt))
+        .limit(10);
+      
+      // Filter to only this client's sites
+      clientIncidents = incidentData
+        .filter(inc => siteIds.includes(inc.siteId))
+        .map(inc => {
+          const site = clientSites.find(s => s.id === inc.siteId);
+          return {
+            id: inc.id,
+            siteId: inc.siteId,
+            siteName: site?.name || 'Onbekend',
+            status: inc.status,
+            cause: inc.cause,
+            startedAt: inc.startedAt?.toISOString(),
+            resolvedAt: inc.resolvedAt?.toISOString(),
+          };
+        });
+    }
 
     // CORS headers
     const response = NextResponse.json({
-      sites: demoSites,
-      incidents: demoIncidents
+      sites: formattedSites,
+      incidents: clientIncidents
     });
     
     const origin = request.headers.get('origin') || '';
