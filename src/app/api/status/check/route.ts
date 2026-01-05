@@ -1,6 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import https from 'https';
 
+const ALLOWED_ORIGINS = [
+  'https://webstability.nl',
+  'https://www.webstability.nl',
+  'http://localhost:5173',
+  'http://localhost:3000',
+];
+
+function addCorsHeaders(response: NextResponse, origin: string | null): NextResponse {
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    response.headers.set('Access-Control-Allow-Origin', origin);
+  }
+  response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  response.headers.set('Access-Control-Max-Age', '86400');
+  return response;
+}
+
 interface CheckResult {
   url: string;
   status: 'online' | 'offline' | 'slow';
@@ -134,6 +151,8 @@ async function performCheck(url: string): Promise<{ isUp: boolean; statusCode: n
 }
 
 export async function POST(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  
   try {
     // Get client IP for rate limiting
     const forwardedFor = request.headers.get('x-forwarded-for');
@@ -141,9 +160,12 @@ export async function POST(request: NextRequest) {
     
     // Check rate limit
     if (isRateLimited(ip)) {
-      return NextResponse.json(
-        { error: 'Te veel verzoeken. Probeer het over een minuut opnieuw.' },
-        { status: 429 }
+      return addCorsHeaders(
+        NextResponse.json(
+          { error: 'Te veel verzoeken. Probeer het over een minuut opnieuw.' },
+          { status: 429 }
+        ),
+        origin
       );
     }
     
@@ -151,9 +173,12 @@ export async function POST(request: NextRequest) {
     const { url } = body;
     
     if (!url || typeof url !== 'string') {
-      return NextResponse.json(
-        { error: 'URL is verplicht' },
-        { status: 400 }
+      return addCorsHeaders(
+        NextResponse.json(
+          { error: 'URL is verplicht' },
+          { status: 400 }
+        ),
+        origin
       );
     }
     
@@ -167,17 +192,23 @@ export async function POST(request: NextRequest) {
     try {
       parsedUrl = new URL(normalizedUrl);
     } catch {
-      return NextResponse.json(
-        { error: 'Ongeldige URL' },
-        { status: 400 }
+      return addCorsHeaders(
+        NextResponse.json(
+          { error: 'Ongeldige URL' },
+          { status: 400 }
+        ),
+        origin
       );
     }
     
     // Only allow http(s) protocols
     if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
-      return NextResponse.json(
-        { error: 'Alleen HTTP en HTTPS URLs zijn toegestaan' },
-        { status: 400 }
+      return addCorsHeaders(
+        NextResponse.json(
+          { error: 'Alleen HTTP en HTTPS URLs zijn toegestaan' },
+          { status: 400 }
+        ),
+        origin
       );
     }
     
@@ -205,48 +236,22 @@ export async function POST(request: NextRequest) {
       statusCode: uptimeResult.statusCode,
     };
     
-    // CORS headers for cross-origin requests from bureau website
-    const response = NextResponse.json(result);
-    const origin = request.headers.get('origin') || '';
-    const allowedOrigins = [
-      'https://webstability.nl',
-      'https://www.webstability.nl',
-      'http://localhost:5173',
-      'http://localhost:3000',
-    ];
-    
-    if (allowedOrigins.includes(origin)) {
-      response.headers.set('Access-Control-Allow-Origin', origin);
-    }
-    response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
-    
-    return response;
+    return addCorsHeaders(NextResponse.json(result), origin);
   } catch (error) {
     console.error('Error in status check:', error);
-    return NextResponse.json(
-      { error: 'Er ging iets mis bij het controleren' },
-      { status: 500 }
+    return addCorsHeaders(
+      NextResponse.json(
+        { error: 'Er ging iets mis bij het controleren' },
+        { status: 500 }
+      ),
+      origin
     );
   }
 }
 
 // Handle CORS preflight
 export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get('origin');
   const response = new NextResponse(null, { status: 204 });
-  const origin = request.headers.get('origin') || '';
-  const allowedOrigins = [
-    'https://webstability.nl',
-    'https://www.webstability.nl',
-    'http://localhost:5173',
-    'http://localhost:3000',
-  ];
-  
-  if (allowedOrigins.includes(origin)) {
-    response.headers.set('Access-Control-Allow-Origin', origin);
-  }
-  response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
-  response.headers.set('Access-Control-Max-Age', '86400');
-  return response;
+  return addCorsHeaders(response, origin);
 }
